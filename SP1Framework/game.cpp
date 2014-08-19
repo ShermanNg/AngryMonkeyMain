@@ -85,6 +85,145 @@ void update(double dt)
         g_quitGame = true;    
 }
 
+void DrawMap2 (void)
+{
+
+	int y =  consoleSize.Y;
+
+	gotoXY(0,y-0);
+	colour(0x3C);
+	std::cout << "                                                                                ";
+
+	gotoXY(0,y-6);
+	colour(0x3C);
+	std::cout << "                                                                                ";
+
+	gotoXY(0,y-12);
+	colour(0x3C);
+	std::cout << "                                                                                ";
+
+	gotoXY(0,y-18);
+	colour(0x3C);
+	std::cout << "                                                                                ";
+
+
+	for (int j = 0; j < 6; ++j)
+	{
+		gotoXY(20,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+
+		gotoXY(40,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+
+		gotoXY(60,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+
+
+	}
+
+
+	for (int j =6; j < 12; ++j)
+	{
+		gotoXY(30,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+
+		gotoXY(50,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+	}
+
+	for (int j = 12; j < 18; ++j)
+	{
+		gotoXY(20,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+
+		gotoXY(40,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+
+		gotoXY(60,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+
+
+	}
+
+
+}
+
+void DrawMap1 (void)
+{
+
+	int y =  consoleSize.Y;
+
+	gotoXY(0,y-0);
+	colour(0x3C);
+	std::cout << "                                                                                ";
+
+	gotoXY(0,y-6);
+	colour(0x3C);
+	std::cout << "                                                                                ";
+
+	gotoXY(0,y-12);
+	colour(0x3C);
+	std::cout << "                                                                                ";
+
+	gotoXY(0,y-18);
+	colour(0x3C);
+	std::cout << "                                                                                ";
+
+
+	for (int j = 6; j < 12; ++j)
+	{
+		gotoXY(20,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+
+		gotoXY(40,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+
+		gotoXY(60,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+
+
+	}
+
+
+	for (int j =0; j < 6; ++j)
+	{
+		gotoXY(30,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+
+		gotoXY(50,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+	}
+
+
+	for (int j =12; j < 18; ++j)
+	{
+		gotoXY(30,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+
+		gotoXY(50,y-j);
+		colour(0x4D);
+		std::cout << "  "<<endl;
+	}
+
+
+
+}
+
+
 void render()
 {
     // clear previous screen
@@ -93,18 +232,7 @@ void render()
 
     //render the game
 
-    //render test screen code (not efficient at all)
-    const WORD colors[] =   {
-	                        0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F,
-	                        0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6
-	                        };
-	
-	for (int i = 0; i < 12; ++i)
-	{
-		gotoXY(3*i,i+1);
-		colour(colors[i]);
-		std::cout << "WOW";
-	}
+	DrawMap1();
 
     // render time taken to calculate this frame
     gotoXY(70, 0);
