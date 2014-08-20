@@ -13,6 +13,9 @@ bool keyPressed[K_COUNT];
 bool telecd = false;// teleporter cooldown
 bool teleporterstamptime = true;
 bool spawn = false;
+bool banana1=true, banana2=true, banana3=false;//bananas(life)
+bool lifepowerup = true;//power ups
+bool getpowerup = true;//able tp pick up power up
 COORD charLocation;
 COORD lefthumanLocation;
 COORD lefthuman2Location;
@@ -28,6 +31,7 @@ COORD teleporter1Location;
 COORD teleporter2Location;
 COORD barrelLocation;
 barrel barrelhitting[10];
+COORD lifepowerupLocation;
 
 void init()
 {
@@ -56,9 +60,9 @@ void init()
 	barrelLocation.Y = charLocation.Y+1;
 
 	// set the banana at top of the ladders.
-    life1.X = consoleSize.X / 2;
+    life1.X = 20;
     life1.Y = 10;
-	life2.X = 20;
+	life2.X = consoleSize.X / 2;
     life2.Y = 10;
 	life3.X = 60;
     life3.Y = 10;
@@ -86,6 +90,10 @@ void init()
 	 teleporter2Location.X = (20);
 	 teleporter2Location.Y = (22);
 
+	//location for life power up
+	lifepowerupLocation.X = (rand() % 72 + 3);
+	lifepowerupLocation.Y = (4);
+
     elapsedTime = 0.0;
 }
 
@@ -112,9 +120,6 @@ void update(double dt)
 	int printR = 0;
 	int leftNum = 0;
 	int rightNum = 0;
-	int banana1 = 0;
-	int banana2 = 0;
-	int banana3 = 0;
 	char player[3][3] = {
 		{' ','O',' '},
 		{'-','|','-'},
@@ -164,33 +169,6 @@ void update(double dt)
 			barrelLocation.Y = charLocation.Y+1;
 			spawn = false;
 		}
-	}
-
-	//spawn life1
-	if(banana1==0)
-	{
-		gotoXY(life1);
-		colour(0x0E);
-		std::cout<<"@@";
-		banana1=1;
-	}
-
-	//spawn life2
-	if(banana2==0)
-	{
-		gotoXY(life2);
-		colour(0x0E);
-		std::cout<<"@@";
-		banana2=1;
-	}
-
-	//spawn life3
-	if(banana3==0)
-	{
-		gotoXY(life3);
-		colour(0x0E);
-		std::cout<<"@@";
-		banana3=1;
 	}
 
 	// first enemy spawn at bottom left
@@ -349,7 +327,7 @@ void update(double dt)
 		 teleporter1Location.Y = (16);
 		 if(rand() % 3 + 1 == 3)
 		 {
-			 teleporter1Location.X =(rand() % 26 + 3);//most left 2nd lane
+			 teleporter1Location.X =(rand() % 25 + 3);//most left 2nd lane
 		 }
 		 else
 		 {
@@ -540,12 +518,34 @@ void update(double dt)
 				 telecd = true;
 			 }
 		 }
-}
-telecd = false;
- //end of teleporter
+	}
+	telecd = false;
+	//end of teleporter
+
     // quits the game if player hits the escape key
     if (keyPressed[K_ESCAPE])
         g_quitGame = true;    
+
+	//lifepowerup
+	if(getpowerup == true)
+	{
+		if(charLocation.X == lifepowerupLocation.X && charLocation.Y+2 == lifepowerupLocation.Y)
+		{
+			if(banana2 == false)
+			{
+				banana2 = true;
+			}
+			else
+			{
+				if(banana3 == false)
+				{
+					banana3 = true;
+				}
+			}
+			lifepowerup = false;
+			getpowerup = false;
+		}
+	}
 }
 
 void DrawMap2 (void)
@@ -735,7 +735,39 @@ void render()
 		std::cout << (char)5;
 		std::cout << (char)5;
 	}
-    
+    //render lives
+	//spawn life1
+	if(banana1==true)
+	{
+		gotoXY(life1);
+		colour(0x0E);
+		std::cout<<"@@";
+		banana1=1;
+	}
+	//spawn life2
+	if(banana2==true)
+	{
+		gotoXY(life2);
+		colour(0x0E);
+		std::cout<<"@@";
+		banana2=1;
+	}
+	//spawn life3
+	if(banana3==true)
+	{
+		gotoXY(life3);
+		colour(0x0E);
+		std::cout<<"@@";
+		banana3=1;
+	}
+
+	//render life power up
+	if(lifepowerup == true)
+	{
+		gotoXY(lifepowerupLocation);
+		colour(0x0C);
+		std::cout<<(char)3;
+	}
 }
 
 void barrelshooting()
