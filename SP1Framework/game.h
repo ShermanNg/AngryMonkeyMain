@@ -27,7 +27,11 @@ void getInput();            // get input from player
 void update(double dt);     // update the game and the state of the game
 void render();              // renders the current state of the game to the console
 void shutdown();            // do clean up, free memory
-void DrawMap ();
+void DrawMap ();// draws up map
+void spawnEnemy();// spawns enemy
+void moveEnemy();// all enemy movements
+int rollDice();// generate random numbers
+bool climbCheck(int posX, int posY);//Check if AI can climb
 void drawbarrel();
 void barrelshooting();
 
