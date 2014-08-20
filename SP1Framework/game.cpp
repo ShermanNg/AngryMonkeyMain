@@ -8,7 +8,10 @@
 
 double elapsedTime;
 double deltaTime;
+double teleportertimestamp;
 bool keyPressed[K_COUNT];
+bool telecd = false;// teleporter cooldown
+bool teleporterstamptime = true;
 COORD charLocation;
 COORD lefthumanLocation;
 COORD lefthuman2Location;
@@ -20,6 +23,8 @@ COORD life1;
 COORD life2;
 COORD life3;
 COORD consoleSize;
+COORD teleporter1Location;
+COORD teleporter2Location;
 
 void init()
 {
@@ -67,6 +72,12 @@ void init()
 	righthuman2Location.Y = 20;
 	righthuman3Location.X = 76;
 	righthuman3Location.Y = 14;
+
+	//teleporter
+	 teleporter1Location.X = (49);
+	 teleporter1Location.Y = (16);
+	 teleporter2Location.X = (20);
+	 teleporter2Location.Y = (22);
 
     elapsedTime = 0.0;
 }
@@ -297,7 +308,215 @@ void update(double dt)
 		Beep(0, 30);
 		righthuman3Location.X--;
 	}
+	//update for tele
+	 if(teleporterstamptime == true)
+ {
+  teleportertimestamp = elapsedTime;
+  teleporterstamptime = false;
+ }
+ if(elapsedTime > teleportertimestamp + 20)//change in teleporter location timing
+ {
+  //location for teleporter1
 
+   teleporter1Location.Y = (16);
+   if(rand() % 3 + 1 == 3)
+   {
+    teleporter1Location.X =(rand() % 26 + 3);//most left 2nd lane
+   }
+   else
+   {
+    if(rand() % 2 + 1 == 2)
+    {
+     teleporter1Location.X = (rand() % 14 + 32);//middle 2nd lane
+    }
+    else
+    {
+     teleporter1Location.X = (rand() % 13 + 53);//most right 2nd lane
+    }
+   }
+
+  //location for teleporter2
+  if(rand() % 2 + 1 == 2)
+  {
+   teleporter2Location.Y = (22);
+   if(rand() % 2 + 1 == 2)
+   {
+    if(rand() % 2 + 1 == 2)
+    {
+     teleporter2Location.X = (rand() % 17 + 3);//3rd most left
+    }
+    else
+    {
+     teleporter2Location.X = (rand() % 16 + 22);//3rd 2 most left
+    }
+   }
+   else
+   {
+    if(rand() % 2 + 1 == 2)
+    {
+     teleporter2Location.X = (rand() % 16 + 42);//3rd 2 most right
+    }
+    else
+    {
+     teleporter2Location.X = (rand() % 14 + 62);//3rd most right
+    }
+   }
+  }
+  else
+  {
+   teleporter2Location.Y = (28);
+   if(rand() % 3 + 1 == 3)
+   {
+    teleporter2Location.X =(rand() % 26 + 3);//most left 4th lane
+   }
+   else
+   {
+    if(rand() % 2 + 1 == 2)
+    {
+     teleporter2Location.X = (rand() % 14 + 32);//middle 4th lane
+    }
+    else
+    {
+     teleporter2Location.X = (rand() % 14 + 53);//most right 4th lane
+    }
+   }
+  }
+  teleporterstamptime = true;
+ }
+
+ if(elapsedTime>2)//time before teleporters spawn
+ {
+  //left humans
+  //left human 1
+  //teleporter 1
+  if(lefthumanLocation.Y == teleporter1Location.Y - 2 && lefthumanLocation.X == teleporter1Location.X)
+  {
+   if(telecd == false)
+   {
+    lefthumanLocation.Y = teleporter2Location.Y-2;
+    lefthumanLocation.X = teleporter2Location.X;
+    telecd = true;
+   }
+  }
+  //teleporter 2
+  if(lefthumanLocation.Y == teleporter2Location.Y - 2&& lefthumanLocation.X == teleporter2Location.X)
+  {
+   if(telecd == false)
+   {
+    lefthumanLocation.Y = teleporter1Location.Y-2;
+    lefthumanLocation.X = teleporter1Location.X;
+    telecd = true;
+   }
+  }
+  //left human 2
+  //teleporter 1
+  if(lefthuman2Location.Y == teleporter1Location.Y -2 && lefthuman2Location.X == teleporter1Location.X)
+  {
+   if(telecd == false)
+   {
+    lefthuman2Location.Y = teleporter2Location.Y-2;
+    lefthuman2Location.X = teleporter2Location.X;
+    telecd = true;
+   }
+  }
+  //teleporter 2
+  if(lefthuman2Location.Y == teleporter2Location.Y  -2&& lefthuman2Location.X == teleporter2Location.X)
+  {
+   if(telecd == false)
+   {
+    lefthuman2Location.Y = teleporter1Location.Y-2;
+    lefthuman2Location.X = teleporter1Location.X;
+    telecd = true;
+   }
+  }
+  //left human 3
+  //teleporter 1
+  if(lefthuman3Location.Y == teleporter1Location.Y-2 && lefthuman3Location.X == teleporter1Location.X)
+  {
+   if(telecd == false)
+   {
+    lefthuman3Location.Y = teleporter2Location.Y-2;
+    lefthuman3Location.X = teleporter2Location.X;
+    telecd = true;
+   }
+  }
+  //teleporter 2
+  if(lefthuman3Location.Y == teleporter2Location.Y-2 && lefthuman3Location.X == teleporter2Location.X)
+  {
+   if(telecd == false)
+   {
+    lefthuman3Location.Y = teleporter1Location.Y-2;
+    lefthuman3Location.X = teleporter1Location.X;
+    telecd = true;
+   }
+  }
+  //right humans
+  //right human 1
+  //teleporter 1
+  if(righthumanLocation.Y == teleporter1Location.Y - 2 && righthumanLocation.X == teleporter1Location.X)
+  {
+   if(telecd == false)
+   {
+    righthumanLocation.Y = teleporter2Location.Y-2;
+    righthumanLocation.X = teleporter2Location.X;
+    telecd = true;
+   }
+  }
+  //teleporter 2
+  if(righthumanLocation.Y == teleporter2Location.Y - 2&& righthumanLocation.X == teleporter2Location.X)
+  {
+   if(telecd == false)
+   {
+    righthumanLocation.Y = teleporter1Location.Y-2;
+    righthumanLocation.X = teleporter1Location.X;
+    telecd = true;
+   }
+  }
+  //right human 2
+  //teleporter 1
+  if(righthuman2Location.Y == teleporter1Location.Y - 2 && righthuman2Location.X == teleporter1Location.X)
+  {
+   if(telecd == false)
+   {
+    righthuman2Location.Y = teleporter2Location.Y-2;
+    righthuman2Location.X = teleporter2Location.X;
+    telecd = true;
+   }
+  }
+  //teleporter 2
+  if(righthuman2Location.Y == teleporter2Location.Y - 2&& righthuman2Location.X == teleporter2Location.X)
+  {
+   if(telecd == false)
+   {
+    righthuman2Location.Y = teleporter1Location.Y-2;
+    righthuman2Location.X = teleporter1Location.X;
+    telecd = true;
+   }
+  }
+  //right human 3
+  //teleporter 1
+  if(righthuman3Location.Y == teleporter1Location.Y - 2 && righthuman3Location.X == teleporter1Location.X)
+  {
+   if(telecd == false)
+   {
+    righthuman3Location.Y = teleporter2Location.Y-2;
+    righthuman3Location.X = teleporter2Location.X;
+    telecd = true;
+   }
+  }
+  //teleporter 2
+  if(righthuman3Location.Y == teleporter2Location.Y - 2&& righthuman3Location.X == teleporter2Location.X)
+  {
+   if(telecd == false)
+   {
+    righthuman3Location.Y = teleporter1Location.Y-2;
+    righthuman3Location.X = teleporter1Location.X;
+    telecd = true;
+   }
+  }
+ }
+ telecd = false;
+ //end of teleporter
     // quits the game if player hits the escape key
     if (keyPressed[K_ESCAPE])
         g_quitGame = true;    
@@ -438,8 +657,6 @@ void DrawMap1 (void)
 		std::cout << "  "<<endl;
 	}
 
-
-
 }
 
 void render()
@@ -479,6 +696,18 @@ void render()
 		print++;
 		gotoXY(charLocation.X,charLocation.Y+print);
 	}
+	//render teleporters
+ if(elapsedTime>2)//time taken for teleporters to spawn
+ {
+  gotoXY(teleporter1Location);
+  colour(0x0C);
+  std::cout << (char)5;
+  std::cout << (char)5;
 
+  gotoXY(teleporter2Location);
+  colour(0x0C);
+  std::cout << (char)5;
+  std::cout << (char)5;
+ }
     
 }
