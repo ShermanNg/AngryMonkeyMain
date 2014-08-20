@@ -145,6 +145,27 @@ void update(double dt)
 		drawbarrel();
 		barrelshooting();
 	}
+
+	if (spawn == true)
+	{
+		drawbarrel();
+
+		if(barrelLocation.Y >= 27)
+		{
+			barrelLocation.Y = 28;
+		}
+		else
+		{
+			barrelLocation.Y++;
+		}                                                                                
+		if(barrelLocation.Y == consoleSize.Y-1)
+		{
+			barrelLocation.X = charLocation.X;
+			barrelLocation.Y = charLocation.Y+1;
+			spawn = false;
+		}
+	}
+
 	//spawn life1
 	if(banana1==0)
 	{
@@ -702,37 +723,18 @@ void render()
 		gotoXY(charLocation.X,charLocation.Y+print);
 	}
 
-	if (spawn == true)
-	{
-		drawbarrel();
-
-		if(barrelLocation.Y >= 27)
-		{
-			barrelLocation.Y = 28;
-		}
-		else
-		{
-			barrelLocation.Y++;
-		}
-		if(barrelLocation.Y == consoleSize.Y-1)
-		{
-			barrelLocation.Y = charLocation.Y + 1;
-			spawn == false;
-		}
-	}
 	//render teleporters
 	if(elapsedTime>2)//time taken for teleporters to spawn
- {
-  gotoXY(teleporter1Location);
-  colour(0x0C);
-  std::cout << (char)5;
-  std::cout << (char)5;
-
-  gotoXY(teleporter2Location);
-  colour(0x0C);
-  std::cout << (char)5;
-  std::cout << (char)5;
- }
+	{
+		gotoXY(teleporter1Location);
+		colour(0x0C);
+		std::cout << (char)5;
+		std::cout << (char)5;
+		gotoXY(teleporter2Location);
+		colour(0x0C);
+		std::cout << (char)5;
+		std::cout << (char)5;
+	}
     
 }
 
