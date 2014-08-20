@@ -325,23 +325,30 @@ void update(double dt)
 	 }
 	 if(elapsedTime > teleportertimestamp + 5)//change in teleporter location timing
 	 {
-		 //location for teleporter1
-		 teleporter1Location.Y = (16);
-		 if(rand() % 3 + 1 == 3)
-		 {
-			 teleporter1Location.X =(rand() % 25 + 3);//most left 2nd lane
-		 }
-		 else
-		 {
-			 if(rand() % 2 + 1 == 2)
+		//location for teleporter1
+		teleporter1Location.Y = (16);
+		if(rand() % 2 + 1 == 2)
 			 {
-				 teleporter1Location.X = (rand() % 13 + 32);//middle 2nd lane
+				 if(rand() % 2 + 1 == 2)
+				 {
+					 teleporter1Location.X = (rand() % 17 + 3);//2nd most left
+				 }
+				 else
+				 {
+					 teleporter1Location.X = (rand() % 16 + 22);//2nd 2 most left
+				 }
 			 }
 			 else
 			 {
-				 teleporter1Location.X = (rand() % 13 + 53);//most right 2nd lane
+				 if(rand() % 2 + 1 == 2)
+				 {
+					 teleporter1Location.X = (rand() % 17 + 42);//2nd 2 most right
+				 }
+				 else
+				 {
+					 teleporter1Location.X = (rand() % 14 + 62);//2nd most right
+				 }
 			 }
-		 }
 		 //location for teleporter2
 		 if(rand() % 2 + 1 == 2)
 		 {
@@ -361,7 +368,7 @@ void update(double dt)
 			 {
 				 if(rand() % 2 + 1 == 2)
 				 {
-					 teleporter2Location.X = (rand() % 16 + 42);//3rd 2 most right
+					 teleporter2Location.X = (rand() % 17 + 42);//3rd 2 most right
 				 }
 				 else
 				 {
@@ -527,6 +534,7 @@ void update(double dt)
     // quits the game if player hits the escape key
     if (keyPressed[K_ESCAPE])
         g_quitGame = true;  
+
 	//random lifepowerup location
 	if(lifepowerup == false)
 	{
