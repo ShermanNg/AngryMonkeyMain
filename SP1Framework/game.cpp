@@ -16,7 +16,9 @@ COORD lefthuman3Location;
 COORD righthumanLocation;
 COORD righthuman2Location;
 COORD righthuman3Location;
-COORD crate;
+COORD life1;
+COORD life2;
+COORD life3;
 COORD consoleSize;
 
 void init()
@@ -40,6 +42,14 @@ void init()
     // set the character to be in the center of the screen.
     charLocation.X = consoleSize.X / 2;
     charLocation.Y = 2;
+
+	// set the banana at top of the ladders.
+    life1.X = consoleSize.X / 2;
+    life1.Y = 10;
+	life2.X = 20;
+    life2.Y = 10;
+	life3.X = 60;
+    life3.Y = 10;
 
 	// set the human enemy to be at the bottom left of the screen
 	lefthumanLocation.X = 0;
@@ -85,6 +95,9 @@ void update(double dt)
 	int printR = 0;
 	int leftNum = 0;
 	int rightNum = 0;
+	int banana1 = 0;
+	int banana2 = 0;
+	int banana3 = 0;
 	char player[3][3] = {
 		{' ','O',' '},
 		{'-','|','-'},
@@ -101,7 +114,6 @@ void update(double dt)
     {
         Beep(1440, 30);
         charLocation.X--;
-		crate.X--;
     }
     if (keyPressed[K_DOWN] && charLocation.Y < consoleSize.Y - 1)
     {
@@ -112,9 +124,35 @@ void update(double dt)
     {
         Beep(1440, 30);
         charLocation.X++;
-		crate.X--;
     }
 	
+	//spawn life1
+	if(banana1==0)
+	{
+		gotoXY(life1);
+		colour(0x0E);
+		std::cout<<"@@";
+		banana1=1;
+	}
+
+	//spawn life2
+	if(banana2==0)
+	{
+		gotoXY(life2);
+		colour(0x0E);
+		std::cout<<"@@";
+		banana2=1;
+	}
+
+	//spawn life3
+	if(banana3==0)
+	{
+		gotoXY(life3);
+		colour(0x0E);
+		std::cout<<"@@";
+		banana3=1;
+	}
+
 	// first enemy spawn at bottom left
 	if(leftNum == 0)
 	{
@@ -333,10 +371,7 @@ void DrawMap2 (void)
 		gotoXY(60,y-j);
 		colour(0x4D);
 		std::cout << "  "<<endl;
-
-
 	}
-
 
 }
 
@@ -407,10 +442,6 @@ void DrawMap1 (void)
 
 }
 
-void spawnCrate(void)
-{
-
-}
 void render()
 {
 	int print = 0;
