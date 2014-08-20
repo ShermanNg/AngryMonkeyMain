@@ -14,7 +14,7 @@ enum Keys
     K_LEFT,
     K_RIGHT,
     K_ESCAPE,
-    K_COUNT
+    K_COUNT,
 };
 
 void init();                // initialize your variables, allocate memory, etc

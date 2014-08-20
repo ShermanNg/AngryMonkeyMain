@@ -12,8 +12,11 @@ bool keyPressed[K_COUNT];
 COORD charLocation;
 COORD lefthumanLocation;
 COORD lefthuman2Location;
+COORD lefthuman3Location;
 COORD righthumanLocation;
 COORD righthuman2Location;
+COORD righthuman3Location;
+COORD crate;
 COORD consoleSize;
 
 void init()
@@ -36,19 +39,24 @@ void init()
 
     // set the character to be in the center of the screen.
     charLocation.X = consoleSize.X / 2;
-    charLocation.Y = 8;
+    charLocation.Y = 2;
 
 	// set the human enemy to be at the bottom left of the screen
 	lefthumanLocation.X = 0;
-	lefthumanLocation.Y = 25;
+	lefthumanLocation.Y = 26;
 	lefthuman2Location.X = 0;
-	lefthuman2Location.Y = 25;
+	lefthuman2Location.Y = 20;
+	lefthuman3Location.X = 0;
+	lefthuman3Location.Y = 14;
+	
 
 	// set the human enemy to be at the bottom right of the screen
 	righthumanLocation.X = 76;
-	righthumanLocation.Y = 25;
+	righthumanLocation.Y = 26;
 	righthuman2Location.X = 76;
-	righthuman2Location.Y = 25;
+	righthuman2Location.Y = 20;
+	righthuman3Location.X = 76;
+	righthuman3Location.Y = 14;
 
     elapsedTime = 0.0;
 }
@@ -64,7 +72,7 @@ void getInput()
     keyPressed[K_UP] = isKeyPressed(VK_UP);
     keyPressed[K_DOWN] = isKeyPressed(VK_DOWN);
     keyPressed[K_LEFT] = isKeyPressed(VK_LEFT);
-    keyPressed[K_RIGHT] = isKeyPressed(VK_RIGHT);
+	keyPressed[K_RIGHT] = isKeyPressed(VK_RIGHT);
     keyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
 }
 
@@ -92,7 +100,8 @@ void update(double dt)
     if (keyPressed[K_LEFT] && charLocation.X > 0)
     {
         Beep(1440, 30);
-        charLocation.X--; 
+        charLocation.X--;
+		crate.X--;
     }
     if (keyPressed[K_DOWN] && charLocation.Y < consoleSize.Y - 1)
     {
@@ -102,8 +111,10 @@ void update(double dt)
     if (keyPressed[K_RIGHT] && charLocation.X < consoleSize.X - 1)
     {
         Beep(1440, 30);
-        charLocation.X++; 
+        charLocation.X++;
+		crate.X--;
     }
+	
 	// first enemy spawn at bottom left
 	if(leftNum == 0)
 	{
@@ -124,10 +135,10 @@ void update(double dt)
 	//updating the location of first left spawn enemy based on time
 	if (elapsedTime>2 && lefthumanLocation.X>=0)
 	{
-		Beep(1440, 30);
+		Beep(0, 30);
 		lefthumanLocation.X++;
 	}
-	
+
 	// 2nd enemy spawn at bottom left
 	if(elapsedTime>4 && leftNum==1)
 	{
@@ -142,13 +153,41 @@ void update(double dt)
 			printL++;
 			gotoXY(lefthuman2Location.X,lefthuman2Location.Y+printL);
 		}
+		leftNum++;
+		printL=0;
 	}
+
 	//updating the location of second left spawn enemy based on time
 	if (elapsedTime>5 && lefthuman2Location.X>=0)
 	{
-		Beep(1440, 30);
+		Beep(0, 30);
 		lefthuman2Location.X++;
 	}
+
+	// 3rd enemy spawn at bottom left
+	if(elapsedTime>6 && leftNum==2)
+	{
+		gotoXY(lefthuman3Location);
+		colour(0x0c);
+		for(int i = 0; i<=2; ++i)
+		{
+			for(int j = 0; j<=2; ++j)
+			{
+				std::cout << player[i][j];
+			}
+			printL++;
+			gotoXY(lefthuman3Location.X,lefthuman3Location.Y+printL);
+		}
+		leftNum++;
+		printL=0;
+	}
+	//updating the location of third left spawn enemy based on time
+	if (elapsedTime>7 && lefthuman3Location.X>=0)
+	{
+		Beep(0, 30);
+		lefthuman3Location.X++;
+	}
+
     // first enemy spawn at bottom right
 	if(rightNum==0)
 	{
@@ -164,13 +203,63 @@ void update(double dt)
 		gotoXY(righthumanLocation.X,righthumanLocation.Y+printR);
 	}
 	rightNum++;
+	printR=0;
 	}
 	//updating the location of right spawn enemy based on time
 	if (elapsedTime>2 && righthumanLocation.X>=0)
 	{
-		Beep(1440, 30);
+		Beep(0, 30);
 		righthumanLocation.X--;
 	}
+
+	// 2nd enemy spawn at bottom right
+	if(elapsedTime>4 && rightNum==1)
+	{
+		gotoXY(righthuman2Location);
+		colour(0x0c);
+		for(int i = 0; i<=2; ++i)
+		{
+			for(int j = 0; j<=2; ++j)
+			{
+				std::cout << player[i][j];
+			}
+			printR++;
+			gotoXY(righthuman2Location.X,righthuman2Location.Y+printR);
+		}
+		rightNum++;
+		printR=0;
+	}
+	//updating the location of second right spawn enemy based on time
+	if (elapsedTime>5 && righthuman2Location.X>=0)
+	{
+		Beep(0, 30);
+		righthuman2Location.X--;
+	}
+
+	// 3rd enemy spawn at bottom right
+	if(elapsedTime>6 && rightNum==2)
+	{
+		gotoXY(righthuman3Location);
+		colour(0x0c);
+		for(int i = 0; i<=2; ++i)
+		{
+			for(int j = 0; j<=2; ++j)
+			{
+				std::cout << player[i][j];
+			}
+			printR++;
+			gotoXY(righthuman3Location.X,righthuman3Location.Y+printR);
+		}
+		rightNum++;
+		printR=0;
+	}
+	//updating the location of 3rd right spawn enemy based on time
+	if (elapsedTime>7 && righthuman3Location.X>=0)
+	{
+		Beep(0, 30);
+		righthuman3Location.X--;
+	}
+
     // quits the game if player hits the escape key
     if (keyPressed[K_ESCAPE])
         g_quitGame = true;    
@@ -180,6 +269,10 @@ void DrawMap2 (void)
 {
 
 	int y =  consoleSize.Y;
+
+	gotoXY(0,y-24);
+	colour(0x3C);
+	std::cout << "                                                                                ";
 
 	gotoXY(0,y-0);
 	colour(0x3C);
@@ -314,7 +407,10 @@ void DrawMap1 (void)
 
 }
 
+void spawnCrate(void)
+{
 
+}
 void render()
 {
 	int print = 0;
@@ -329,7 +425,7 @@ void render()
 
     //render the game
 
-	DrawMap1();
+	DrawMap2();
 
     // render time taken to calculate this frame
     gotoXY(70, 0);
