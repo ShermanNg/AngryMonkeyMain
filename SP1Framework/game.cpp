@@ -9,13 +9,15 @@
 double elapsedTime;
 double deltaTime;
 double teleportertimestamp;
+double lifetimestamp;
 bool keyPressed[K_COUNT];
 bool telecd = false;// teleporter cooldown
 bool teleporterstamptime = true;
 bool spawn = false;
-bool banana1=true, banana2=true, banana3=false;//bananas(life)
+bool banana1=true, banana2=false, banana3=false;//bananas(life)
 bool lifepowerup = true;//power ups
 bool getpowerup = true;//able tp pick up power up
+bool lifestamptime = true;
 COORD charLocation;
 COORD lefthumanLocation;
 COORD lefthuman2Location;
@@ -136,7 +138,7 @@ void update(double dt)
 			barrelLocation.X--;
 		}
     }
-    if (keyPressed[K_RIGHT] && charLocation.X < consoleSize.X - 1)
+    if (keyPressed[K_RIGHT] && charLocation.X < consoleSize.X - 3)
     {
         Beep(1440, 30);
         charLocation.X++;
@@ -321,7 +323,7 @@ void update(double dt)
 		 teleportertimestamp = elapsedTime;
 		 teleporterstamptime = false;
 	 }
-	 if(elapsedTime > teleportertimestamp + 20)//change in teleporter location timing
+	 if(elapsedTime > teleportertimestamp + 5)//change in teleporter location timing
 	 {
 		 //location for teleporter1
 		 teleporter1Location.Y = (16);
@@ -333,7 +335,7 @@ void update(double dt)
 		 {
 			 if(rand() % 2 + 1 == 2)
 			 {
-				 teleporter1Location.X = (rand() % 14 + 32);//middle 2nd lane
+				 teleporter1Location.X = (rand() % 13 + 32);//middle 2nd lane
 			 }
 			 else
 			 {
@@ -524,12 +526,30 @@ void update(double dt)
 
     // quits the game if player hits the escape key
     if (keyPressed[K_ESCAPE])
-        g_quitGame = true;    
+        g_quitGame = true;  
+	//random lifepowerup location
+	if(lifepowerup == false)
+	{
+		lifepowerupLocation.X = (rand() % 72 + 3);
+		lifepowerupLocation.Y = (4);
+	}
+	//lifepowerup random spawn
+	if(lifestamptime == true && lifepowerup == false)
+	{
+		lifetimestamp = elapsedTime;
+		lifestamptime = false;
+	}
+	if(elapsedTime > lifetimestamp + rand() % 10 + 5 && lifepowerup == false)//change spawn timing here
+	{
+		lifepowerup = true;
+		getpowerup = true;
+		lifestamptime = true;
+	}
 
 	//lifepowerup
 	if(getpowerup == true)
 	{
-		if(charLocation.X == lifepowerupLocation.X && charLocation.Y+2 == lifepowerupLocation.Y)
+		if(charLocation.X == lifepowerupLocation.X)
 		{
 			if(banana2 == false)
 			{
