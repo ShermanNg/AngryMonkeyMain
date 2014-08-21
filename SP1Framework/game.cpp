@@ -21,6 +21,7 @@ bool lifepowerup = true;//power ups
 bool getpowerup = true;//able tp pick up power up
 bool lifestamptime = true;
 COORD charLocation;
+COORD barrelLocation;
 vector <int> alive;
 //COORD lefthumanLocation;
 //COORD lefthuman2Location;
@@ -34,9 +35,9 @@ COORD life3;
 COORD consoleSize;
 COORD teleporter1Location;
 COORD teleporter2Location;
-COORD barrelLocation;
-barrel barrelhitting[10];
+barrel barrelspawn[10];
 COORD lifepowerupLocation;
+int barrelcount;
 
 struct Enemy{
 	int health;
@@ -109,6 +110,29 @@ struct Ladders{
 	COORD position;
 };
 
+struct Barrel
+{
+	bool active;
+	COORD position;
+};
+Barrel Barrel_one,Barrel_two,Barrel_three;
+void setBarrel(Barrel& Barrelposition,bool active, COORD position)
+{
+	//Barrel One
+	Barrel_one.position.X=barrelLocation.X;
+	Barrel_one.position.Y=barrelLocation.Y;
+	Barrel_one.active=false;
+
+		//Barrel Two
+	Barrel_two.position.X=barrelLocation.X;
+	Barrel_two.position.Y=barrelLocation.Y;
+	Barrel_two.active=false;
+
+		//Barrel Three
+	Barrel_two.position.X=barrelLocation.X;
+	Barrel_two.position.Y=barrelLocation.Y;
+	Barrel_two.active=false;
+}
 Ladders L_One, L_Two, L_Three, L_Four, L_Five, L_Six, L_Seven, L_Eight; 
 
 //Position of each ladder is defined
@@ -164,7 +188,9 @@ void init()
 
 	// set barrel coord
 	barrelLocation.X = charLocation.X;
-	barrelLocation.Y = charLocation.Y+1;
+	barrelLocation.Y = charLocation.Y;
+	setBarrel(Barrel_one,Barrel_one.active,Barrel_one.position);
+	barrelcount=1;
 
 	// set the banana at top of the ladders.
     life1.X = 20;
@@ -257,43 +283,43 @@ void update(double dt)
     {
         Beep(1440, 30);
         charLocation.X--;
-		if(spawn == false)
+		if(Barrel_one.active == false)
 		{
-			barrelLocation.X--;
+			Barrel_one.position.X--;
+		}
+		if(Barrel_two.active == false)
+		{
+			Barrel_two.position.X--;
+		}
+		if(Barrel_three.active == false)
+		{
+			Barrel_three.position.X--;
 		}
     }
     if (keyPressed[K_RIGHT] && charLocation.X < consoleSize.X - 3)
     {
         Beep(1440, 30);
         charLocation.X++;
-		if(spawn == false)
+		if(Barrel_one.active == false)
 		{
-			barrelLocation.X++;
+			Barrel_one.position.X++;
+		}
+		if(Barrel_two.active == false)
+		{
+			Barrel_two.position.X++;
+		}
+		if(Barrel_three.active == false)
+		{
+			Barrel_three.position.X++;
 		}
     }
 	if(keyPressed[K_SPACE])
 	{
-		drawbarrel();
 		barrelshooting();
-	}
-
-	if (spawn == true)
-	{
-		drawbarrel();
-
-		if(barrelLocation.Y >= 27)
+		barrelcount++;
+		if(barrelcount == 3)
 		{
-			barrelLocation.Y = 28;
-		}
-		else
-		{
-			barrelLocation.Y++;
-		}                                                                                
-		if(barrelLocation.Y == consoleSize.Y-1)
-		{
-			barrelLocation.X = charLocation.X;
-			barrelLocation.Y = charLocation.Y+1;
-			spawn = false;
+			barrelcount = 1;
 		}
 	}
 
@@ -875,7 +901,68 @@ void render()
 		gotoXY(charLocation.X,charLocation.Y+print);
 	}
 
+	/*if (barrelcount == 1 && spawn == true || barrelcount == 2 && spawn == true)
+	{
+		drawbarrel();
+
+		if(barrelLocation.Y >= 27)
+		{
+			barrelLocation.Y = 28;
+		}
+		else
+		{
+			barrelLocation.Y++;
+		}                                                                                
+		if(barrelLocation.Y == consoleSize.Y-1)
+		{
+			barrelLocation.X = charLocation.X;
+			barrelLocation.Y = charLocation.Y+1;
+			spawn = false;
+		}
+	}
+
+	if (barrelcount == 2 && spawn == true)
+	{
+		drawbarrel();
+
+		if(barrel2Location.Y >= 27)
+		{
+			barrel2Location.Y = 28;
+		}
+		else
+		{
+			barrel2Location.Y++;
+		}                                                                                
+		if(barrel2Location.Y == consoleSize.Y-1)
+		{
+			barrel2Location.X = charLocation.X;
+			barrel2Location.Y = charLocation.Y+1;
+			spawn = false;
+		}
+	}
+
+	if (barrelcount == 3 && spawn == true)
+	{
+		drawbarrel();
+
+		if(barrel3Location.Y >= 27)
+		{
+			barrel3Location.Y = 28;
+		}
+		else
+		{
+			barrel3Location.Y++;
+		}                                                                                
+		if(barrel3Location.Y == consoleSize.Y-1)
+		{
+			barrel3Location.X = charLocation.X;
+			barrel3Location.Y = charLocation.Y+1;
+			spawn = false;
+		}
+	}*/
+
 	spawnEnemy();
+	Updatebarrel();
 
 	//render teleporters
 	if(elapsedTime>2)//time taken for teleporters to spawn
@@ -957,6 +1044,7 @@ void spawnEnemy()
 		//Resetting Y Pos
 		printL=0;
 	}
+
 }
 
 void moveEnemy()
@@ -1113,14 +1201,95 @@ bool climbCheck(int posX, int posY)
 
 void barrelshooting()
 {
-	barrel*barrelone = new barrel;
-	barrelone->x = barrelLocation.X;
-	spawn = true;
+	if(Barrel_one.active == false)
+	{
+		Barrel_one.active = true;
+	}
+	else	if (Barrel_two.active == false)
+	{
+		Barrel_two.active = true;
+	}
+	else	if (Barrel_three.active == false)
+	{
+		Barrel_three.active = true;
+	}
 }
 
 void drawbarrel()
 {
-	gotoXY(barrelLocation);
+	if(Barrel_one.active == true)
+	{
+	gotoXY(Barrel_one.position.X,Barrel_one.position.Y);
 	colour(0xA2);
 	std::cout<<(char)4;
+	}
+	if(Barrel_two.active == true)
+	{
+	gotoXY(Barrel_two.position.X,Barrel_two.position.Y);
+	colour(0xA2);
+	std::cout<<(char)4;
+	}
+	if(Barrel_three.active == true)
+	{
+	gotoXY(Barrel_three.position.X,Barrel_three.position.Y);
+	colour(0xA2);
+	std::cout<<(char)4;
+	}
+}
+
+void Updatebarrel(void)
+{
+	if (Barrel_one.active == true)
+	{
+		drawbarrel();
+		if(Barrel_one.position.Y >= 27)
+		{
+			Barrel_one.position.Y = 28;
+		}
+		else
+		{
+			Barrel_one.position.Y++;
+		}                                                                                
+		if(Barrel_one.position.Y == consoleSize.Y-1)
+		{
+			Barrel_one.position.X = charLocation.X;
+			Barrel_one.position.Y = charLocation.Y+1;
+			Barrel_one.active = false;
+		}
+	}
+	if (Barrel_two.active == true)
+	{
+		drawbarrel();
+		if(Barrel_two.position.Y >= 27)
+		{
+			Barrel_two.position.Y = 28;
+		}
+		else
+		{
+			Barrel_two.position.Y++;
+		}                                                                                
+		if(Barrel_two.position.Y == consoleSize.Y-1)
+		{
+			Barrel_two.position.X = charLocation.X;
+			Barrel_two.position.Y = charLocation.Y+1;
+			Barrel_two.active = false;
+		}
+	}if (Barrel_three.active == true)
+	{
+		drawbarrel();
+		if(Barrel_three.position.Y >= 27)
+		{
+			Barrel_three.position.Y = 28;
+		}
+		else
+		{
+			Barrel_three.position.Y++;
+		}                                                                                
+		if(Barrel_three.position.Y == consoleSize.Y-1)
+		{
+			Barrel_three.position.X = charLocation.X;
+			Barrel_three.position.Y = charLocation.Y+1;
+			Barrel_three.active = false;
+		}
+	}
 }
