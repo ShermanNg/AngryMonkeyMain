@@ -2,11 +2,7 @@
 //
 //
 #include "game.h"
-#include "Framework\console.h"
-#include <iostream>
-#include <iomanip>
-#include <vector>
-
+#pragma once
 double elapsedTime;
 double deltaTime;
 double randomTimer;
@@ -21,6 +17,10 @@ bool lifepowerup = true;//power ups
 bool getpowerup = true;//able tp pick up power up
 bool lifestamptime = true;
 COORD charLocation;
+
+int Score;
+int highscore;
+
 vector <int> alive;
 //COORD lefthumanLocation;
 //COORD lefthuman2Location;
@@ -222,6 +222,7 @@ void init()
 	// set enemy variables
 	setEnemy(Enemy_One, Enemy_One.health, Enemy_One.toRight, Enemy_One.canClimb, Enemy_One.canMove, Enemy_One.randNum,Enemy_One.position);
 
+	Highscoreload();
     elapsedTime = 0.0;
 }
 
@@ -239,6 +240,12 @@ int rollDice()
 
 void shutdown()
 {
+	int i = highscore;
+	if (i < Score)
+	{
+		HighscoreSave();
+	}
+
     // Reset to white text on black background
 	colour(FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 }
@@ -257,6 +264,8 @@ void update(double dt)
     elapsedTime += dt;
     deltaTime = dt;
 	randomTimer += dt;
+	Score = elapsedTime*1;
+
 	int printL = 0;
 	int printR = 0;
 	int leftNum = 0;
@@ -651,7 +660,14 @@ void update(double dt)
 
     // quits the game if player hits the escape key
     if (keyPressed[K_ESCAPE])
-        g_quitGame = true;  
+	{
+        if (Score > highscore)
+		{
+			g_quitGame = true;
+		}
+		else
+			g_quitGame = true;  
+	}
 
 	//random lifepowerup location
 	if(lifepowerup == false)
@@ -698,137 +714,14 @@ void DrawMap2 (void)
 {
 
 	int y =  consoleSize.Y;
-
-	gotoXY(0,y-24);
-	colour(0x3C);
-	std::cout << "                                                                                ";
-
-	gotoXY(0,y-0);
-	colour(0x3C);
-	std::cout << "                                                                                ";
-
-	gotoXY(0,y-6);
-	colour(0x3C);
-	std::cout << "                                                                                ";
-
-	gotoXY(0,y-12);
-	colour(0x3C);
-	std::cout << "                                                                                ";
-
-	gotoXY(0,y-18);
-	colour(0x3C);
-	std::cout << "                                                                                ";
-
-
-	for (int j = 0; j < 6; ++j)
-	{
-		gotoXY(20,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-
-		gotoXY(40,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-
-		gotoXY(60,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-
-
-	}
-
-
-	for (int j =6; j < 12; ++j)
-	{
-		gotoXY(30,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-
-		gotoXY(50,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-	}
-
-	for (int j = 12; j < 18; ++j)
-	{
-		gotoXY(20,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-
-		gotoXY(40,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-
-		gotoXY(60,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-	}
+	loadlevel2 (y);
 
 }
 
 void DrawMap1 (void)
 {
-
 	int y =  consoleSize.Y;
-
-	gotoXY(0,y-0);
-	colour(0x3C);
-	std::cout << "                                                                                ";
-
-	gotoXY(0,y-6);
-	colour(0x3C);
-	std::cout << "                                                                                ";
-
-	gotoXY(0,y-12);
-	colour(0x3C);
-	std::cout << "                                                                                ";
-
-	gotoXY(0,y-18);
-	colour(0x3C);
-	std::cout << "                                                                                ";
-
-
-	for (int j = 6; j < 12; ++j)
-	{
-		gotoXY(20,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-
-		gotoXY(40,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-
-		gotoXY(60,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-
-
-	}
-
-
-	for (int j =0; j < 6; ++j)
-	{
-		gotoXY(30,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-
-		gotoXY(50,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-	}
-
-
-	for (int j =12; j < 18; ++j)
-	{
-		gotoXY(30,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-
-		gotoXY(50,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-	}
-
+	loadlevel1 (y);
 }
 
 void render()
@@ -845,7 +738,7 @@ void render()
 
     //render the game
 
-	DrawMap2();
+	DrawMap1();
 
     // render time taken to calculate this frame
     gotoXY(70, 0);
@@ -1219,5 +1112,30 @@ void Updatebarrel(void)
 				barrellist[i].active = false;
 			}
 		}
+	}
+}
+
+
+void HighscoreSave (void)
+{
+	ofstream myfile;
+	myfile.open ("HighScore.txt", ios::in|ios::trunc);
+	myfile << Score <<endl;
+	myfile.close();
+}
+
+
+int Highscoreload(void)
+{
+	string line;
+	ifstream myfile ("HighScore.txt");
+	if (myfile.is_open())
+	{
+		getline (myfile,line);
+		stringstream convert(line);
+		if ( !(convert >> highscore) )//give the value to Result using the characters in the string
+			return highscore;
+
+		myfile.close();
 	}
 }
