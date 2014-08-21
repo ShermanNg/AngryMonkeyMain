@@ -21,7 +21,6 @@ bool lifepowerup = true;//power ups
 bool getpowerup = true;//able tp pick up power up
 bool lifestamptime = true;
 COORD charLocation;
-COORD barrelLocation;
 vector <int> alive;
 //COORD lefthumanLocation;
 //COORD lefthuman2Location;
@@ -37,7 +36,7 @@ COORD teleporter1Location;
 COORD teleporter2Location;
 barrel barrelspawn[10];
 COORD lifepowerupLocation;
-int barrelcount;
+int barrelcount = 0;
 
 struct Enemy{
 	int health;
@@ -115,24 +114,20 @@ struct Barrel
 	bool active;
 	COORD position;
 };
-Barrel Barrel_one,Barrel_two,Barrel_three;
-void setBarrel(Barrel& Barrelposition,bool active, COORD position)
+
+Barrel barrellist[3];
+
+//initialise barrel
+void intialisebarrel(void)
 {
-	//Barrel One
-	Barrel_one.position.X=barrelLocation.X;
-	Barrel_one.position.Y=barrelLocation.Y;
-	Barrel_one.active=false;
-
-		//Barrel Two
-	Barrel_two.position.X=barrelLocation.X;
-	Barrel_two.position.Y=barrelLocation.Y;
-	Barrel_two.active=false;
-
-		//Barrel Three
-	Barrel_two.position.X=barrelLocation.X;
-	Barrel_two.position.Y=barrelLocation.Y;
-	Barrel_two.active=false;
+	for(int i = 0; i<3; i++)
+	{
+		barrellist[i].position.X = 0;
+		barrellist[i].position.Y= 0;
+		barrellist[i].active=false;
+	}
 }
+
 Ladders L_One, L_Two, L_Three, L_Four, L_Five, L_Six, L_Seven, L_Eight; 
 
 //Position of each ladder is defined
@@ -185,12 +180,6 @@ void init()
     // set the character to be in the center of the screen.
     charLocation.X = consoleSize.X / 2;
     charLocation.Y = 2;
-
-	// set barrel coord
-	barrelLocation.X = charLocation.X;
-	barrelLocation.Y = charLocation.Y;
-	setBarrel(Barrel_one,Barrel_one.active,Barrel_one.position);
-	barrelcount=1;
 
 	// set the banana at top of the ladders.
     life1.X = 20;
@@ -283,43 +272,22 @@ void update(double dt)
     {
         Beep(1440, 30);
         charLocation.X--;
-		if(Barrel_one.active == false)
-		{
-			Barrel_one.position.X--;
-		}
-		if(Barrel_two.active == false)
-		{
-			Barrel_two.position.X--;
-		}
-		if(Barrel_three.active == false)
-		{
-			Barrel_three.position.X--;
-		}
     }
     if (keyPressed[K_RIGHT] && charLocation.X < consoleSize.X - 3)
     {
         Beep(1440, 30);
         charLocation.X++;
-		if(Barrel_one.active == false)
-		{
-			Barrel_one.position.X++;
-		}
-		if(Barrel_two.active == false)
-		{
-			Barrel_two.position.X++;
-		}
-		if(Barrel_three.active == false)
-		{
-			Barrel_three.position.X++;
-		}
     }
 	if(keyPressed[K_SPACE])
 	{
-		barrelshooting();
+		if(barrelcount<3)
+		{
+		barrelshooting(charLocation);
 		barrelcount++;
+		}
 		if(barrelcount == 3)
 		{
-			barrelcount = 1;
+			barrelcount = 0;
 		}
 	}
 
@@ -961,8 +929,8 @@ void render()
 		}
 	}*/
 
-	spawnEnemy();
 	Updatebarrel();
+	spawnEnemy();
 
 	//render teleporters
 	if(elapsedTime>2)//time taken for teleporters to spawn
@@ -1199,97 +1167,57 @@ bool climbCheck(int posX, int posY)
 	}
 }
 
-void barrelshooting()
+void barrelshooting(COORD unit)
 {
-	if(Barrel_one.active == false)
+	for(int i = 0; i<3; i++)
 	{
-		Barrel_one.active = true;
-	}
-	else	if (Barrel_two.active == false)
-	{
-		Barrel_two.active = true;
-	}
-	else	if (Barrel_three.active == false)
-	{
-		Barrel_three.active = true;
+		if(barrellist[i].active == false)
+		{
+			barrellist[i].active = true;
+			barrellist[i].position.X = unit.X;
+			barrellist[i].position.Y = unit.Y;
+			break;
+		}
 	}
 }
 
 void drawbarrel()
 {
-	if(Barrel_one.active == true)
+	for(int i = 0; i<3; i++)
 	{
-	gotoXY(Barrel_one.position.X,Barrel_one.position.Y);
-	colour(0xA2);
-	std::cout<<(char)4;
-	}
-	if(Barrel_two.active == true)
-	{
-	gotoXY(Barrel_two.position.X,Barrel_two.position.Y);
-	colour(0xA2);
-	std::cout<<(char)4;
-	}
-	if(Barrel_three.active == true)
-	{
-	gotoXY(Barrel_three.position.X,Barrel_three.position.Y);
-	colour(0xA2);
-	std::cout<<(char)4;
+		if(barrellist[i].active == true)
+		{
+			gotoXY(barrellist[i].position.X,barrellist[i].position.Y);
+			colour(0xA2);
+			std::cout<<(char)4;
+		}
 	}
 }
 
 void Updatebarrel(void)
 {
-	if (Barrel_one.active == true)
+	for(int i = 0; i<3; i++)
 	{
-		drawbarrel();
-		if(Barrel_one.position.Y >= 27)
+		if (barrellist[i].active == true)
 		{
-			Barrel_one.position.Y = 28;
-		}
-		else
-		{
-			Barrel_one.position.Y++;
-		}                                                                                
-		if(Barrel_one.position.Y == consoleSize.Y-1)
-		{
-			Barrel_one.position.X = charLocation.X;
-			Barrel_one.position.Y = charLocation.Y+1;
-			Barrel_one.active = false;
-		}
-	}
-	if (Barrel_two.active == true)
-	{
-		drawbarrel();
-		if(Barrel_two.position.Y >= 27)
-		{
-			Barrel_two.position.Y = 28;
-		}
-		else
-		{
-			Barrel_two.position.Y++;
-		}                                                                                
-		if(Barrel_two.position.Y == consoleSize.Y-1)
-		{
-			Barrel_two.position.X = charLocation.X;
-			Barrel_two.position.Y = charLocation.Y+1;
-			Barrel_two.active = false;
-		}
-	}if (Barrel_three.active == true)
-	{
-		drawbarrel();
-		if(Barrel_three.position.Y >= 27)
-		{
-			Barrel_three.position.Y = 28;
-		}
-		else
-		{
-			Barrel_three.position.Y++;
-		}                                                                                
-		if(Barrel_three.position.Y == consoleSize.Y-1)
-		{
-			Barrel_three.position.X = charLocation.X;
-			Barrel_three.position.Y = charLocation.Y+1;
-			Barrel_three.active = false;
+			if(barrellist[i+1].active == false)
+			{
+			drawbarrel();
+			}
+			if(barrellist[i].position.Y >= 27)
+			{
+				barrellist[i].position.Y = 28;
+			}
+			else
+			{
+				barrellist[i].position.Y++;
+			}
+			if(barrellist[i].position.Y == consoleSize.Y-1)
+			{
+				barrellist[i].position.X = charLocation.X;
+				barrellist[i].position.Y = charLocation.Y+1;
+				barrellist[i].active = false;
+			}
 		}
 	}
 }
