@@ -25,26 +25,35 @@ struct barrel
 };
 
 //Main Game functions
-void init();                // initialize your variables, allocate memory, etc
-void getInput();            // get input from player
-void update(double dt);     // update the game and the state of the game
-void render();              // renders the current state of the game to the console
+void init();					// initialize your variables, allocate memory, etc
+void getInput();			   // get input from player
+void update(double dt);		  // update the game and the state of the game
+void render();               // renders the current state of the game to the console
 void shutdown();            // do clean up, free memory
-void DrawMap ();// draws up map
-void drawbarrel();
-void barrelshooting(COORD);//set barrel location
-void Updatebarrel();
-void initialiseEnemy();		// initialise enemies properties
-void initialiseLadder();	// initialise ladder properties
-void spawnEnemy();// spawns enemy
-void moveEnemy();// all enemy movements
-int rollDice();// generate random numbers
-void enemyClimb();
-void climbAlign(int identity);// align enemy climb
-bool climbCheck(int posX, int posY, bool isClimbing);//Check if AI can climb
-void teleporters();//teleporters
-void extralifepowerup();//life power up
-void pause();
+void DrawMap ();		   // draws up map
+
+//Barrel functions
+void drawbarrel();			  // draws out barrel
+void barrelshooting(COORD);  // set barrel location for shooting
+void Updatebarrel();		// update barrel COORD
+
+//Ladder functions
+void initialiseLadders();	// initialise ladder properties
+
+//Enemy functions
+void initialiseEnemy();										  // initialise All enemies properties
+void moveEnemy(int identity);								 // all enemy movements
+void enemyClimb(int identity);								// Enemy Climbing
+void climbAlign(int identity);							   // Align enemy climb
+bool enemyAlive(int identity);							  // Enemy death and needs respawn
+int rollDice();											 // RNG
+bool climbCheck(int posX, int posY, bool isClimbing);	//Check if AI can climb
+
+//Powerups & Teleporters functions
+void teleporters();				//teleporters
+void extralifepowerup();	   //life power up
+
+//Game Menu functions
 bool gameStart();
 
 #endif // _GAME_H
