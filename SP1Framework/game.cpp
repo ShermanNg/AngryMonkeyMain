@@ -1112,7 +1112,7 @@ void Updatebarrel(void)
 	{
 		if (barrellist[i].active == true)
 		{
-			if(barrellist[i+1].active == false)
+			if(barrellist[i+1].active == false)// error usage
 			{
 			drawbarrel();
 			}
