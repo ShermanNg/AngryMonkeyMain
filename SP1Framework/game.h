@@ -2,15 +2,7 @@
 #define _GAME_H
 
 #include "Framework\timer.h"
-#include "Framework\console.h"
-#include "Levels.h"
-#include <iostream>
-#include <iomanip>
-#include <vector>
-#include <string>  
-#include <sstream>
-#include <fstream>
-#pragma once
+#include<iostream>
 using namespace std;
 extern StopWatch g_timer;
 extern bool g_quitGame;
@@ -21,7 +13,6 @@ enum Keys
     K_RIGHT,
 	K_SPACE,
     K_ESCAPE,
-	K_PAUSE,
     K_COUNT,
 };
 
@@ -44,7 +35,5 @@ void spawnEnemy();// spawns enemy
 void moveEnemy();// all enemy movements
 int rollDice();// generate random numbers
 bool climbCheck(int posX, int posY);//Check if AI can climb
-void HighscoreSave();
-int	Highscoreload();
 
 #endif // _GAME_H
