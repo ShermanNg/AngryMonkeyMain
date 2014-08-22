@@ -24,6 +24,7 @@ struct barrel
 	int y;
 };
 
+//Main Game functions
 void init();                // initialize your variables, allocate memory, etc
 void getInput();            // get input from player
 void update(double dt);     // update the game and the state of the game

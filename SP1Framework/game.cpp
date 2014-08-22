@@ -1,6 +1,7 @@
 // This is the main file for the game logic and function
 //
 //
+#define barrelNum 3
 #include "game.h"
 #include "Framework\console.h"
 #include <iostream>
@@ -20,8 +21,6 @@ COORD consoleSize;
 COORD teleporter1Location;
 COORD teleporter2Location;
 COORD lifepowerupLocation;
-
-int barrelcount = 0;
 
 enum States
 {
@@ -165,13 +164,9 @@ void init()
 	// set the banana Coord and Status
 	for(int i = 0; i<3; i++)
 	{
-		banana[i].active = true;
+		banana[i].active = false;//for testing purpose(change to true after testing)
 		banana[i].position.Y = 10;
 	}
-	//for testing purpose
-	banana[0].active = false;
-	banana[1].active = false;
-	banana[2].active = false;
 	banana[0].position.X = 20;
 	banana[1].position.X = 40;
 	banana[2].position.X = 60;
@@ -182,9 +177,9 @@ void init()
 	 teleporter2Location.X = (20);
 	 teleporter2Location.Y = (22);
 
-	//location for life power up
-	lifepowerupLocation.X = (1);
-	lifepowerupLocation.Y = (1);
+	//initialise location for life power up
+	lifepowerupLocation.X = (0);
+	lifepowerupLocation.Y = (0);
 
 	// set the position of ladders
 	setLadders(L_One,L_One.position);
@@ -247,7 +242,7 @@ void setpowerups(powerups& spawning,bool present)
 
 void extralifepowerup()
 {
-	bool getpowerup = true;//able tp pick up power up
+	bool getpowerup = true;//able to pick up power up
 
 	//change random lifepowerup location
 	if(plife.present == false)
@@ -269,7 +264,7 @@ void extralifepowerup()
 	}
 
 	//lifepowerup
-	if(getpowerup == true)
+	if(getpowerup == true && plife.present == true)
 	{
 		if(charLocation.X == lifepowerupLocation.X)
 		{
@@ -280,9 +275,9 @@ void extralifepowerup()
 					banana[i].active = true;
 				}
 			}
+			plife.present = false;
+			getpowerup = false;
 		}
-		plife.present = false;
-		getpowerup = false;
 	}
 }
 void teleporters()
@@ -392,22 +387,21 @@ void update(double dt)
     }
 	if(keyPressed[K_SPACE])
 	{
-		if(barrelcount<3)
+		int barrelcount = 0;
+		if(barrelcount<barrelNum)
 		{
 		barrelshooting(charLocation);
-		Updatebarrel();
 		barrelcount++;
 		}
-		if(barrelcount == 3)
+		if(barrelcount == barrelNum)
 		{
 			barrelcount = 0;
 		}
 	}
-
+	Updatebarrel();//update location of barrels if it is active
 	teleporters();
 	extralifepowerup();
 	
-
     // quits the game if player hits the escape key
     if (keyPressed[K_ESCAPE])
       {
@@ -665,7 +659,7 @@ bool gameStart()
 	}
 }
 
-void render()
+void render()// for drawing of objects only
 {
 	int print = 0;
 	char player[3][3] = {
@@ -1083,7 +1077,7 @@ bool climbCheck(int posX, int posY, bool isClimbing)
 
 void barrelshooting(COORD unit)// set barrel according to player's position
 {
-	for(int i = 0; i<3; i++)
+	for(int i = 0; i<barrelNum; i++)
 	{
 		if(barrellist[i].active == false)
 		{
@@ -1097,7 +1091,7 @@ void barrelshooting(COORD unit)// set barrel according to player's position
 
 void drawbarrel()
 {
-	for(int i = 0; i<3; i++)
+	for(int i = 0; i<barrelNum; i++)
 	{
 		if(barrellist[i].active == true)
 		{
@@ -1110,14 +1104,10 @@ void drawbarrel()
 
 void Updatebarrel(void)
 {
-	for(int i = 0; i<3; i++)
+	for(int i = 0; i<barrelNum; i++)
 	{
 		if (barrellist[i].active == true)
 		{
-			if(barrellist[i].position.Y <= charLocation.Y)
-			{
-			drawbarrel();
-			}
 			if(barrellist[i].position.Y >= 27)
 			{
 				barrellist[i].position.Y = 28;
