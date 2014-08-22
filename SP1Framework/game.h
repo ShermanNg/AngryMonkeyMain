@@ -13,6 +13,8 @@ enum Keys
     K_RIGHT,
 	K_SPACE,
     K_ESCAPE,
+	K_F1,
+	K_RETURN,
     K_COUNT,
 };
 
@@ -31,9 +33,17 @@ void DrawMap ();// draws up map
 void drawbarrel();
 void barrelshooting(COORD);
 void Updatebarrel();
+void initialiseEnemy();		// initialise enemies properties
+void initialiseLadder();	// initialise ladder properties
 void spawnEnemy();// spawns enemy
 void moveEnemy();// all enemy movements
 int rollDice();// generate random numbers
-bool climbCheck(int posX, int posY);//Check if AI can climb
+void enemyClimb();
+void climbAlign(int identity);// align enemy climb
+bool climbCheck(int posX, int posY, bool isClimbing);//Check if AI can climb
+void teleporters();//teleporters
+void extralifepowerup();//life power up
+void pause();
+bool gameStart();
 
 #endif // _GAME_H
