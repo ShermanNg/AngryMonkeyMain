@@ -395,6 +395,7 @@ void update(double dt)
 		if(barrelcount<3)
 		{
 		barrelshooting(charLocation);
+		Updatebarrel();
 		barrelcount++;
 		}
 		if(barrelcount == 3)
@@ -702,7 +703,8 @@ void render()
 		gotoXY(charLocation.X,charLocation.Y+print);
 	}
 
-	Updatebarrel();
+	// render barrel
+	drawbarrel();
 	spawnEnemy();
 
 	//render teleporters
@@ -1079,7 +1081,7 @@ bool climbCheck(int posX, int posY, bool isClimbing)
 		return false;
 }
 
-void barrelshooting(COORD unit)
+void barrelshooting(COORD unit)// set barrel according to player's position
 {
 	for(int i = 0; i<3; i++)
 	{
@@ -1112,7 +1114,7 @@ void Updatebarrel(void)
 	{
 		if (barrellist[i].active == true)
 		{
-			if(barrellist[i+1].active == false)// error usage
+			if(barrellist[i].position.Y <= charLocation.Y)
 			{
 			drawbarrel();
 			}

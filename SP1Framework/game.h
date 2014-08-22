@@ -31,7 +31,7 @@ void render();              // renders the current state of the game to the cons
 void shutdown();            // do clean up, free memory
 void DrawMap ();// draws up map
 void drawbarrel();
-void barrelshooting(COORD);
+void barrelshooting(COORD);//set barrel location
 void Updatebarrel();
 void initialiseEnemy();		// initialise enemies properties
 void initialiseLadder();	// initialise ladder properties
