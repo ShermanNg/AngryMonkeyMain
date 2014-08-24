@@ -46,7 +46,7 @@ void enemyClimb(int identity);								// Enemy Climbing
 void climbAlign(int identity);							   // Align enemy climb
 bool enemyAlive(int identity);							  // Enemy death and needs respawn
 int rollDice();											 // RNG
-bool climbCheck(int posX, int posY, bool isClimbing);	//Check if AI can climb
+bool climbCheck(int identity, bool isClimbing);	//Check if AI can climb
 
 //Powerups & Teleporters functions
 void teleporters();				//teleporters
