@@ -297,7 +297,7 @@ void teleporters()
 		}
 		else
 		{
-			teleporter2Location.Y = (28);
+			teleporter2Location.Y = (27);
 		}
 		tele.stamptime = true;
 	}
@@ -321,7 +321,7 @@ void teleporters()
 		//teleporter 2
 		for(int i = 0; i<6; i++)
 		{
-		if(enemyList[i].position.Y == teleporter2Location.Y - 2&& enemyList[i].position.X == teleporter2Location.X)
+		if(enemyList[i].position.Y == teleporter2Location.Y - 2 && enemyList[i].position.X == teleporter2Location.X)
 		{
 			if(telecd == false)
 			{
