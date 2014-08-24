@@ -1,7 +1,7 @@
 // This is the main file for the game logic and function
 //
 //
-#define barrelNum 8 // num of barrel allowed at one time on screen
+#define barrelNum 3 // num of barrel allowed at one time on screen
 #define enemies 6 //Size of enemies
 #define sizeX 6 //Size of X Coord Array
 #define sizeY 6 //Size of Y Coord Array
@@ -13,6 +13,11 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+
+using std::cin;
+using std::cout;
+using std::endl;
+using std:: string;
 
 double elapsedTime;
 double deltaTime;
@@ -407,9 +412,19 @@ void update(double dt)
 	}
 
 	Updatebarrel();//update location of barrels if it is active
-	teleporters();
+	teleporters();// update location of teleporters
 	extralifepowerup();
+	monkeydead();// update banana status
 	
+	//Pause function
+	if(isKeyPressed(VK_F1))
+	{
+		gotoXY(10,0);
+		cout<<"Press enter to continue";
+		cin.get();
+		
+	}
+
     // quits the game if player hits the escape key
     if (keyPressed[K_ESCAPE])
       {
@@ -419,14 +434,13 @@ void update(double dt)
 
 void DrawMap2 (void)
 {
-
 	int y =  consoleSize.Y;
 
 	gotoXY(0,y-24);
 	colour(0x3C);
 	std::cout << "                                                                                ";
 
-	gotoXY(0,y-0);
+	gotoXY(0,y-1);
 	colour(0x3C);
 	std::cout << "                                                                                ";
 
@@ -486,7 +500,6 @@ void DrawMap2 (void)
 		colour(0x4D);
 		std::cout << "  "<<endl;
 	}
-
 }
 
 void DrawMap1 (void)
@@ -667,7 +680,7 @@ bool gameStart()
 	}
 }
 
-void render()// for drawing of objects only
+void render(int a)// for drawing of objects only
 {
 	int print = 0;
 	char player[3][3] = {
@@ -680,8 +693,10 @@ void render()// for drawing of objects only
     cls();
 
     //render the game
-
-	DrawMap2();
+	if(a == 1)
+	{
+		DrawMap2();
+	}
 
     // render time taken to calculate this frame
     gotoXY(70, 0);
@@ -728,6 +743,12 @@ void render()// for drawing of objects only
 			gotoXY(banana[i].position);
 			colour(0x0E);
 			std::cout<<"@@";
+		}
+		if(banana[i].active == false)
+		{
+			gotoXY(banana[i].position);
+			colour(0x0E);
+			std::cout<<"gone";
 		}
 	}
 
@@ -777,14 +798,6 @@ void render()// for drawing of objects only
 		}
 	}
 
-	//Pause function
-	if(isKeyPressed(VK_F1))
-	{
-		gotoXY(10,0);
-		cout<<"Press enter to continue";
-		cin.get();
-		
-	}
 }
 
 void moveEnemy(int identity)
@@ -797,9 +810,6 @@ void moveEnemy(int identity)
 		//If allowed to move after climbing conditions
 		if(enemyList[identity].canMove == true)
 		{
-					
-					
-
 				//Allows moving to the LEFT side upon reaching the corner
 				if(enemyList[identity].position.X > 76)
 				{
@@ -1154,4 +1164,64 @@ void Updatebarrel(void)
 			}
 		}
 	}
+}
+
+void monkeydead()
+{
+	int death = 0;
+	for(int i = 0; i<enemies; i++)
+	{
+		COORD temp = enemyList[i].position;
+		for(int i = 0; i<3; i++)
+		{
+			if(temp.X == banana[i].position.X && temp.Y+2 == banana[i].position.Y && banana[i].active == true)
+			{
+				banana[i].active = false;
+			}
+		}
+	}
+	for(int i = 0; i<3; i++)
+	{
+		if(banana[i].active == false)
+		{
+			death++;
+		}
+	}
+	if(death==3)
+	{
+		showgameover();
+	}
+	death = 0;//reset temp death value
+}
+
+void showgameover()
+{
+	cls();
+	gotoXY(13,consoleSize.Y/4);
+	colour(0x0E);
+	cout<<"*******************************************************";
+	for(int i = 8; i<14; i++)
+	{
+		gotoXY(13,i);
+		colour(0x0E);
+		cout<<"*                                                     *";
+	}
+	gotoXY(13,consoleSize.Y/2);
+	colour(0x0E);
+	cout<<"* GameOver Press something to return to the main menu *";
+	for(int i = 15; i<21; i++)
+	{
+		gotoXY(13,i);
+		colour(0x0E);
+		cout<<"*                                                     *";
+	}
+	gotoXY(13,21);
+	colour(0x0E);
+	cout<<"*******************************************************";
+	cin.get();
+	//for(int i = 0; i<3; i++)//reset banana status
+	//{
+	//	banana[i].active = true;
+	//}
+	//gameStart();
 }

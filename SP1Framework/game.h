@@ -3,7 +3,6 @@
 
 #include "Framework\timer.h"
 #include<iostream>
-using namespace std;
 extern StopWatch g_timer;
 extern bool g_quitGame;
 
@@ -28,7 +27,7 @@ struct barrel
 void init();					// initialize your variables, allocate memory, etc
 void getInput();			   // get input from player
 void update(double dt);		  // update the game and the state of the game
-void render();               // renders the current state of the game to the console
+void render(int a);               // renders the current state of the game to the console
 void shutdown();            // do clean up, free memory
 void DrawMap ();		   // draws up map
 
@@ -56,4 +55,7 @@ void extralifepowerup();	   //life power up
 //Game Menu functions
 bool gameStart();
 
+
+void monkeydead();
+void showgameover();
 #endif // _GAME_H
