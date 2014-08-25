@@ -1,14 +1,15 @@
 #ifndef _GAME_H
 #define _GAME_H
-
+# pragma once
+#include "Level.h"
 #include "Framework\timer.h"
 #include "Framework\console.h"
-#include<iostream>
+#include <iostream>
 #include <iomanip>
 #include <string>  
 #include <sstream>
 #include <fstream>
-#pragma once
+using namespace std;
 extern StopWatch g_timer;
 extern bool g_quitGame;
 

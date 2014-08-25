@@ -336,6 +336,12 @@ void teleporters()
 
 void shutdown()
 {
+		int i = highscore;
+	if (i < Score)
+	{
+		HighscoreSave();
+	}
+
     // Reset to white text on black background
 	colour(FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 }
@@ -352,6 +358,7 @@ void getInput()
 
 void update(double dt)
 {
+	Score = elapsedTime*1;
     // get the delta time
     elapsedTime += dt;
     deltaTime = dt;
