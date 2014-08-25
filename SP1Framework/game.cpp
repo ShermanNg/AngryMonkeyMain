@@ -1223,6 +1223,7 @@ void monkeydead()
 		HighscoreCheck();
 	}
 
+
 }
 
 void HighscoreCheck()
@@ -1288,7 +1289,7 @@ int Highscoreload(void)
 	{
 		getline (myfile,line);
 		std::stringstream convert(line);
-		if ( !(convert >> highscore) )//give the value to Result using the characters in the string
+		if (!(convert >> highscore) )//give the value to Result using the characters in the string
 			return highscore;
 
 		myfile.close();
