@@ -55,5 +55,8 @@
     <None Include="HighScore.txt">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Level1.txt">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

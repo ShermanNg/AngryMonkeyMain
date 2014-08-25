@@ -1,5 +1,7 @@
 #ifndef _GAME_H
 #define _GAME_H
+#define WIDTH 80
+#define HEIGHT 30
 # pragma once
 #include "Level.h"
 #include "Framework\timer.h"
@@ -10,6 +12,8 @@
 #include <sstream>
 #include <fstream>
 using namespace std;
+
+extern char map[WIDTH][HEIGHT];
 extern StopWatch g_timer;
 extern bool g_quitGame;
 
@@ -62,6 +66,7 @@ void extralifepowerup();	   //life power up
 //Game Menu functions
 bool gameStart();
 void HighscoreSave();
+void HighscoreCheck();
 int	Highscoreload();
 
 void monkeydead();

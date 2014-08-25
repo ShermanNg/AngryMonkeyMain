@@ -1,10 +1,8 @@
 #include "Level.h"
 
 # pragma once
-#define WIDTH 80
-#define HEIGHT 30
 
-char map[WIDTH][HEIGHT];
+
 void save (void)
 {
 	ofstream myfile;
@@ -36,12 +34,9 @@ void LoadMap(void)
 				p = strtok(NULL," ,");
 				j++;
 			}
-
-
 		}
 		else
 			cout << "Error Loading Map"<<endl;
-
 	}
 	delete[] str;
 }
@@ -58,7 +53,6 @@ void read(void)
 DrawMap(symbol);
 		}
 	}
-
 }
 
 void DrawMap (char Sym)
@@ -73,7 +67,7 @@ void DrawMap (char Sym)
 		colour(0x4D);
 		cout << " ";
 	}
-	else	if (Sym =='0')
+	else if (Sym =='0')
 	{
 		colour(0x00);
 		cout <<" ";
@@ -82,5 +76,4 @@ void DrawMap (char Sym)
 	{
 		cout << " skip" ;
 	}
-
 }

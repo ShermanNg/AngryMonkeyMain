@@ -17,10 +17,10 @@ using std::string;
 double elapsedTime;
 double deltaTime;
 double dodgeTimer;
-
 bool keyPressed[K_COUNT];
 bool gameStarted = false;
 
+bool pause;
 int highscore;
 int Score;
 
@@ -124,25 +124,27 @@ void intialisebarrel(void)
 
 void init()
 {
-    // Set precision for floating point output
-    std::cout << std::fixed << std::setprecision(3);
 
-    SetConsoleTitle(L"Angry Monkey");
+	LoadMap();
+	// Set precision for floating point output
+	std::cout << std::fixed << std::setprecision(3);
 
-    // Sets the console size, this is the biggest so far.
-    setConsoleSize(79, 28);
+	SetConsoleTitle(L"Angry Monkey");
 
-    // Get console width and height
-    CONSOLE_SCREEN_BUFFER_INFO csbi; /* to get buffer info */     
+	// Sets the console size, this is the biggest so far.
+	setConsoleSize(79, 28);
 
-    /* get the number of character cells in the current buffer */ 
-    GetConsoleScreenBufferInfo( GetStdHandle( STD_OUTPUT_HANDLE ), &csbi );
-    consoleSize.X = csbi.srWindow.Right + 1;
-    consoleSize.Y = csbi.srWindow.Bottom + 1;
+	// Get console width and height
+	CONSOLE_SCREEN_BUFFER_INFO csbi; /* to get buffer info */     
 
-    // set the character to be in the center of the screen.
-    charLocation.X = 40;
-    charLocation.Y = 2;
+	/* get the number of character cells in the current buffer */ 
+	GetConsoleScreenBufferInfo( GetStdHandle( STD_OUTPUT_HANDLE ), &csbi );
+	consoleSize.X = csbi.srWindow.Right + 1;
+	consoleSize.Y = csbi.srWindow.Bottom + 1;
+
+	// set the character to be in the center of the screen.
+	charLocation.X = 40;
+	charLocation.Y = 2;
 
 	// set the banana Coord and Status
 	for(int i = 0; i<3; i++)
@@ -155,10 +157,10 @@ void init()
 	banana[2].position.X = 60;
 
 	//teleporter
-	 teleporter1Location.X = (49);
-	 teleporter1Location.Y = (16);
-	 teleporter2Location.X = (20);
-	 teleporter2Location.Y = (22);
+	teleporter1Location.X = (49);
+	teleporter1Location.Y = (16);
+	teleporter2Location.X = (20);
+	teleporter2Location.Y = (22);
 
 	//initialise location for life power up
 	lifepowerupLocation.X = (0);
@@ -171,7 +173,8 @@ void init()
 	initialiseEnemy();
 
 	Highscoreload();
-    elapsedTime = 0.0;
+	elapsedTime = 0.0;
+	pause = false;
 }
 
 //Rolling dice for chance to climb
@@ -307,219 +310,206 @@ void teleporters()
 		//teleporter 1
 		for(int i = 0; i<6; i++)
 		{
-		if(enemyList[i].position.Y == teleporter1Location.Y - 2 && enemyList[0].position.X == teleporter1Location.X)
-		{
-			if(telecd == false)
+			if(enemyList[i].position.Y == teleporter1Location.Y - 2 && enemyList[0].position.X == teleporter1Location.X)
 			{
-				enemyList[i].position.Y = teleporter2Location.Y-2;
-				enemyList[i].position.X = teleporter2Location.X;
-				telecd = true;
+				if(telecd == false)
+				{
+					enemyList[i].position.Y = teleporter2Location.Y-2;
+					enemyList[i].position.X = teleporter2Location.X;
+					telecd = true;
+				}
 			}
-		}
 		}
 		//teleporter 2
 		for(int i = 0; i<6; i++)
 		{
-		if(enemyList[i].position.Y == teleporter2Location.Y - 2 && enemyList[i].position.X == teleporter2Location.X)
-		{
-			if(telecd == false)
+			if(enemyList[i].position.Y == teleporter2Location.Y - 2 && enemyList[i].position.X == teleporter2Location.X)
 			{
-				enemyList[i].position.Y = teleporter1Location.Y-2;
-				enemyList[i].position.X = teleporter1Location.X;
-				telecd = true;
+				if(telecd == false)
+				{
+					enemyList[i].position.Y = teleporter1Location.Y-2;
+					enemyList[i].position.X = teleporter1Location.X;
+					telecd = true;
+				}
 			}
 		}
-	}
-	telecd = false;
+		telecd = false;
 	}
 }
 
 void shutdown()
 {
-		int i = highscore;
-	if (i < Score)
-	{
-		HighscoreSave();
-	}
-
-    // Reset to white text on black background
+	// Reset to white text on black background
 	colour(FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 }
 
 void getInput()
 {    
-    keyPressed[K_LEFT] = isKeyPressed(VK_LEFT);
+	keyPressed[K_LEFT] = isKeyPressed(VK_LEFT);
 	keyPressed[K_RIGHT] = isKeyPressed(VK_RIGHT);
 	keyPressed[K_SPACE] = isKeyPressed(VK_SPACE);
-    keyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
+	keyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
 	keyPressed[K_RETURN] = isKeyPressed(VK_RETURN);
 	keyPressed[K_F1] = isKeyPressed(VK_F1);
 }
 
 void update(double dt)
 {
-	Score = elapsedTime*1;
-    // get the delta time
-    elapsedTime += dt;
-    deltaTime = dt;
-	dodgeTimer += dt;
-	Score = elapsedTime*1;
-	int printL = 0;
-	int leftNum = 0;
-	int rightNum = 0;
-	char player[3][3] = {
-		{' ','O',' '},
-		{'-','|','-'},
-		{'/',' ','\\'}
-	};
+	if (pause == false)
+	{
+		Score = elapsedTime*1;
+		// get the delta time
+		elapsedTime += dt;
+		deltaTime = dt;
+		dodgeTimer += dt;
+		Score = elapsedTime*1;
+		int printL = 0;
+		int leftNum = 0;
+		int rightNum = 0;
+		char player[3][3] = {
+			{' ','O',' '},
+			{'-','|','-'},
+			{'/',' ','\\'}
+		};
 
-	//Pause
-	if(keyPressed[K_F1])
-	{
-		gotoXY(20,0);
-		cout << "Game Paused, press enter to continue";
-		cin.get();
-	}
 
-    // Updating the location of the character based on the key press
-    if (keyPressed[K_LEFT] && charLocation.X > 2)
-    {
-        Beep(1440, 30);
-        charLocation.X-=3;
-    }
-    if (keyPressed[K_RIGHT] && charLocation.X < consoleSize.X - 4)
-    {
-        Beep(1440, 30);
-        charLocation.X+=3;
-    }
-	if(keyPressed[K_SPACE])
-	{
-		int barrelcount = 0;
-		if(barrelcount<barrelNum)
+		// Updating the location of the character based on the key press
+		if (keyPressed[K_LEFT] && charLocation.X > 2)
 		{
-		barrelshooting(charLocation);
-		barrelcount++;
+			Beep(1440, 30);
+			charLocation.X-=3;
 		}
-		if(barrelcount == barrelNum)
+		if (keyPressed[K_RIGHT] && charLocation.X < consoleSize.X - 4)
 		{
-			barrelcount = 0;
+			Beep(1440, 30);
+			charLocation.X+=3;
 		}
-	}
-	//Spawning of enemies
-	for(int i = 0; i < enemies; i++)
-	{
-		if(enemyList[i].isAlive == true)
+		if(keyPressed[K_SPACE])
 		{
-			moveEnemy(i);
-		}
-		//If enemy is not alive
-		else if(enemyAlive(i) == false)
-		{
-			//Respawn timer
-			enemyList[i].respawnTimer -= dt;
-			//If countdown to 0 and below, respawns
-			if(enemyList[i].respawnTimer < 0)
+			int barrelcount = 0;
+			if(barrelcount<barrelNum)
 			{
-				//Restores the selected enemy and properties to alive status
-				enemyList[i].health = 1;
-				enemyList[i].canMove = true;
-				enemyList[i].isAlive = true;
-				enemyList[i].respawnTimer = 3;
-				enemyList[i].position.X = enemyX[i];
-				enemyList[i].position.Y = enemyY[i];
+				barrelshooting(charLocation);
+				barrelcount++;
+			}
+			if(barrelcount == barrelNum)
+			{
+				barrelcount = 0;
 			}
 		}
-	}
+		//Spawning of enemies
+		for(int i = 0; i < enemies; i++)
+		{
+			if(enemyList[i].isAlive == true)
+			{
+				moveEnemy(i);
+			}
+			//If enemy is not alive
+			else if(enemyAlive(i) == false)
+			{
+				//Respawn timer
+				enemyList[i].respawnTimer -= dt;
+				//If countdown to 0 and below, respawns
+				if(enemyList[i].respawnTimer < 0)
+				{
+					//Restores the selected enemy and properties to alive status
+					enemyList[i].health = 1;
+					enemyList[i].canMove = true;
+					enemyList[i].isAlive = true;
+					enemyList[i].respawnTimer = 3;
+					enemyList[i].position.X = enemyX[i];
+					enemyList[i].position.Y = enemyY[i];
+				}
+			}
+		}
 
-	Updatebarrel();//update location of barrels if it is active
-	teleporters();// update location of teleporters
-	extralifepowerup();
-	monkeydead();// update banana status
-	
+		Updatebarrel();//update location of barrels if it is active
+		teleporters();// update location of teleporters
+		extralifepowerup();
+		monkeydead();// update banana status
+	}
 	//Pause function
 	if(isKeyPressed(VK_F1))
 	{
-		gotoXY(10,0);
-		cout<<"Press enter to continue";
-		cin.get();
-		
+		pause = !pause;
 	}
 
-    // quits the game if player hits the escape key
-    if (keyPressed[K_ESCAPE])
-      {
-		  gameStart();
-	  }
+	// quits the game if player hits the escape key
+	if (keyPressed[K_ESCAPE])
+	{
+		gameStart();
+	}
 }
 
 void DrawMap2 (void)
 {
-	int y =  consoleSize.Y;
+	//int y =  consoleSize.Y;
 
-	gotoXY(0,y-24);
-	colour(0x3C);
-	std::cout << "                                                                                ";
+	//gotoXY(0,y-24);
+	//colour(0x3C);
+	//std::cout << "                                                                                ";
 
-	gotoXY(0,y-1);
-	colour(0x3C);
-	std::cout << "                                                                                ";
+	//gotoXY(0,y-1);
+	//colour(0x3C);
+	//std::cout << "                                                                                ";
 
-	gotoXY(0,y-6);
-	colour(0x3C);
-	std::cout << "                                                                                ";
+	//gotoXY(0,y-6);
+	//colour(0x3C);
+	//std::cout << "                                                                                ";
 
-	gotoXY(0,y-12);
-	colour(0x3C);
-	std::cout << "                                                                                ";
+	//gotoXY(0,y-12);
+	//colour(0x3C);
+	//std::cout << "                                                                                ";
 
-	gotoXY(0,y-18);
-	colour(0x3C);
-	std::cout << "                                                                                ";
-
-
-	for (int j = 0; j < 6; ++j)
-	{
-		gotoXY(20,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-
-		gotoXY(40,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-
-		gotoXY(60,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
+	//gotoXY(0,y-18);
+	//colour(0x3C);
+	//std::cout << "                                                                                ";
 
 
-	}
+	//for (int j = 0; j < 6; ++j)
+	//{
+	//	gotoXY(20,y-j);
+	//	colour(0x4D);
+	//	std::cout << "  "<<endl;
+
+	//	gotoXY(40,y-j);
+	//	colour(0x4D);
+	//	std::cout << "  "<<endl;
+
+	//	gotoXY(60,y-j);
+	//	colour(0x4D);
+	//	std::cout << "  "<<endl;
 
 
-	for (int j =6; j < 12; ++j)
-	{
-		gotoXY(30,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
+	//}
 
-		gotoXY(50,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-	}
 
-	for (int j = 12; j < 18; ++j)
-	{
-		gotoXY(20,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
+	//for (int j =6; j < 12; ++j)
+	//{
+	//	gotoXY(30,y-j);
+	//	colour(0x4D);
+	//	std::cout << "  "<<endl;
 
-		gotoXY(40,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
+	//	gotoXY(50,y-j);
+	//	colour(0x4D);
+	//	std::cout << "  "<<endl;
+	//}
 
-		gotoXY(60,y-j);
-		colour(0x4D);
-		std::cout << "  "<<endl;
-	}
+	//for (int j = 12; j < 18; ++j)
+	//{
+	//	gotoXY(20,y-j);
+	//	colour(0x4D);
+	//	std::cout << "  "<<endl;
+
+	//	gotoXY(40,y-j);
+	//	colour(0x4D);
+	//	std::cout << "  "<<endl;
+
+	//	gotoXY(60,y-j);
+	//	colour(0x4D);
+	//	std::cout << "  "<<endl;
+	//}
+	read();
 }
 
 void DrawMap1 (void)
@@ -589,7 +579,7 @@ void DrawMap1 (void)
 
 bool gameStart()
 {
-
+	init();
 	//Menu Vars
 	int *p = 0;
 	int pointer = 0;
@@ -602,7 +592,7 @@ bool gameStart()
 	while(true)	//Loop runs until user is not in menu screen
 	{
 		cls();	//Clear screen to update input
-		
+
 		//Banner
 		colour(0x0F);
 		menuText.open("Text/Banner.txt");
@@ -659,7 +649,7 @@ bool gameStart()
 				//Choice is made depending on what pointer points to
 				switch (*p)
 				{
-					case STARTGAME:	//Starts the game
+				case STARTGAME:	//Starts the game
 					{
 						cout << "\n\nStarting the game now, please wait for a moment" << endl;
 						Sleep(1500);
@@ -669,7 +659,7 @@ bool gameStart()
 					} 
 
 					//Explains the game
-					case ABOUT:	
+				case ABOUT:	
 					{
 						menuText.open("Text/about.txt");
 						//Opens up about text file
@@ -677,14 +667,14 @@ bool gameStart()
 						{
 							getline(menuText, menuBanner);
 							cout << menuBanner << endl;
-							
+
 						}
 						system("PAUSE");
 						menuText.close();
 						break;
 					} 
 
-					case QUITGAME:
+				case QUITGAME:
 					{
 						cout << "\n\nQuitting the game now";
 						Sleep(1000);
@@ -702,120 +692,129 @@ bool gameStart()
 
 void render(int a)// for drawing of objects only
 {
-	int print = 0;
-	char player[3][3] = {
-		{' ','O',' '},
-		{'-','|','-'},
-		{'/',' ','\\'}
-	};
-    // clear previous screen
-    colour(0x0F);
-    cls();
-
-    //render the game
-	if(a == 1)
+	if (pause ==false)
 	{
-		DrawMap2();
-	}
+		int print = 0;
+		char player[3][3] = {
+			{' ','O',' '},
+			{'-','|','-'},
+			{'/',' ','\\'}
+		};
+		// clear previous screen
+		colour(0x0F);
+		cls();
 
-    // render time taken to calculate this frame
-    gotoXY(70, 0);
-    colour(0x1A);
-    std::cout << 1.0 / deltaTime << "fps" << std::endl;
-  
-    gotoXY(0, 0);
-    colour(0x59);
-    std::cout << elapsedTime << "secs" << std::endl;
-
-    // render character
-    gotoXY(charLocation);
-    colour(0x0C);
-    for(int i = 0; i<=2; ++i)
-	{
-		for(int j = 0; j<=2; ++j)
+		//render the game
+		if(a == 1)
 		{
-			std::cout << player[i][j];
+			DrawMap2();
 		}
-		print++;
-		gotoXY(charLocation.X,charLocation.Y+print);
-	}
 
-	// render barrel
-	drawbarrel();
+		// render time taken to calculate this frame
+		gotoXY(70, 0);
+		colour(0x1A);
+		std::cout << 1.0 / deltaTime << "fps" << std::endl;
 
-	//render teleporters
-	if(elapsedTime>2)//time taken for teleporters to spawn
-	{
-		gotoXY(teleporter1Location);
+		gotoXY(0, 0);
+		colour(0x59);
+		std::cout << elapsedTime << "secs" << std::endl;
+
+		// render character
+		gotoXY(charLocation);
 		colour(0x0C);
-		std::cout << (char)5;
-		std::cout << (char)5;
-		gotoXY(teleporter2Location);
-		colour(0x0C);
-		std::cout << (char)5;
-		std::cout << (char)5;
-	}
-    //draw banana
-	for(int i = 0; i<3; i++)
-	{
-		if(banana[i].active == true)
+		for(int i = 0; i<=2; ++i)
 		{
-			gotoXY(banana[i].position);
-			colour(0x0E);
-			std::cout<<"@@";
-		}
-		if(banana[i].active == false)
-		{
-			gotoXY(banana[i].position);
-			colour(0x0E);
-			std::cout<<"gone";
-		}
-	}
-
-	//render life power up
-	if(plife.present == true)
-	{
-		gotoXY(lifepowerupLocation);
-		colour(0x0C);
-		std::cout<<(char)3;
-	}
-
-	//Draws the enemies
-	int printLine = 0;
-	char enemy[3][3] = {
-		{' ','O',' '},
-		{'-','|','-'},
-		{'/',' ','\\'}
-	};
-
-	//Spawns after 2 seconds
-	if(elapsedTime > 0)
-	{
-		for(int i = 0; i < enemies; i++)
-		{
-			//Spawns enemies after 4 seconds
-			if (enemyList[i].position.X >= 0 && enemyList[i].isAlive == true)
+			for(int j = 0; j<=2; ++j)
 			{
-				//Designated spawn point
-				gotoXY(enemyList[i].position.X,enemyList[i].position.Y);
+				std::cout << player[i][j];
+			}
+			print++;
+			gotoXY(charLocation.X,charLocation.Y+print);
+		}
 
-				//Colors enemy
-				colour(0x0c);
-			
-				//Drawing of enemy
-				for(int j = 0; j<=2; ++j)
-				{
-					for(int k = 0; k<=2; ++k)
-					{
-						cout << enemy[j][k];
-					}
-					printLine++;
-					gotoXY(enemyList[i].position.X,enemyList[i].position.Y+printLine);
-				}
-				//Resetting Y Pos after draw
-				printLine=0;
+		// render barrel
+		drawbarrel();
+
+		//render teleporters
+		if(elapsedTime>2)//time taken for teleporters to spawn
+		{
+			gotoXY(teleporter1Location);
+			colour(0x0C);
+			std::cout << (char)5;
+			std::cout << (char)5;
+			gotoXY(teleporter2Location);
+			colour(0x0C);
+			std::cout << (char)5;
+			std::cout << (char)5;
+		}
+		//draw banana
+		for(int i = 0; i<3; i++)
+		{
+			if(banana[i].active == true)
+			{
+				gotoXY(banana[i].position);
+				colour(0x0E);
+				std::cout<<"@@";
+			}
+			if(banana[i].active == false)
+			{
+				gotoXY(banana[i].position);
+				colour(0x0E);
+				std::cout<<"gone";
 			}
 		}
+
+		//render life power up
+		if(plife.present == true)
+		{
+			gotoXY(lifepowerupLocation);
+			colour(0x0C);
+			std::cout<<(char)3;
+		}
+
+		//Draws the enemies
+		int printLine = 0;
+		char enemy[3][3] = {
+			{' ','O',' '},
+			{'-','|','-'},
+			{'/',' ','\\'}
+		};
+
+		//Spawns after 2 seconds
+		if(elapsedTime > 0)
+		{
+			for(int i = 0; i < enemies; i++)
+			{
+				//Spawns enemies after 4 seconds
+				if (enemyList[i].position.X >= 0 && enemyList[i].isAlive == true)
+				{
+					//Designated spawn point
+					gotoXY(enemyList[i].position.X,enemyList[i].position.Y);
+
+					//Colors enemy
+					colour(0x0c);
+
+					//Drawing of enemy
+					for(int j = 0; j<=2; ++j)
+					{
+						for(int k = 0; k<=2; ++k)
+						{
+							cout << enemy[j][k];
+						}
+						printLine++;
+						gotoXY(enemyList[i].position.X,enemyList[i].position.Y+printLine);
+					}
+					//Resetting Y Pos after draw
+					printLine=0;
+				}
+			}
+		}
+	}
+
+	else if (pause == true)
+	{
+		gotoXY(40,0);
+		cout<<"Paused";
 	}
 
 }
@@ -1045,7 +1044,7 @@ bool climbCheck(int identity, bool isClimbing)
 				//enemyList[identity].position.Y++;
 				//return false;
 			}
-			
+
 		}
 		////If is climbing, cannot change to unable to climb
 		//else if(enemyList[identity].isClimbing == true)
@@ -1053,7 +1052,7 @@ bool climbCheck(int identity, bool isClimbing)
 		//	return true;
 		//}
 	}
-			
+
 	//Loop for ladder length for first level
 	for(int i = 0;i < 8; ++i)
 	{
@@ -1073,7 +1072,7 @@ bool climbCheck(int identity, bool isClimbing)
 		{
 			return true;
 		}
-					
+
 	}
 
 	//Loop for ladder length for second level
@@ -1112,18 +1111,18 @@ bool climbCheck(int identity, bool isClimbing)
 			return true;
 		}
 	}
-		//Unable to climb at not at a ladder
-		return false;
+	//Unable to climb at not at a ladder
+	return false;
 }
 
 bool enemyAlive(int identity)
 {
 	//Vertical Line for printing enemes
 	int printLine = 0;
-	
+
 	//Disables movement
 	enemyList[identity].canMove = false;
-	
+
 	//Go to specific enemy coord
 	gotoXY(enemyList[identity].position.X,enemyList[identity].position.Y);
 
@@ -1219,9 +1218,21 @@ void monkeydead()
 	}
 	if(death==3)
 	{
+		death = 0;//reset temp death value
 		showgameover();
+		HighscoreCheck();
 	}
-	death = 0;//reset temp death value
+
+}
+
+void HighscoreCheck()
+{
+	int i = highscore;
+	if (i < Score)
+	{
+		HighscoreSave();
+	}
+
 }
 
 void showgameover()
