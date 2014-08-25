@@ -1248,7 +1248,12 @@ void showgameover()
 	gotoXY(13,21);
 	colour(0x0E);
 	cout<<"*******************************************************";
-	cin.get();
+	getchar();
+	if(getchar())
+	{
+		cls();
+		gameStart();
+	}
 	//for(int i = 0; i<3; i++)//reset banana status
 	//{
 	//	banana[i].active = true;
