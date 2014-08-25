@@ -2,7 +2,13 @@
 #define _GAME_H
 
 #include "Framework\timer.h"
+#include "Framework\console.h"
 #include<iostream>
+#include <iomanip>
+#include <string>  
+#include <sstream>
+#include <fstream>
+#pragma once
 extern StopWatch g_timer;
 extern bool g_quitGame;
 
@@ -54,7 +60,8 @@ void extralifepowerup();	   //life power up
 
 //Game Menu functions
 bool gameStart();
-
+void HighscoreSave();
+int	Highscoreload();
 
 void monkeydead();
 void showgameover();

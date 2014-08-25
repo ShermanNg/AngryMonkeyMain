@@ -8,16 +8,11 @@
 #define sizeLadders 8 //Size of Ladders Array
 
 #include "game.h"
-#include "Framework\console.h"
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <string>
 
 using std::cin;
 using std::cout;
 using std::endl;
-using std:: string;
+using std::string;
 
 double elapsedTime;
 double deltaTime;
@@ -25,6 +20,9 @@ double dodgeTimer;
 
 bool keyPressed[K_COUNT];
 bool gameStarted = false;
+
+int highscore;
+int Score;
 
 COORD charLocation;
 COORD consoleSize;
@@ -172,6 +170,7 @@ void init()
 	// set enemy variables
 	initialiseEnemy();
 
+	Highscoreload();
     elapsedTime = 0.0;
 }
 
@@ -357,6 +356,7 @@ void update(double dt)
     elapsedTime += dt;
     deltaTime = dt;
 	dodgeTimer += dt;
+	Score = elapsedTime*1;
 	int printL = 0;
 	int leftNum = 0;
 	int rightNum = 0;
@@ -1247,4 +1247,27 @@ void showgameover()
 	//	banana[i].active = true;
 	//}
 	//gameStart();
+}
+
+void HighscoreSave (void)
+{
+	std::ofstream myfile;
+	myfile.open ("HighScore.txt", std::ios::in|std::ios::trunc);
+	myfile << Score <<endl;
+	myfile.close();
+}
+
+int Highscoreload(void)
+{
+	string line;
+	std::ifstream myfile ("HighScore.txt");
+	if (myfile.is_open())
+	{
+		getline (myfile,line);
+		std::stringstream convert(line);
+		if ( !(convert >> highscore) )//give the value to Result using the characters in the string
+			return highscore;
+
+		myfile.close();
+	}
 }
