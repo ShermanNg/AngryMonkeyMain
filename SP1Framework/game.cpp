@@ -1219,9 +1219,10 @@ void monkeydead()
 	}
 	if(death==3)
 	{
+		death = 0;//reset temp death value
 		showgameover();
 	}
-	death = 0;//reset temp death value
+	
 }
 
 void showgameover()
