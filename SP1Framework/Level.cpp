@@ -15,7 +15,6 @@ void LoadMap(int a)
 	string line;
 	char *pch;
 	char * str;
-	ifstream Level ("Level1.txt");
 	if(a == 1)
 	{
 		ifstream Level ("Level1.txt");

@@ -7,6 +7,7 @@
 #include "versusLevel.h"
 #include "Framework\timer.h"
 #include "Framework\console.h"
+#include <conio.h>
 #include <iostream>
 #include <iomanip>
 #include <string>  
@@ -29,6 +30,7 @@ enum Keys
 	K_S,
 	K_A,
 	K_D,
+	K_BACKSPACE,
 	K_F1,
 	K_RETURN,
     K_COUNT,
@@ -74,7 +76,11 @@ bool gameStart();
 void HighscoreSave();
 void HighscoreCheck();
 int	Highscoreload();
+void pauseGame();
 
 void monkeydead();
 void showgameover();
+void multiplayer1gameover();     
+void multiplayer2gameover();
+void multiplayerdead();
 #endif // _GAME_H

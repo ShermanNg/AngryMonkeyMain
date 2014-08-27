@@ -62,6 +62,12 @@ void initialisepowercoord()
 	freezepoweruplocation.powerlocation.X = 1;
 	freezepoweruplocation.powerlocation.Y = 1;
 }
+
+struct playerhuman
+{
+	int health;
+};
+
 //Struct of enemy properties
 struct Enemy
 {
@@ -404,7 +410,8 @@ void teleporters()
 	{
 		//location for teleporter1
 		teleporter1location.powerlocation.Y = (15);
-		teleporter1location.powerlocation.X = (rand() % 76 + 1);
+		teleporter1location.powerlocation.
+	X = (rand() % 76 + 1);
 
 		//location for teleporter2
 		teleporter2location.powerlocation.X = (rand() % 76 + 1);
@@ -414,7 +421,7 @@ void teleporters()
 		}
 		else
 		{
-			teleporter2location.powerlocation.Y = (26);
+			teleporter2location.powerlocation.Y = (27);
 		}
 		tele.stamptime = true;
 	}
@@ -468,6 +475,7 @@ void getInput()
 	keyPressed[K_S] = isKeyPressed(0x53);
 	keyPressed[K_A] = isKeyPressed(0x41);
 	keyPressed[K_D] = isKeyPressed(0x44);
+	keyPressed[K_BACKSPACE] = isKeyPressed(0x08);
 	keyPressed[K_RETURN] = isKeyPressed(VK_RETURN);
 	keyPressed[K_F1] = isKeyPressed(VK_F1);
 }
@@ -578,9 +586,10 @@ void update(double dt)
 		}
 	}
 	//Pause function
-	if(isKeyPressed(VK_F1))
+	if(isKeyPressed(K_BACKSPACE))
 	{
 		pause = !pause;
+		pauseGame();
 	}
 
 	// Return to the game menu if player hits the escape key
@@ -662,7 +671,7 @@ bool gameStart()
 	int *p = 0;
 	int pointer = 0;
 	p = &pointer;
-	string Menu[3] = {"Start Angry Monkeys!", "About Angry Monkeys", "Quit Angry Monkeys."};
+	string Menu[3] = {"Start Angry Monkeys!", "2-Player Versus Mode", "Quit Angry Monkeys."};
 	std::ifstream menuText;
 	string menuBanner;
 
@@ -740,7 +749,7 @@ bool gameStart()
 					//Explains the game
 				case ABOUT:	
 					{
-						cout << "\n\nStarting the game now, please wait for a moment" << endl;
+						cout << "\n\nStarting 2-player versus game now, please wait for a moment" << endl;
 						Sleep(1500);
 						gameStarted = true;
 						versus = true;
@@ -938,8 +947,8 @@ void render(int a)// for drawing of objects only
 
 	else if (pause == true)
 	{
-		gotoXY(40,0);
-		cout<<"Paused";
+		gotoXY(20,0);
+		cout<<"Game is Paused, Press BACKSPACE to continue";
 	}
 
 }
@@ -1323,6 +1332,9 @@ void showgameover()
 		colour(0x0E);
 		cout<<"*                                                     *";
 	}
+	gotoXY(13,10);
+	colour(0x0E);
+	cout<<"*                Highest Score: "<<highscore<<"seconds             *"<<endl;
 	gotoXY(13,12);
 	colour(0x0E);
 	cout<<"*      Congratulations!! Your Score is "<<Score<<"seconds      *"<<endl;
@@ -1372,5 +1384,131 @@ int Highscoreload(void)
 			return highscore;
 
 		myfile.close();
+	}
+}
+
+void multiplayerdead()
+{
+	int death = 0;
+	playerhuman player2;
+	player2.health = 1;
+	for( int i = 0; i <= 2; ++i)
+	{
+		if(playerhumanLocation.X == banana[i].position.X && playerhumanLocation.Y+2 == banana[i].position.Y && banana[i].active == true)
+		{
+			banana[i].active = false;
+		}
+
+	}
+	for(int i = 0; i<3; i++)
+	{
+		if(banana[i].active == false)
+		{
+			death++;
+		}
+	}
+	if(death==3)
+	{
+		death = 0;//reset temp death value	
+		multiplayer1gameover();
+
+	}
+	for( int i = 0; i <= 2; ++i)
+	{
+		if(playerhumanLocation.X == barrellist[i].position.X && playerhumanLocation.Y+2 == barrellist[i].position.Y)
+		{
+			player2.health--;
+			multiplayer2gameover();
+		}
+
+	}
+}
+
+void multiplayer1gameover()
+{
+	cls();
+	gotoXY(13,consoleSize.Y/4);
+	colour(0x0E);
+	cout<<"*******************************************************";
+	for(int i = 8; i<14; i++)
+	{
+		gotoXY(13,i);
+		colour(0x0E);
+		cout<<"*                                                     *";
+	}
+	gotoXY(13,consoleSize.Y/2);
+	colour(0x0E);
+
+	cout<<"* Player 2 won! Press something to return to the main menu *";
+
+	for(int i = 15; i<21; i++)
+	{
+		gotoXY(13,i);
+		colour(0x0E);
+		cout<<"*                                                     *";
+	}
+	gotoXY(13,21);
+	colour(0x0E);
+	cout<<"*******************************************************"<<endl;
+	cout << highscore <<endl;;
+	getchar();
+	if(getchar())
+	{
+		cls();
+		gameStart();
+	}
+	//for(int i = 0; i<3; i++)//reset banana status
+	//{
+	//	banana[i].active = true;
+	//}
+	//gameStart();
+}
+
+void multiplayer2gameover()
+{
+	cls();
+	gotoXY(13,consoleSize.Y/4);
+	colour(0x0E);
+	cout<<"*******************************************************";
+	for(int i = 8; i<14; i++)
+	{
+		gotoXY(13,i);
+		colour(0x0E);
+		cout<<"*                                                     *";
+	}
+	gotoXY(13,consoleSize.Y/2);
+	colour(0x0E);
+
+	cout<<"* Player 1 won! Press something to return to the main menu *";
+
+	for(int i = 15; i<21; i++)
+	{
+		gotoXY(13,i);
+		colour(0x0E);
+		cout<<"*                                                     *";
+	}
+	gotoXY(13,21);
+	colour(0x0E);
+	cout<<"*******************************************************"<<endl;
+	cout << highscore <<endl;;
+	getchar();
+	if(getchar())
+	{
+		cls();
+		gameStart();
+	}
+	//for(int i = 0; i<3; i++)//reset banana status
+	//{
+	//	banana[i].active = true;
+	//}
+	//gameStart();
+}
+
+void pauseGame()
+{
+	if(pause == true)
+	{
+	fflush(stdout);
+	getchar();
 	}
 }
