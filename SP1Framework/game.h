@@ -4,6 +4,7 @@
 #define HEIGHT 30
 # pragma once
 #include "Level.h"
+#include "HighScore.h"
 #include "versusLevel.h"
 #include "Framework\timer.h"
 #include "Framework\console.h"
@@ -73,10 +74,7 @@ void extralifepowerup();	   //life power up
 
 //Game Menu functions
 bool gameStart();
-void HighscoreSave();
-void HighscoreCheck();
-int	Highscoreload();
-void pauseGame();
+
 
 void monkeydead();
 void showgameover();

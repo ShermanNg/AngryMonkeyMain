@@ -6,6 +6,7 @@
 #define sizeX 8 //Size of X Coord Array
 #define sizeY 8 //Size of Y Coord Array
 #define sizeLadders 8 //Size of Ladders Array
+#define speed 0.3//General speed
 
 #include "game.h"
 
@@ -21,8 +22,6 @@ bool keyPressed[K_COUNT];
 bool gameStarted = false;
 
 bool pause;
-int highscore;
-int Score;
 
 COORD charLocation;
 COORD playerhumanLocation;
@@ -484,12 +483,10 @@ void update(double dt)
 {
 	if (pause == false)
 	{
-		Score = elapsedTime*1;
 		// get the delta time
 		elapsedTime += dt;
 		deltaTime = dt;
 		dodgeTimer += dt;
-		Score = elapsedTime*1;
 		int printL = 0;
 		int leftNum = 0;
 		int rightNum = 0;
@@ -575,7 +572,14 @@ void update(double dt)
 		teleporters();// update location of teleporters
 		extralifepowerup();
 		firepowerup();
-		monkeydead();// update banana status
+		if(versus == true)
+		{
+			multiplayerdead();//gameover conditions for versus mode
+		}
+		else
+		{
+			monkeydead();//gameover conditions for single player
+		}
 		if(versus == true)
 		{
 			LoadMap(2);
@@ -589,7 +593,6 @@ void update(double dt)
 	if(isKeyPressed(K_BACKSPACE))
 	{
 		pause = !pause;
-		pauseGame();
 	}
 
 	// Return to the game menu if player hits the escape key
@@ -667,6 +670,7 @@ void DrawMap1 (void)
 bool gameStart()
 {
 	init();
+	gameStarted = false;
 	//Menu Vars
 	int *p = 0;
 	int pointer = 0;
@@ -692,7 +696,7 @@ bool gameStart()
 
 		//Text Attribute only for Main Menu text
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0x0F);
-		cout << "Please navigate through the menu and select your desired action" << endl;
+		cout << "Please navigate through the menu and select your desired action using spacebar" << endl;
 		for (int i = 0; i < 3; ++i)
 		{
 			if (i == *p)
@@ -731,7 +735,7 @@ bool gameStart()
 				break;
 			}
 			//Execute action selected
-			else if (isKeyPressed(VK_RETURN))
+			else if (isKeyPressed(VK_SPACE))
 			{
 				//Choice is made depending on what pointer points to
 				switch (*p)
@@ -740,8 +744,8 @@ bool gameStart()
 					{
 						cout << "\n\nStarting the game now, please wait for a moment" << endl;
 						Sleep(1500);
-						gameStarted = true;
 						versus = false;
+						gameStarted = true;
 						return gameStarted;
 						break;
 					} 
@@ -1260,15 +1264,8 @@ void Updatebarrel(void)
 	{
 		if (barrellist[i].active == true)
 		{
+			barrellist[i].position.Y = barrellist[i].position.Y + 2;
 			if(barrellist[i].position.Y >= 27)
-			{
-				barrellist[i].position.Y = 28;
-			}
-			else
-			{
-				barrellist[i].position.Y+=2;
-			}
-			if(barrellist[i].position.Y == consoleSize.Y-1)
 			{
 				barrellist[i].active = false;
 				barrellist[i].position.X = charLocation.X;
@@ -1303,20 +1300,10 @@ void monkeydead()
 	if(death==3)
 	{
 		death = 0;//reset temp death value
-		HighscoreCheck();
+		HighscoreCheck(elapsedTime*1);
 		showgameover();
 	}
 
-
-}
-
-void HighscoreCheck()
-{
-	int i = highscore;
-	if (i < Score)
-	{
-		HighscoreSave();
-	}
 
 }
 
@@ -1334,13 +1321,17 @@ void showgameover()
 	}
 	gotoXY(13,10);
 	colour(0x0E);
-	cout<<"*                Highest Score: "<<highscore<<"seconds             *"<<endl;
+	cout<<"*                Highest Score: ";
+	printhighScore();
+	cout<<"seconds             *"<<endl;
 	gotoXY(13,12);
 	colour(0x0E);
-	cout<<"*      Congratulations!! Your Score is "<<Score<<"seconds      *"<<endl;
+	cout<<"*      Congratulations!! Your Score is ";
+	printScore(elapsedTime*1);
+	cout<<"seconds      *"<<endl;
 	gotoXY(13,consoleSize.Y/2);
 	colour(0x0E);
-	cout<<"*   GameOver Press Enter to return to the main menu   *";
+	cout<<"*  You will return to the main menu in a short while  *";
 	for(int i = 15; i<21; i++)
 	{
 		gotoXY(13,i);
@@ -1350,48 +1341,15 @@ void showgameover()
 	gotoXY(13,21);
 	colour(0x0E);
 	cout<<"*******************************************************";
-	std::cin.ignore(1000,'\n');
-	getchar();
-	if(getchar())
-	{
-		cls();
-		gameStart();
-	}
-	//for(int i = 0; i<3; i++)//reset banana status
-	//{
-	//	banana[i].active = true;
-	//}
-	//gameStart();
-}
-
-void HighscoreSave (void)
-{
-	std::ofstream myfile;
-	myfile.open ("HighScore.txt", std::ios::in|std::ios::trunc);
-	myfile << Score <<endl;
-	myfile.close();
-}
-
-int Highscoreload(void)
-{
-	string line;
-	std::ifstream myfile ("HighScore.txt");
-	if (myfile.is_open())
-	{
-		getline (myfile,line);
-		std::stringstream convert(line);
-		if (!(convert >> highscore) )//give the value to Result using the characters in the string
-			return highscore;
-
-		myfile.close();
-	}
+	Sleep(15000);
+	gameStart();
 }
 
 void multiplayerdead()
 {
 	int death = 0;
 	playerhuman player2;
-	player2.health = 1;
+	player2.health = 3;
 	for( int i = 0; i <= 2; ++i)
 	{
 		if(playerhumanLocation.X == banana[i].position.X && playerhumanLocation.Y+2 == banana[i].position.Y && banana[i].active == true)
@@ -1399,6 +1357,18 @@ void multiplayerdead()
 			banana[i].active = false;
 		}
 
+	}
+	for(int i = 0; i<enemies; i++)
+	{
+		COORD temp = enemyList[i].position;
+		for(int i = 0; i<3; i++)
+		{
+			if(temp.X-1 == banana[i].position.X && temp.Y+2 == banana[i].position.Y 
+				|| temp.X+1 == banana[i].position.X && temp.Y+2 == banana[i].position.Y&& banana[i].active == true)
+			{
+				banana[i].active = false;
+			}
+		}
 	}
 	for(int i = 0; i<3; i++)
 	{
@@ -1415,12 +1385,11 @@ void multiplayerdead()
 	}
 	for( int i = 0; i <= 2; ++i)
 	{
-		if(playerhumanLocation.X == barrellist[i].position.X && playerhumanLocation.Y+2 == barrellist[i].position.Y)
+		if(playerhumanLocation.X == barrellist[i].position.X && playerhumanLocation.Y == barrellist[i].position.Y)
 		{
 			player2.health--;
 			multiplayer2gameover();
 		}
-
 	}
 }
 
@@ -1436,11 +1405,12 @@ void multiplayer1gameover()
 		colour(0x0E);
 		cout<<"*                                                     *";
 	}
+	gotoXY(13,10);
+	colour(0x0E);
+	cout<<"*                 Player 2 Victory!                   *";
 	gotoXY(13,consoleSize.Y/2);
 	colour(0x0E);
-
-	cout<<"* Player 2 won! Press something to return to the main menu *";
-
+	cout<<"*  You will return to the main menu in a short while  *";
 	for(int i = 15; i<21; i++)
 	{
 		gotoXY(13,i);
@@ -1450,18 +1420,8 @@ void multiplayer1gameover()
 	gotoXY(13,21);
 	colour(0x0E);
 	cout<<"*******************************************************"<<endl;
-	cout << highscore <<endl;;
-	getchar();
-	if(getchar())
-	{
-		cls();
-		gameStart();
-	}
-	//for(int i = 0; i<3; i++)//reset banana status
-	//{
-	//	banana[i].active = true;
-	//}
-	//gameStart();
+	Sleep(15000);
+	gameStart();
 }
 
 void multiplayer2gameover()
@@ -1476,11 +1436,12 @@ void multiplayer2gameover()
 		colour(0x0E);
 		cout<<"*                                                     *";
 	}
+	gotoXY(13,10);
+	colour(0x0E);
+	cout<<"*                 Player 1 Victory!                   *";
 	gotoXY(13,consoleSize.Y/2);
 	colour(0x0E);
-
-	cout<<"* Player 1 won! Press something to return to the main menu *";
-
+	cout<<"*  You will return to the main menu in a short while  *";
 	for(int i = 15; i<21; i++)
 	{
 		gotoXY(13,i);
@@ -1490,25 +1451,6 @@ void multiplayer2gameover()
 	gotoXY(13,21);
 	colour(0x0E);
 	cout<<"*******************************************************"<<endl;
-	cout << highscore <<endl;;
-	getchar();
-	if(getchar())
-	{
-		cls();
-		gameStart();
-	}
-	//for(int i = 0; i<3; i++)//reset banana status
-	//{
-	//	banana[i].active = true;
-	//}
-	//gameStart();
-}
-
-void pauseGame()
-{
-	if(pause == true)
-	{
-	fflush(stdout);
-	getchar();
-	}
+	Sleep(15000);
+	gameStart();
 }
