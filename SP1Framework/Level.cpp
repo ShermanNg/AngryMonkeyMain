@@ -15,9 +15,8 @@ void LoadMap(void)
 	string line;
 	char *pch;
 	char * str;
-
 	ifstream Level ("Level1.txt");
-	for (int i=0;i<30;i++)
+	for (int i=0;i<29;i++)
 	{	
 		if (Level.is_open())
 		{
@@ -45,12 +44,12 @@ void read(void)
 {
 	char symbol = '0';
 
-	for (int i=0;i<30;i++)
+	for (int i=0;i<29;i++)
 	{	
 		for(int j =0;j<80;j++)
 		{
 			symbol = map[j][i] ;
-DrawMap(symbol);
+			DrawMap(symbol);
 		}
 	}
 }
@@ -65,15 +64,15 @@ void DrawMap (char Sym)
 	else if (Sym == '2')
 	{
 		colour(0x4D);
-		cout << " ";
+		cout << "H";
 	}
 	else if (Sym =='0')
 	{
 		colour(0x00);
 		cout <<" ";
 	}
-	else 
+	/*else 
 	{
 		cout << " skip" ;
-	}
+	}*/
 }

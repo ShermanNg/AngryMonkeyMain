@@ -25,6 +25,7 @@ int highscore;
 int Score;
 
 COORD charLocation;
+COORD playerhumanLocation;
 COORD consoleSize;
 COORD teleporter1Location;
 COORD teleporter2Location;
@@ -68,7 +69,7 @@ int ladderY[sizeLadders] = {25, 25, 25, 20, 20, 14, 14, 14};
 Enemy enemyList[enemies];	//Enemy count
 bool enemyType[enemies] = {true, true, false, false, false, false, false, false};
 int enemyX[sizeX] = {25, 30, 0, 3, 6, 64, 67, 70};//left enemy X=COORD
-int enemyY[sizeY] = {26, 26, 26, 26, 26, 26, 26, 26};//Standard enemy Y COORD
+int enemyY[sizeY] = {25, 25, 25, 25, 25, 25, 25, 25};//Standard enemy Y COORD
 
 // Initialise enemies
 void initialiseEnemy(void)
@@ -124,7 +125,6 @@ void intialisebarrel(void)
 
 void init()
 {
-
 	LoadMap();
 	// Set precision for floating point output
 	std::cout << std::fixed << std::setprecision(3);
@@ -144,13 +144,17 @@ void init()
 
 	// set the character to be in the center of the screen.
 	charLocation.X = 40;
-	charLocation.Y = 2;
+	charLocation.Y = 1;
+
+	// set 2nd player coord
+	playerhumanLocation.X = 40;
+	playerhumanLocation.Y = 25;
 
 	// set the banana Coord and Status
 	for(int i = 0; i<3; i++)
 	{
 		banana[i].active = true;
-		banana[i].position.Y = 10;
+		banana[i].position.Y = 9;
 	}
 	banana[0].position.X = 20;
 	banana[1].position.X = 40;
@@ -158,9 +162,9 @@ void init()
 
 	//teleporter
 	teleporter1Location.X = (49);
-	teleporter1Location.Y = (16);
+	teleporter1Location.Y = (15);
 	teleporter2Location.X = (20);
-	teleporter2Location.Y = (22);
+	teleporter2Location.Y = (21);
 
 	//initialise location for life power up
 	lifepowerupLocation.X = (0);
@@ -241,7 +245,7 @@ void extralifepowerup()
 				lifepowerupLocation.X = (n * 3) + 1;
 			}
 		}
-		lifepowerupLocation.Y = (4);
+		lifepowerupLocation.Y = (3);
 	}
 	//lifepowerup random spawn time
 	if(life.stamptime == true && plife.present == false)
@@ -288,18 +292,18 @@ void teleporters()
 	if(elapsedTime > tele.timestamp + 5)
 	{
 		//location for teleporter1
-		teleporter1Location.Y = (16);
+		teleporter1Location.Y = (15);
 		teleporter1Location.X = (rand() % 76 + 1);
 
 		//location for teleporter2
 		teleporter2Location.X = (rand() % 76 + 1);
 		if(rand() % 2 + 1 == 2)
 		{
-			teleporter2Location.Y = (22);
+			teleporter2Location.Y = (21);
 		}
 		else
 		{
-			teleporter2Location.Y = (27);
+			teleporter2Location.Y = (26);
 		}
 		tele.stamptime = true;
 	}
@@ -349,6 +353,10 @@ void getInput()
 	keyPressed[K_RIGHT] = isKeyPressed(VK_RIGHT);
 	keyPressed[K_SPACE] = isKeyPressed(VK_SPACE);
 	keyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
+	keyPressed[K_W] = isKeyPressed(0x57);
+	keyPressed[K_S] = isKeyPressed(0x53);
+	keyPressed[K_A] = isKeyPressed(0x41);
+	keyPressed[K_D] = isKeyPressed(0x44);
 	keyPressed[K_RETURN] = isKeyPressed(VK_RETURN);
 	keyPressed[K_F1] = isKeyPressed(VK_F1);
 }
@@ -397,6 +405,27 @@ void update(double dt)
 				barrelcount = 0;
 			}
 		}
+		// Updating the location of player 2
+		if(keyPressed[K_W] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] == '2')
+		{
+			Beep(1440, 30);
+			playerhumanLocation.Y--;
+		}
+		if(keyPressed[K_S] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] == '2' && map[playerhumanLocation.X+1][playerhumanLocation.Y+3] != '1')
+		{
+			Beep(1440, 30);
+			playerhumanLocation.Y++;
+		}
+		if(keyPressed[K_A] && map[playerhumanLocation.X+1][playerhumanLocation.Y] != '2' || keyPressed[K_A] && map[playerhumanLocation.X][playerhumanLocation.Y+3] == '1')
+		{
+			Beep(1440, 30);
+			playerhumanLocation.X--;
+		}
+		if(keyPressed[K_D] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] != '2' || keyPressed[K_D] && map[playerhumanLocation.X][playerhumanLocation.Y+3] == '1')
+		{
+			Beep(1440, 30);
+			playerhumanLocation.X++;
+		}
 		//Spawning of enemies
 		for(int i = 0; i < enemies; i++)
 		{
@@ -434,82 +463,11 @@ void update(double dt)
 		pause = !pause;
 	}
 
-	// quits the game if player hits the escape key
+	// Return to the game menu if player hits the escape key
 	if (keyPressed[K_ESCAPE])
 	{
 		gameStart();
 	}
-}
-
-void DrawMap2 (void)
-{
-	//int y =  consoleSize.Y;
-
-	//gotoXY(0,y-24);
-	//colour(0x3C);
-	//std::cout << "                                                                                ";
-
-	//gotoXY(0,y-1);
-	//colour(0x3C);
-	//std::cout << "                                                                                ";
-
-	//gotoXY(0,y-6);
-	//colour(0x3C);
-	//std::cout << "                                                                                ";
-
-	//gotoXY(0,y-12);
-	//colour(0x3C);
-	//std::cout << "                                                                                ";
-
-	//gotoXY(0,y-18);
-	//colour(0x3C);
-	//std::cout << "                                                                                ";
-
-
-	//for (int j = 0; j < 6; ++j)
-	//{
-	//	gotoXY(20,y-j);
-	//	colour(0x4D);
-	//	std::cout << "  "<<endl;
-
-	//	gotoXY(40,y-j);
-	//	colour(0x4D);
-	//	std::cout << "  "<<endl;
-
-	//	gotoXY(60,y-j);
-	//	colour(0x4D);
-	//	std::cout << "  "<<endl;
-
-
-	//}
-
-
-	//for (int j =6; j < 12; ++j)
-	//{
-	//	gotoXY(30,y-j);
-	//	colour(0x4D);
-	//	std::cout << "  "<<endl;
-
-	//	gotoXY(50,y-j);
-	//	colour(0x4D);
-	//	std::cout << "  "<<endl;
-	//}
-
-	//for (int j = 12; j < 18; ++j)
-	//{
-	//	gotoXY(20,y-j);
-	//	colour(0x4D);
-	//	std::cout << "  "<<endl;
-
-	//	gotoXY(40,y-j);
-	//	colour(0x4D);
-	//	std::cout << "  "<<endl;
-
-	//	gotoXY(60,y-j);
-	//	colour(0x4D);
-	//	std::cout << "  "<<endl;
-	//}
-	read();
 }
 
 void DrawMap1 (void)
@@ -654,6 +612,7 @@ bool gameStart()
 						cout << "\n\nStarting the game now, please wait for a moment" << endl;
 						Sleep(1500);
 						gameStarted = true;
+						versus = false;
 						return gameStarted;
 						break;
 					} 
@@ -690,11 +649,12 @@ bool gameStart()
 	}
 }
 
-void render(int a)// for drawing of objects only
+void render()// for drawing of objects only
 {
 	if (pause ==false)
 	{
 		int print = 0;
+		int printplayer = 0;
 		char player[3][3] = {
 			{' ','O',' '},
 			{'-','|','-'},
@@ -705,11 +665,7 @@ void render(int a)// for drawing of objects only
 		cls();
 
 		//render the game
-		if(a == 1)
-		{
-			DrawMap2();
-		}
-
+		read();
 		// render time taken to calculate this frame
 		gotoXY(70, 0);
 		colour(0x1A);
@@ -732,6 +688,18 @@ void render(int a)// for drawing of objects only
 			gotoXY(charLocation.X,charLocation.Y+print);
 		}
 
+		// render player human if in versus mode
+		gotoXY(playerhumanLocation);
+		colour(0x0E);
+		for(int i = 0; i<=2; ++i)
+		{
+			for(int j = 0; j<=2; ++j)
+			{
+				std::cout << player[i][j];
+			}
+			printplayer++;
+			gotoXY(playerhumanLocation.X,playerhumanLocation.Y+printplayer);
+		}
 		// render barrel
 		drawbarrel();
 
@@ -754,7 +722,7 @@ void render(int a)// for drawing of objects only
 			{
 				gotoXY(banana[i].position);
 				colour(0x0E);
-				std::cout<<"@@";
+				std::cout<<(char)247;
 			}
 			if(banana[i].active == false)
 			{
@@ -961,7 +929,7 @@ void enemyClimb(int identity)
 void climbAlign(int identity)
 {
 	//Adjusts enemy to platform's Y COORD after climbing(Lowest lvl)
-	if(enemyList[identity].position.Y == 20)
+	if(enemyList[identity].position.Y == 19)
 	{
 		enemyList[identity].canMove = true;
 		enemyList[identity].canClimb = false;
@@ -983,7 +951,7 @@ void climbAlign(int identity)
 		}
 	}
 	//Adjusts enemy to platform Y COORD after climbing(mid lvl)
-	else if(enemyList[identity].position.Y == 14)
+	else if(enemyList[identity].position.Y == 13)
 	{
 		enemyList[identity].canMove = true;
 		enemyList[identity].canClimb = false;
@@ -1005,7 +973,7 @@ void climbAlign(int identity)
 		}
 	}
 	//Adjusts enemy to platform Y COORD after climbing(highest lvl)
-	else if(enemyList[identity].position.Y == 8)
+	else if(enemyList[identity].position.Y == 7)
 	{
 		enemyList[identity].canMove = true;
 		enemyList[identity].canClimb = false;
@@ -1046,73 +1014,22 @@ bool climbCheck(int identity, bool isClimbing)
 			}
 
 		}
-		////If is climbing, cannot change to unable to climb
-		//else if(enemyList[identity].isClimbing == true)
-		//{
-		//	return true;
-		//}
+		//If is climbing, cannot change to unable to climb
+		else if(enemyList[identity].isClimbing == true)
+		{
+			return true;
+		}
 	}
-
-	//Loop for ladder length for first level
-	for(int i = 0;i < 8; ++i)
+	 //Only climb at ladders designated with '2' char in the array
+	if(map[enemyList[identity].position.X+1][enemyList[identity].position.Y+2] == '2')
 	{
-		y--;
-		//Checking collision against first ladder
-		if(enemyList[identity].position.X == ladderList[0].position.X && enemyList[identity].position.Y == y)
-		{
-			return true;
-		}
-		//Checking collision against second ladder
-		else if(enemyList[identity].position.X == ladderList[1].position.X && enemyList[identity].position.Y == y)
-		{
-			return true;
-		}
-		//Checking collision against third ladder
-		else if(enemyList[identity].position.X == ladderList[2].position.X && enemyList[identity].position.Y == y)
-		{
-			return true;
-		}
-
-	}
-
-	//Loop for ladder length for second level
-	for(int i =0;i < 6; ++i)
+		return true;
+	}   
+	else
 	{
-		y--;
-		//Checking collision against first ladder
-		if(enemyList[identity].position.X == ladderList[3].position.X && enemyList[identity].position.Y == y)
-		{
-			return true;
-		}
-		//Checking collision against second ladder
-		else if(enemyList[identity].position.X == ladderList[4].position.X && enemyList[identity].position.Y == y)
-		{
-			return true;
-		}
+		//Unable to climb at not at a ladder
+		return false;
 	}
-
-	//Loop for ladder length for third level
-	for(int i = 0;i < 6; ++i)
-	{
-		y--;
-		//Checking collision against first ladder
-		if(enemyList[identity].position.X == ladderList[5].position.X && enemyList[identity].position.Y == y)
-		{
-			return true;
-		}
-		//Checking collision against second ladder
-		else if(enemyList[identity].position.X == ladderList[6].position.X && enemyList[identity].position.Y == y)
-		{
-			return true;
-		}
-		//Checking collision against third ladder
-		else if(enemyList[identity].position.X == ladderList[7].position.X && enemyList[identity].position.Y == y)
-		{
-			return true;
-		}
-	}
-	//Unable to climb at not at a ladder
-	return false;
 }
 
 bool enemyAlive(int identity)
@@ -1203,7 +1120,8 @@ void monkeydead()
 		COORD temp = enemyList[i].position;
 		for(int i = 0; i<3; i++)
 		{
-			if(temp.X == banana[i].position.X && temp.Y+2 == banana[i].position.Y && banana[i].active == true)
+			if(temp.X-1 == banana[i].position.X && temp.Y+2 == banana[i].position.Y 
+				|| temp.X+1 == banana[i].position.X && temp.Y+2 == banana[i].position.Y&& banana[i].active == true)
 			{
 				banana[i].active = false;
 			}
@@ -1219,8 +1137,8 @@ void monkeydead()
 	if(death==3)
 	{
 		death = 0;//reset temp death value
-		showgameover();
 		HighscoreCheck();
+		showgameover();
 	}
 
 
@@ -1248,9 +1166,12 @@ void showgameover()
 		colour(0x0E);
 		cout<<"*                                                     *";
 	}
+	gotoXY(13,12);
+	colour(0x0E);
+	cout<<"*      Congratulations!! Your Score is "<<Score<<"seconds      *"<<endl;
 	gotoXY(13,consoleSize.Y/2);
 	colour(0x0E);
-	cout<<"* GameOver Press something to return to the main menu *";
+	cout<<"*   GameOver Press Enter to return to the main menu   *";
 	for(int i = 15; i<21; i++)
 	{
 		gotoXY(13,i);
@@ -1260,6 +1181,7 @@ void showgameover()
 	gotoXY(13,21);
 	colour(0x0E);
 	cout<<"*******************************************************";
+	std::cin.ignore(1000,'\n');
 	getchar();
 	if(getchar())
 	{
