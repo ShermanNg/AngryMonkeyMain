@@ -3,5 +3,5 @@
 
 void save (void);
 void read (void);
-void LoadMap(void);
+void LoadMap(int a);
 void DrawMap(char);

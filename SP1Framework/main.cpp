@@ -38,7 +38,13 @@ void mainLoop()
         g_timer.waitUntil(frameTime);       // Frame rate limiter. Limits each frame to a specified time in ms.
 		if(gameStart && versus == false)
 		{
-			render();						// render the graphics output to screen for gamestart
+			LoadMap(2);
+			render(1);						// render the graphics output to screen for gamestart
+		}
+		if(gameStart && versus == true)
+		{
+			LoadMap(2);
+			render(2);
 		}
 	}
 }

@@ -27,9 +27,6 @@ int Score;
 COORD charLocation;
 COORD playerhumanLocation;
 COORD consoleSize;
-COORD teleporter1Location;
-COORD teleporter2Location;
-COORD lifepowerupLocation;
 
 // Enum of Game State
 enum States
@@ -39,6 +36,32 @@ enum States
 	QUITGAME
 };
 
+
+struct powercoord{
+	COORD powerlocation;
+};
+
+powercoord teleporter1location, teleporter2location, lifepoweruplocation, firepoweruplocation, flameslocation, freezepoweruplocation;
+
+void initialisepowercoord()
+{
+	teleporter1location.powerlocation.X = 1;
+	teleporter1location.powerlocation.Y = 1;
+	teleporter2location.powerlocation.X = 1;
+	teleporter2location.powerlocation.Y = 1;
+
+	lifepoweruplocation.powerlocation.X = 1;
+	lifepoweruplocation.powerlocation.Y = 1;
+
+	firepoweruplocation.powerlocation.X = 1;
+	firepoweruplocation.powerlocation.Y = 1;
+
+	flameslocation.powerlocation.X = 1;
+	flameslocation.powerlocation.Y = 1;
+
+	freezepoweruplocation.powerlocation.X = 1;
+	freezepoweruplocation.powerlocation.Y = 1;
+}
 //Struct of enemy properties
 struct Enemy
 {
@@ -125,7 +148,6 @@ void intialisebarrel(void)
 
 void init()
 {
-	LoadMap();
 	// Set precision for floating point output
 	std::cout << std::fixed << std::setprecision(3);
 
@@ -160,16 +182,6 @@ void init()
 	banana[1].position.X = 40;
 	banana[2].position.X = 60;
 
-	//teleporter
-	teleporter1Location.X = (49);
-	teleporter1Location.Y = (15);
-	teleporter2Location.X = (20);
-	teleporter2Location.Y = (21);
-
-	//initialise location for life power up
-	lifepowerupLocation.X = (0);
-	lifepowerupLocation.Y = (0);
-
 	// set the position of ladders
 	initialiseLadders();
 
@@ -192,12 +204,37 @@ int rollDice()
 	return randNum;
 }
 
+struct activatepowerup{
+	bool activated;
+};
+
+activatepowerup afire;
+
+
+void activatepowerups(activatepowerup& state,bool activated)
+{
+	afire.activated = false;
+}
+
+struct randomlevelpos{
+	int levelpos;
+};
+
+randomlevelpos lfire;
+
+
+void setrandomlevelpos(randomlevelpos& random,int levelpos)
+{
+	//random fire level
+	lfire.levelpos = 4;
+}
+
 struct timestamps{
 	double timestamp;
 	bool stamptime;
 };
 
-timestamps tele, life, fire;
+timestamps tele, life, fire, flame, freeze;
 
 void settimeStamps(timestamps& timing,double timestamp, bool stamptime)
 {
@@ -212,13 +249,21 @@ void settimeStamps(timestamps& timing,double timestamp, bool stamptime)
 	//fire powerup
 	fire.timestamp = 0.0;
 	life.stamptime = true;
+
+	//flame lifetime
+	flame.timestamp = 0.0;
+	flame.stamptime = true;
+
+	//freeze powerup
+	freeze.timestamp = 0.0;
+	freeze.stamptime = true;
 }
 
 struct powerups{
 	bool present;
 };
 
-powerups plife, pfire;
+powerups plife, pfire, pfreeze;
 
 
 void setpowerups(powerups& spawning,bool present)
@@ -228,6 +273,9 @@ void setpowerups(powerups& spawning,bool present)
 
 	//fire powerup
 	pfire.present = false;
+
+	//freeze powerup
+	pfreeze.present = false;
 }
 
 void extralifepowerup()
@@ -242,10 +290,10 @@ void extralifepowerup()
 		{
 			if(randomloop - 1 == n)
 			{
-				lifepowerupLocation.X = (n * 3) + 1;
+				lifepoweruplocation.powerlocation.X = (n * 3) + 1;
 			}
 		}
-		lifepowerupLocation.Y = (3);
+		lifepoweruplocation.powerlocation.Y = (3);
 	}
 	//lifepowerup random spawn time
 	if(life.stamptime == true && plife.present == false)
@@ -263,7 +311,7 @@ void extralifepowerup()
 	//lifepowerup
 	if(getpowerup == true && plife.present == true)
 	{
-		if(charLocation.X == lifepowerupLocation.X)
+		if(charLocation.X == lifepoweruplocation.powerlocation.X)
 		{
 			for(int i = 0; i<3; i++)
 			{
@@ -278,6 +326,69 @@ void extralifepowerup()
 		}
 	}
 }
+
+void firepowerup()
+{
+	bool getfire = true;//able to pick up power up
+	int randomloop = rand() % 24 + 1;
+	int randomnum = rand() % 3 + 1;
+
+	//change random firepowerup location
+	if(pfire.present== false)
+	{
+		for(int n = 0;n < randomloop;n++)
+		{
+			if(randomloop - 1 == n)
+			{
+				firepoweruplocation.powerlocation.X = (n * 3) + 1;
+			}
+		}
+		firepoweruplocation.powerlocation.Y = (3);
+	}
+
+	//firepowerup random spawn time
+	if(fire.stamptime == true && pfire.present == false)
+	{
+		fire.timestamp = elapsedTime;
+		fire.stamptime = false;
+	}
+	if(elapsedTime > fire.timestamp + rand() % 10 + 5 && pfire.present == false)//change random spawn timing here
+	{
+		pfire.present = true;
+		getfire = true;
+		fire.stamptime = true;
+	}
+
+	//fire power up effect
+	if(getfire == true && pfire.present == true)
+	{
+		if(charLocation.X == firepoweruplocation.powerlocation.X)
+		{
+			flameslocation.powerlocation.X = 0;
+			switch(randomnum)
+			{
+			case 3: flameslocation.powerlocation.Y = 15;
+				break;
+			case 2: flameslocation.powerlocation.Y = 21;
+				break;
+			case 1: flameslocation.powerlocation.Y = 27;
+			}
+			//kill enemies
+			for(int i = 0; i<6; i++)
+			{
+				if(enemyList[i].position.Y == flameslocation.powerlocation.Y - 1)
+				{
+					enemyList[i].health = 0;
+				}
+			}
+			pfire.present = false;
+			getfire = false;
+			afire.activated = true;
+			flame.timestamp = elapsedTime;
+		}
+	}
+}
+
 void teleporters()
 {
 	bool telecd = false;// teleporter cooldown
@@ -292,18 +403,18 @@ void teleporters()
 	if(elapsedTime > tele.timestamp + 5)
 	{
 		//location for teleporter1
-		teleporter1Location.Y = (15);
-		teleporter1Location.X = (rand() % 76 + 1);
+		teleporter1location.powerlocation.Y = (15);
+		teleporter1location.powerlocation.X = (rand() % 76 + 1);
 
 		//location for teleporter2
-		teleporter2Location.X = (rand() % 76 + 1);
+		teleporter2location.powerlocation.X = (rand() % 76 + 1);
 		if(rand() % 2 + 1 == 2)
 		{
-			teleporter2Location.Y = (21);
+			teleporter2location.powerlocation.Y = (21);
 		}
 		else
 		{
-			teleporter2Location.Y = (26);
+			teleporter2location.powerlocation.Y = (26);
 		}
 		tele.stamptime = true;
 	}
@@ -314,12 +425,12 @@ void teleporters()
 		//teleporter 1
 		for(int i = 0; i<6; i++)
 		{
-			if(enemyList[i].position.Y == teleporter1Location.Y - 2 && enemyList[0].position.X == teleporter1Location.X)
+			if(enemyList[i].position.Y == teleporter1location.powerlocation.Y - 2 && enemyList[0].position.X == teleporter1location.powerlocation.X)
 			{
 				if(telecd == false)
 				{
-					enemyList[i].position.Y = teleporter2Location.Y-2;
-					enemyList[i].position.X = teleporter2Location.X;
+					enemyList[i].position.Y = teleporter2location.powerlocation.Y-2;
+					enemyList[i].position.X = teleporter2location.powerlocation.X;
 					telecd = true;
 				}
 			}
@@ -327,12 +438,12 @@ void teleporters()
 		//teleporter 2
 		for(int i = 0; i<6; i++)
 		{
-			if(enemyList[i].position.Y == teleporter2Location.Y - 2 && enemyList[i].position.X == teleporter2Location.X)
+			if(enemyList[i].position.Y == teleporter2location.powerlocation.Y - 2 && enemyList[i].position.X == teleporter2location.powerlocation.X)
 			{
 				if(telecd == false)
 				{
-					enemyList[i].position.Y = teleporter1Location.Y-2;
-					enemyList[i].position.X = teleporter1Location.X;
+					enemyList[i].position.Y = teleporter1location.powerlocation.Y-2;
+					enemyList[i].position.X = teleporter1location.powerlocation.X;
 					telecd = true;
 				}
 			}
@@ -455,7 +566,16 @@ void update(double dt)
 		Updatebarrel();//update location of barrels if it is active
 		teleporters();// update location of teleporters
 		extralifepowerup();
+		firepowerup();
 		monkeydead();// update banana status
+		if(versus == true)
+		{
+			LoadMap(2);
+		}
+		else
+		{
+			LoadMap(1);
+		}
 	}
 	//Pause function
 	if(isKeyPressed(VK_F1))
@@ -620,17 +740,23 @@ bool gameStart()
 					//Explains the game
 				case ABOUT:	
 					{
-						menuText.open("Text/about.txt");
-						//Opens up about text file
-						while(!menuText.eof())
-						{
-							getline(menuText, menuBanner);
-							cout << menuBanner << endl;
-
-						}
-						system("PAUSE");
-						menuText.close();
+						cout << "\n\nStarting the game now, please wait for a moment" << endl;
+						Sleep(1500);
+						gameStarted = true;
+						versus = true;
+						return gameStarted;
 						break;
+						//menuText.open("Text/about.txt");
+						////Opens up about text file
+						//while(!menuText.eof())
+						//{
+						//	getline(menuText, menuBanner);
+						//	cout << menuBanner << endl;
+
+						//}
+						//system("PAUSE");
+						//menuText.close();
+						//break;
 					} 
 
 				case QUITGAME:
@@ -649,7 +775,7 @@ bool gameStart()
 	}
 }
 
-void render()// for drawing of objects only
+void render(int a)// for drawing of objects only
 {
 	if (pause ==false)
 	{
@@ -689,6 +815,8 @@ void render()// for drawing of objects only
 		}
 
 		// render player human if in versus mode
+		if(a == 2)
+		{
 		gotoXY(playerhumanLocation);
 		colour(0x0E);
 		for(int i = 0; i<=2; ++i)
@@ -700,20 +828,21 @@ void render()// for drawing of objects only
 			printplayer++;
 			gotoXY(playerhumanLocation.X,playerhumanLocation.Y+printplayer);
 		}
+		}
 		// render barrel
 		drawbarrel();
 
 		//render teleporters
 		if(elapsedTime>2)//time taken for teleporters to spawn
 		{
-			gotoXY(teleporter1Location);
-			colour(0x0C);
-			std::cout << (char)5;
-			std::cout << (char)5;
-			gotoXY(teleporter2Location);
-			colour(0x0C);
-			std::cout << (char)5;
-			std::cout << (char)5;
+			gotoXY(teleporter1location.powerlocation);
+		colour(0x0C);
+		std::cout << (char)5;
+		std::cout << (char)5;
+		gotoXY(teleporter2location.powerlocation);
+		colour(0x0C);
+		std::cout << (char)5;
+		std::cout << (char)5;
 		}
 		//draw banana
 		for(int i = 0; i<3; i++)
@@ -735,9 +864,37 @@ void render()// for drawing of objects only
 		//render life power up
 		if(plife.present == true)
 		{
-			gotoXY(lifepowerupLocation);
+			gotoXY(lifepoweruplocation.powerlocation);
 			colour(0x0C);
 			std::cout<<(char)3;
+		}
+
+		//render fire power up
+		if(pfire.present == true)
+		{
+			gotoXY(firepoweruplocation.powerlocation);
+			colour(0x0C);
+			std::cout<<(char)21;
+		}
+		
+		//render flames of fire power up
+		if(afire.activated == true)
+		{
+			gotoXY(flameslocation.powerlocation);
+			colour(0x4E);//orange
+			for(int n = 0; n < 79;n++)
+			{
+				std::cout<<(char)15;
+			}
+			std::cout<<std::endl;
+			for(int n = 0; n < 79;n++)
+			{
+				std::cout<<(char)15;
+			}
+			if(elapsedTime > flame.timestamp + 1)//flame lifetime
+			{
+				afire.activated = false;
+			}
 		}
 
 		//Draws the enemies
@@ -1104,9 +1261,9 @@ void Updatebarrel(void)
 			}
 			if(barrellist[i].position.Y == consoleSize.Y-1)
 			{
+				barrellist[i].active = false;
 				barrellist[i].position.X = charLocation.X;
 				barrellist[i].position.Y = charLocation.Y+1;
-				barrellist[i].active = false;
 			}
 		}
 	}

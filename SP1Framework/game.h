@@ -44,7 +44,7 @@ struct barrel
 void init();					// initialize your variables, allocate memory, etc
 void getInput();			   // get input from player
 void update(double dt);		  // update the game and the state of the game
-void render();               // renders the current state of the game to the console
+void render(int a);               // renders the current state of the game to the console
 void shutdown();            // do clean up, free memory
 void DrawMap ();		   // draws up map
 
