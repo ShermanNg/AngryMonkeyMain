@@ -37,10 +37,10 @@ enum Keys
     K_COUNT,
 };
 
-struct barrel
+struct EndScreen
 {
-	int x;
-	int y;
+	bool active;
+	int type;
 };
 
 //Main Game functions
@@ -74,8 +74,6 @@ void extralifepowerup();	   //life power up
 
 //Game Menu functions
 bool gameStart();
-
-
 void monkeydead();
 void showgameover();
 void multiplayer1gameover();     

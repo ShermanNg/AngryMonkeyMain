@@ -6,6 +6,7 @@
 #define sizeX 8 //Size of X Coord Array
 #define sizeY 8 //Size of Y Coord Array
 #define sizeLadders 8 //Size of Ladders Array
+#define endScreenNum 3// No of end screen in game
 #define speed 0.3//General speed
 
 #include "game.h"
@@ -151,6 +152,8 @@ void intialisebarrel(void)
 	}
 }
 
+EndScreen Gameover;
+
 void init()
 {
 	// Set precision for floating point output
@@ -192,6 +195,11 @@ void init()
 
 	// set enemy variables
 	initialiseEnemy();
+
+	//initialise endscreen
+	Gameover.active = false;
+	Gameover.type = 0;
+
 
 	Highscoreload();
 	elapsedTime = 0.0;
@@ -790,7 +798,7 @@ bool gameStart()
 
 void render(int a)// for drawing of objects only
 {
-	if (pause ==false)
+	if (pause == false && Gameover.active == false)
 	{
 		int print = 0;
 		int printplayer = 0;
@@ -830,17 +838,17 @@ void render(int a)// for drawing of objects only
 		// render player human if in versus mode
 		if(a == 2)
 		{
-		gotoXY(playerhumanLocation);
-		colour(0x0E);
-		for(int i = 0; i<=2; ++i)
-		{
-			for(int j = 0; j<=2; ++j)
+			gotoXY(playerhumanLocation);
+			colour(0x0E);
+			for(int i = 0; i<=2; ++i)
 			{
-				std::cout << player[i][j];
+				for(int j = 0; j<=2; ++j)
+				{
+					std::cout << player[i][j];
+				}
+				printplayer++;
+				gotoXY(playerhumanLocation.X,playerhumanLocation.Y+printplayer);
 			}
-			printplayer++;
-			gotoXY(playerhumanLocation.X,playerhumanLocation.Y+printplayer);
-		}
 		}
 		// render barrel
 		drawbarrel();
@@ -849,13 +857,13 @@ void render(int a)// for drawing of objects only
 		if(elapsedTime>2)//time taken for teleporters to spawn
 		{
 			gotoXY(teleporter1location.powerlocation);
-		colour(0x0C);
-		std::cout << (char)5;
-		std::cout << (char)5;
-		gotoXY(teleporter2location.powerlocation);
-		colour(0x0C);
-		std::cout << (char)5;
-		std::cout << (char)5;
+			colour(0x0C);
+			std::cout << (char)5;
+			std::cout << (char)5;
+			gotoXY(teleporter2location.powerlocation);
+			colour(0x0C);
+			std::cout << (char)5;
+			std::cout << (char)5;
 		}
 		//draw banana
 		for(int i = 0; i<3; i++)
@@ -889,7 +897,7 @@ void render(int a)// for drawing of objects only
 			colour(0x0C);
 			std::cout<<(char)21;
 		}
-		
+
 		//render flames of fire power up
 		if(afire.activated == true)
 		{
@@ -948,13 +956,99 @@ void render(int a)// for drawing of objects only
 			}
 		}
 	}
-
+	if(Gameover.active == true && Gameover.type == 1)
+	{
+		gotoXY(13,consoleSize.Y/4);
+		colour(0x0E);
+		cout<<"*******************************************************";
+		for(int i = 8; i<14; i++)
+		{
+			gotoXY(13,i);
+			colour(0x0E);
+			cout<<"*                                                     *";
+		}
+		gotoXY(13,10);
+		colour(0x0E);
+		cout<<"*                Highest Score: ";
+		printhighScore();
+		cout<<"seconds             *"<<endl;
+		gotoXY(13,12);
+		colour(0x0E);
+		cout<<"*      Congratulations!! Your Score is ";
+		printScore(elapsedTime*1);
+		cout<<"seconds      *"<<endl;
+		gotoXY(13,consoleSize.Y/2);
+		colour(0x0E);
+		cout<<"*  You will return to the main menu in a short while  *";
+		for(int i = 15; i<21; i++)
+		{
+			gotoXY(13,i);
+			colour(0x0E);
+			cout<<"*                                                     *";
+		}
+		gotoXY(13,21);
+		colour(0x0E);
+		cout<<"*******************************************************";
+	}
+	if(Gameover.active == true && Gameover.type == 2)
+	{
+		gotoXY(13,consoleSize.Y/4);
+		colour(0x0E);
+		cout<<"*******************************************************";
+		for(int i = 8; i<14; i++)
+		{
+			gotoXY(13,i);
+			colour(0x0E);
+			cout<<"*                                                     *";
+		}
+		gotoXY(13,10);
+		colour(0x0E);
+		cout<<"*                 Player 2 Victory!                   *";
+		gotoXY(13,consoleSize.Y/2);
+		colour(0x0E);
+		cout<<"*  You will return to the main menu in a short while  *";
+		for(int i = 15; i<21; i++)
+		{
+			gotoXY(13,i);
+			colour(0x0E);
+			cout<<"*                                                     *";
+		}
+		gotoXY(13,21);
+		colour(0x0E);
+		cout<<"*******************************************************"<<endl;
+	}
+	if(Gameover.active == true && Gameover.type == 3)
+	{
+		gotoXY(13,consoleSize.Y/4);
+		colour(0x0E);
+		cout<<"*******************************************************";
+		for(int i = 8; i<14; i++)
+		{
+			gotoXY(13,i);
+			colour(0x0E);
+			cout<<"*                                                     *";
+		}
+		gotoXY(13,10);
+		colour(0x0E);
+		cout<<"*                 Player 1 Victory!                   *";
+		gotoXY(13,consoleSize.Y/2);
+		colour(0x0E);
+		cout<<"*  You will return to the main menu in a short while  *";
+		for(int i = 15; i<21; i++)
+		{
+			gotoXY(13,i);
+			colour(0x0E);
+			cout<<"*                                                     *";
+		}
+		gotoXY(13,21);
+		colour(0x0E);
+		cout<<"*******************************************************"<<endl;
+	}
 	else if (pause == true)
 	{
 		gotoXY(20,0);
 		cout<<"Game is Paused, Press BACKSPACE to continue";
 	}
-
 }
 
 void moveEnemy(int identity)
@@ -1310,37 +1404,9 @@ void monkeydead()
 void showgameover()
 {
 	cls();
-	gotoXY(13,consoleSize.Y/4);
-	colour(0x0E);
-	cout<<"*******************************************************";
-	for(int i = 8; i<14; i++)
-	{
-		gotoXY(13,i);
-		colour(0x0E);
-		cout<<"*                                                     *";
-	}
-	gotoXY(13,10);
-	colour(0x0E);
-	cout<<"*                Highest Score: ";
-	printhighScore();
-	cout<<"seconds             *"<<endl;
-	gotoXY(13,12);
-	colour(0x0E);
-	cout<<"*      Congratulations!! Your Score is ";
-	printScore(elapsedTime*1);
-	cout<<"seconds      *"<<endl;
-	gotoXY(13,consoleSize.Y/2);
-	colour(0x0E);
-	cout<<"*  You will return to the main menu in a short while  *";
-	for(int i = 15; i<21; i++)
-	{
-		gotoXY(13,i);
-		colour(0x0E);
-		cout<<"*                                                     *";
-	}
-	gotoXY(13,21);
-	colour(0x0E);
-	cout<<"*******************************************************";
+	Gameover.active = true;
+	Gameover.type = 1;
+	render(1);
 	Sleep(15000);
 	gameStart();
 }
@@ -1396,30 +1462,9 @@ void multiplayerdead()
 void multiplayer1gameover()
 {
 	cls();
-	gotoXY(13,consoleSize.Y/4);
-	colour(0x0E);
-	cout<<"*******************************************************";
-	for(int i = 8; i<14; i++)
-	{
-		gotoXY(13,i);
-		colour(0x0E);
-		cout<<"*                                                     *";
-	}
-	gotoXY(13,10);
-	colour(0x0E);
-	cout<<"*                 Player 2 Victory!                   *";
-	gotoXY(13,consoleSize.Y/2);
-	colour(0x0E);
-	cout<<"*  You will return to the main menu in a short while  *";
-	for(int i = 15; i<21; i++)
-	{
-		gotoXY(13,i);
-		colour(0x0E);
-		cout<<"*                                                     *";
-	}
-	gotoXY(13,21);
-	colour(0x0E);
-	cout<<"*******************************************************"<<endl;
+	Gameover.active = true;
+	Gameover.type = 2;
+	render(1);
 	Sleep(15000);
 	gameStart();
 }
@@ -1427,30 +1472,9 @@ void multiplayer1gameover()
 void multiplayer2gameover()
 {
 	cls();
-	gotoXY(13,consoleSize.Y/4);
-	colour(0x0E);
-	cout<<"*******************************************************";
-	for(int i = 8; i<14; i++)
-	{
-		gotoXY(13,i);
-		colour(0x0E);
-		cout<<"*                                                     *";
-	}
-	gotoXY(13,10);
-	colour(0x0E);
-	cout<<"*                 Player 1 Victory!                   *";
-	gotoXY(13,consoleSize.Y/2);
-	colour(0x0E);
-	cout<<"*  You will return to the main menu in a short while  *";
-	for(int i = 15; i<21; i++)
-	{
-		gotoXY(13,i);
-		colour(0x0E);
-		cout<<"*                                                     *";
-	}
-	gotoXY(13,21);
-	colour(0x0E);
-	cout<<"*******************************************************"<<endl;
+	Gameover.active = true;
+	Gameover.type = 3;
+	render(1);
 	Sleep(15000);
 	gameStart();
-}
+ }
