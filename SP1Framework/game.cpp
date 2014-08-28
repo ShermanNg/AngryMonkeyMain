@@ -1,13 +1,6 @@
 // This is the main file for the game logic and function
 //
 //
-#define barrelNum 3 // num of barrel allowed at one time on screen
-#define enemies 8 //Size of enemies
-#define sizeX 8 //Size of X Coord Array
-#define sizeY 8 //Size of Y Coord Array
-#define sizeLadders 8 //Size of Ladders Array
-#define endScreenNum 3// No of end screen in game
-#define speed 0.3//General speed
 
 #include "game.h"
 
@@ -71,6 +64,7 @@ struct playerhuman
 //Struct of enemy properties
 struct Enemy
 {
+	int enemy;
 	int health;
 	int randNum;
 	int dodgeChance;
@@ -79,20 +73,11 @@ struct Enemy
 	bool isClimbing;
 	bool canMove;
 	bool isAlive;
+	bool isJumpingOff;
 	bool isSpecial;
 	double respawnTimer;
 	COORD position;
 };
-
-//Struct of ladder properties
-struct Ladders{
-	COORD position;
-};
-
-Ladders ladderList[sizeLadders];
-
-int ladderX[sizeLadders] = {19, 39, 59, 30, 50, 19, 39, 59};
-int ladderY[sizeLadders] = {25, 25, 25, 20, 20, 14, 14, 14};
 
 //Using defined array size
 Enemy enemyList[enemies];	//Enemy count
@@ -103,31 +88,22 @@ int enemyY[sizeY] = {25, 25, 25, 25, 25, 25, 25, 25};//Standard enemy Y COORD
 // Initialise enemies
 void initialiseEnemy(void)
 {
-	for(int i = 0; i < 8; i++)
+	for(int i = 0; i < enemies; i++)
 	{	
 		//initialising stats
 		enemyList[i].health = 1;
 		enemyList[i].randNum = rollDice();
 		enemyList[i].dodgeChance = rollDice();
 		enemyList[i].toRight = true;
-		enemyList[i].canClimb = false;
+		enemyList[i].canClimb = true;
 		enemyList[i].isClimbing = false;
 		enemyList[i].canMove = true;
 		enemyList[i].isAlive = true;
-		enemyList[i].respawnTimer = 3;
+		enemyList[i].isJumpingOff = false;
 		enemyList[i].position.X = enemyX[i];
 		enemyList[i].position.Y = enemyY[i];
 		enemyList[i].isSpecial = enemyType[i];
-	}
-}
-
-//Position of each ladder is defined
-void initialiseLadders(void)
-{
-	for(int i = 0; i < 8; i++)
-	{
-		ladderList[i].position.X = ladderX[i];
-		ladderList[i].position.Y = ladderY[i];
+		enemyList[i].respawnTimer = 3;
 	}
 }
 
@@ -138,7 +114,7 @@ struct Barrel
 	COORD position;
 };
 
-Barrel barrellist[3];
+Barrel barrellist[barrelNum];
 Barrel banana[3];
 
 //initialise barrel
@@ -189,9 +165,6 @@ void init()
 	banana[0].position.X = 20;
 	banana[1].position.X = 40;
 	banana[2].position.X = 60;
-
-	// set the position of ladders
-	initialiseLadders();
 
 	// set enemy variables
 	initialiseEnemy();
@@ -1051,261 +1024,224 @@ void render(int a)// for drawing of objects only
 	}
 }
 
-void moveEnemy(int identity)
+void moveEnemy(int &enemy)
 {
 	//AI 1.0 Movement
-
 	//Damage enemies
 	for(int i = 0; i < 3; i++)
 	{
 		//Collision against enemy bodies
-		if(enemyList[identity].position.X == barrellist[i].position.X && enemyList[identity].position.Y == barrellist[i].position.Y
-			|| enemyList[identity].position.X == barrellist[i].position.X && enemyList[identity].position.Y+1 == barrellist[i].position.Y
-			|| enemyList[identity].position.X == barrellist[i].position.X && enemyList[identity].position.Y+2 == barrellist[i].position.Y
-			|| enemyList[identity].position.X+1 == barrellist[i].position.X && enemyList[identity].position.Y == barrellist[i].position.Y
-			|| enemyList[identity].position.X+1 == barrellist[i].position.X && enemyList[identity].position.Y+1 == barrellist[i].position.Y
-			|| enemyList[identity].position.X+1 == barrellist[i].position.X && enemyList[identity].position.Y+2 == barrellist[i].position.Y
-			|| enemyList[identity].position.X-1 == barrellist[i].position.X && enemyList[identity].position.Y == barrellist[i].position.Y
-			|| enemyList[identity].position.X-1 == barrellist[i].position.X && enemyList[identity].position.Y+1 == barrellist[i].position.Y
-			|| enemyList[identity].position.X-1 == barrellist[i].position.X && enemyList[identity].position.Y+2 == barrellist[i].position.Y)
+		if(enemyList[enemy].position.X == barrellist[i].position.X && enemyList[enemy].position.Y == barrellist[i].position.Y
+			|| enemyList[enemy].position.X+1 == barrellist[i].position.X && enemyList[enemy].position.Y == barrellist[i].position.Y
+			|| enemyList[enemy].position.X-1 == barrellist[i].position.X && enemyList[enemy].position.Y == barrellist[i].position.Y)
 		{
-			enemyList[identity].health = 0;
+			enemyList[enemy].health = 0;
 			break;
 		}
 	}
 	//Only move if alive
-	if(enemyList[identity].health == 1)
+	if(enemyList[enemy].health == 1)
 	{
 		//If allowed to move after climbing conditions
-		if(enemyList[identity].canMove == true)
+		if(enemyList[enemy].canMove == true)
 		{
 
-
-
 			//Allows moving to the LEFT side upon reaching the corner
-			if(enemyList[identity].position.X > 76)
+			if(enemyList[enemy].position.X > 76)
 			{
-				enemyList[identity].toRight = false;
+				enemyList[enemy].toRight = false;
 			}
-			//Moving to opposite side(Left)
-			if(enemyList[identity].toRight == false)
-			{
-				enemyList[identity].position.X--;
-
-				//AI 1.1 Evasive movement(Dodge right)
-				for(int i = 0; i < 3; i++)
-				{
-					//Checks for: on same position, above and active barrels and not climbing
-					if(enemyList[identity].position.X == barrellist[i].position.X && barrellist[i].active == true && barrellist[i].position.Y < enemyList[identity].position.Y && enemyList[identity].isClimbing == false)
-					{
-						//Checks the random number for to dodge(50%, chance reset every frame)
-						if(enemyList[identity].dodgeChance < 4)
-						{
-							enemyList[identity].position.X+=4;
-							enemyList[identity].dodgeChance = rollDice();
-						}
-					}
-				}
-			}
-
 
 			//Allows moving to the RIGHT side upon reaching the corner
-			if(enemyList[identity].position.X < 1)
+			if(enemyList[enemy].position.X < 1)
 			{
-				enemyList[identity].toRight = true;
+				enemyList[enemy].toRight = true;
 			}
-			//Moving right side after reaching end of left side
-			if(enemyList[identity].toRight == true)
-			{
-				enemyList[identity].position.X++;
 
-				//AI 1.1 Evasive movement(Dodge left)
-				for(int i = 0; i < 3; i++)
+			//Moving right side after reaching left corner
+			if(enemyList[enemy].toRight == true)
+			{
+				enemyList[enemy].position.X++;
+			}
+			//Moving left side after reaching right corner
+			else
+			{
+				enemyList[enemy].position.X--;
+			}
+		}
+		//AI 1.1 Evasive movement(Dodge)
+		for(int i = 0; i < 3; i++)
+		{
+			//Checks for: on same position, above and active barrels and not climbing
+			if(enemyList[enemy].position.X == barrellist[i].position.X 
+				&& barrellist[i].active == true 
+				&& barrellist[i].position.Y < enemyList[enemy].position.Y 
+				&& enemyList[enemy].isClimbing == false)
+			{
+				//Checks the random number for to dodge(50%, chance reset every frame)
+				if(enemyList[enemy].dodgeChance < 4)
 				{
-					//Checks for: on same position, above and active barrels and not climbing
-					if(enemyList[identity].position.X == barrellist[i].position.X && barrellist[i].active == true && barrellist[i].position.Y < enemyList[identity].position.Y && enemyList[identity].isClimbing == false)
+					//Dodges to left if moving right
+					if(enemyList[enemy].toRight == true)
 					{
-						//Checks the random number for to dodge(50%, chance reset every frame)
-						if(enemyList[identity].dodgeChance < 4)
-						{
-							enemyList[identity].position.X-=4;
-							enemyList[identity].dodgeChance = rollDice();
-						}
+						enemyList[enemy].position.X-=4;
+						enemyList[enemy].dodgeChance = rollDice();
+					}
+					//Dodges to right if moving left
+					else
+					{
+						enemyList[enemy].position.X+=4;
+						enemyList[enemy].dodgeChance = rollDice();
 					}
 				}
 			}
 		}
-
 		//AI 1.2 Climbing
-		enemyClimb(identity);
-
+		enemyClimb(enemy);
 	}
-	else if(enemyList[identity].health == 0)
+	else if(enemyList[enemy].health == 0)
 	{
-		enemyAlive(identity); 
+		enemyAlive(enemy); 
 	}
 
 	//AI 1.3 Dodge chance reset every 1.5 seconds
 	if(dodgeTimer > 1.5)
 	{
 		dodgeTimer = 0;
-		enemyList[identity].dodgeChance = rollDice();
+		enemyList[enemy].dodgeChance = rollDice();
 	}
 }
 
-void enemyClimb(int identity)
+void enemyClimb(int &enemy)
 {
 	//AI 1.2 Climbing
 	//Climbing ladders only if collided at a 50% rate
-	if(enemyList[identity].randNum < 7)
+	if(enemyList[enemy].randNum < 4)
 	{
-		enemyList[identity].canClimb = (climbCheck(identity, enemyList[identity].isClimbing));
+		enemyList[enemy].canClimb = (climbCheck(enemy));
 
 		//If enabled to climb
-		if(enemyList[identity].canClimb == true)
+		if(enemyList[enemy].canClimb == true)
 		{
 			//Climb only if alive
-			if(enemyList[identity].health == 1)
+			if(enemyList[enemy].health == 1)
 			{
 				//Starts climbing
-				enemyList[identity].position.Y--;
-				enemyList[identity].isClimbing = true;
-				enemyList[identity].canMove = false;
+				enemyList[enemy].position.Y--;
+				enemyList[enemy].isClimbing = true;
+				enemyList[enemy].canMove = false;
 
 				//Alligns to platform after climbing
-				climbAlign(identity);
+				climbAlign(enemy);
 			}
 			//Enemy is no longer alive
-			else if(enemyList[identity].health == 0)
+			else if(enemyList[enemy].health == 0)
 			{
-				enemyAlive(identity); 
+				enemyAlive(enemy); 
 			}
 		}
-
 	}
 	//Reroll chance
 	else
 	{
-		enemyList[identity].randNum = rollDice();
+		enemyList[enemy].randNum = rollDice();
 	}
 }
 
-void climbAlign(int identity)
+void climbAlign(int &enemy)
 {
-	//Adjusts enemy to platform's Y COORD after climbing(Lowest lvl)
-	if(enemyList[identity].position.Y == 19)
+	//Checking if aligned to platform with char '1'(platform)
+	if(map[enemyList[enemy].position.X][enemyList[enemy].position.Y+3] == '1')
 	{
-		enemyList[identity].canMove = true;
-		enemyList[identity].canClimb = false;
-		enemyList[identity].isClimbing = false;
+		//Enables movement after alignment
+		enemyList[enemy].canMove = true;
+		enemyList[enemy].canClimb = false;
+		enemyList[enemy].isClimbing = false;
+		enemyList[enemy].isJumpingOff = false;
 		//Randomize numbers again
-		if(enemyList[identity].isClimbing == false)
+		if(enemyList[enemy].isClimbing == false)
 		{
-			enemyList[identity].randNum = rollDice();
+			enemyList[enemy].randNum = rollDice();
 
-			if(enemyList[identity].randNum < 4)
+			if(enemyList[enemy].randNum < 4)
 			{
-				enemyList[identity].toRight = false;
+				enemyList[enemy].toRight = false;
 			}
-			else if(enemyList[identity].randNum > 3)
+			else if(enemyList[enemy].randNum > 3)
 			{
-				enemyList[identity].toRight = true;
-			}
-
-		}
-	}
-	//Adjusts enemy to platform Y COORD after climbing(mid lvl)
-	else if(enemyList[identity].position.Y == 13)
-	{
-		enemyList[identity].canMove = true;
-		enemyList[identity].canClimb = false;
-		enemyList[identity].isClimbing = false;
-		//Randomize numbers again
-		if(enemyList[identity].isClimbing == false)
-		{
-			enemyList[identity].randNum = rollDice();
-
-			if(enemyList[identity].randNum < 4)
-			{
-				enemyList[identity].toRight = false;
-			}
-			else if(enemyList[identity].randNum > 3)
-			{
-				enemyList[identity].toRight = true;
-			}
-
-		}
-	}
-	//Adjusts enemy to platform Y COORD after climbing(highest lvl)
-	else if(enemyList[identity].position.Y == 7)
-	{
-		enemyList[identity].canMove = true;
-		enemyList[identity].canClimb = false;
-		enemyList[identity].isClimbing = false;
-		//Randomize numbers again
-		if(enemyList[identity].isClimbing == false)
-		{
-			enemyList[identity].randNum = rollDice();
-			if(enemyList[identity].randNum < 4)
-			{
-				enemyList[identity].toRight = false;
-			}
-			else if(enemyList[identity].randNum > 3)
-			{
-				enemyList[identity].toRight = true;
+				enemyList[enemy].toRight = true;
 			}
 
 		}
 	}
 }
 
-bool climbCheck(int identity, bool isClimbing)
+bool climbCheck(int &enemy)
 {
 	int y = consoleSize.Y;
 
 	//AI 1.3 Evasive climbing
 	for(int i = 0; i < 3; i++)
 	{
-		//Climbs only when no crates are falling.
-		if(enemyList[identity].position.X == barrellist[i].position.X && barrellist[i].active == true && barrellist[i].position.Y < enemyList[identity].position.Y)
+		//Does not climb if crates are falling(match X)(Y is below)
+		if(barrellist[i].active == true 
+ 			&& barrellist[i].position.Y < enemyList[enemy].position.Y
+			&& barrellist[i].position.X == enemyList[enemy].position.X
+			|| enemyList[enemy].isJumpingOff == true)
 		{
 			//Special enemy can jump off and avoid dropping barrels while climbing
-			if(isClimbing && enemyList[identity].isSpecial == true)
+			if(map[enemyList[enemy].position.X+1][enemyList[enemy].position.Y+3] != '1'
+				&& enemyList[enemy].isSpecial == true)
 			{
-				//enemyList[identity].position.X++;
-				//enemyList[identity].position.Y++;
-				//return false;
+				//Random chance of jumping off left or right
+				if(enemyList[enemy].randNum < 4)
+				{
+					enemyList[enemy].position.X++;
+					enemyList[enemy].position.Y++;
+					enemyList[enemy].isJumpingOff = true;
+					climbAlign(enemy);
+				}
+				else
+				{
+					enemyList[enemy].position.X--;
+					enemyList[enemy].position.Y++;
+					enemyList[enemy].isJumpingOff = true;
+					climbAlign(enemy);
+				}
 			}
-
-		}
-		//If is climbing, cannot change to unable to climb
-		else if(enemyList[identity].isClimbing == true)
-		{
-			return true;
+			
+			return false;
 		}
 	}
-	 //Only climb at ladders designated with '2' char in the array
-	if(map[enemyList[identity].position.X+1][enemyList[identity].position.Y+2] == '2')
+	//Only climb at ladders designated with '2' char in the array(ladder) 
+	if(map[enemyList[enemy].position.X+1][enemyList[enemy].position.Y+2] == '2')
 	{
 		return true;
-	}   
+	}	
+
+	//If is climbing, cannot change to unable to climb
+	if(enemyList[enemy].isClimbing == true)
+	{
+		return true;
+	}
+
+	//Unable to climb when not at ladders
 	else
 	{
-		//Unable to climb at not at a ladder
 		return false;
 	}
 }
 
-bool enemyAlive(int identity)
+bool enemyAlive(int &enemy)
 {
 	//Vertical Line for printing enemes
 	int printLine = 0;
 
 	//Disables movement
-	enemyList[identity].canMove = false;
+	enemyList[enemy].canMove = false;
 
 	//Go to specific enemy coord
-	gotoXY(enemyList[identity].position.X,enemyList[identity].position.Y);
+	gotoXY(enemyList[enemy].position.X,enemyList[enemy].position.Y);
 
 	//Clears up dead enemy
 	for(int j = 0; j<=2; ++j)
@@ -1315,14 +1251,14 @@ bool enemyAlive(int identity)
 			cout << " ";
 		}
 		printLine++;
-		gotoXY(enemyList[identity].position.X,enemyList[identity].position.Y+printLine);
+		gotoXY(enemyList[enemy].position.X,enemyList[enemy].position.Y+printLine);
 	}
 
 	//Enemy is no longer alive
-	enemyList[identity].isAlive = false;
+	enemyList[enemy].isAlive = false;
 
 	//Returns is not alive status
-	return enemyList[identity].isAlive;
+	return enemyList[enemy].isAlive;
 }
 
 void barrelshooting(COORD unit)// set barrel according to player's position

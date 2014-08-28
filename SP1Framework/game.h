@@ -2,6 +2,14 @@
 #define _GAME_H
 #define WIDTH 80
 #define HEIGHT 30
+#define barrelNum 3 // num of barrel allowed at one time on screen
+#define enemies 8 //Size of enemies
+#define sizeX 8 //Size of X Coord Array
+#define sizeY 8 //Size of Y Coord Array
+#define sizeLadders 8 //Size of Ladders Array
+#define endScreenNum 3// No of end screen in game
+#define speed 0.3//General speed
+
 # pragma once
 #include "Level.h"
 #include "HighScore.h"
@@ -56,17 +64,14 @@ void drawbarrel();			  // draws out barrel
 void barrelshooting(COORD);  // set barrel location for shooting
 void Updatebarrel();		// update barrel COORD
 
-//Ladder functions
-void initialiseLadders();	// initialise ladder properties
-
 //Enemy functions
 void initialiseEnemy();										  // initialise All enemies properties
-void moveEnemy(int identity);								 // all enemy movements
-void enemyClimb(int identity);								// Enemy Climbing
-void climbAlign(int identity);							   // Align enemy climb
-bool enemyAlive(int identity);							  // Enemy death and needs respawn
+void moveEnemy(int &enemy);								 // all enemy movements
+void enemyClimb(int &enemy);								// Enemy Climbing
+void climbAlign(int &enemy);							   // Align enemy climb
+bool enemyAlive(int &enemy);							  // Enemy death and needs respawn
 int rollDice();											 // RNG
-bool climbCheck(int identity, bool isClimbing);	//Check if AI can climb
+bool climbCheck(int &enemy);	//Check if AI can climb
 
 //Powerups & Teleporters functions
 void teleporters();				//teleporters
