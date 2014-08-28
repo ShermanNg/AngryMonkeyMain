@@ -6,11 +6,8 @@ extern COORD playerhumanLocation;
 
 
 powercoord teleporter1location, teleporter2location, lifepoweruplocation, firepoweruplocation, flameslocation, freezepoweruplocation;
-activatepowerup afire;
-randomlevelpos lfire;
-powerups plife, pfire, pfreeze;
+powerups life, fire, freeze, tele, flames, frozen;
 
-timestamps tele, life, fire, flame, freeze;
 void initialisepowercoord()
 {
 	teleporter1location.powerlocation.X = 1;
@@ -95,59 +92,45 @@ void teleporters()
 	}
 }
 
-void activatepowerups(activatepowerup& state,bool activated)
-{
-	afire.activated = false;
-}
-
-void setrandomlevelpos(randomlevelpos& random,int levelpos)
-{
-	//random fire level
-	lfire.levelpos = 4;
-}
-
-void settimeStamps(timestamps& timing,double timestamp, bool stamptime)
+void setpowerups(powerups& spawning,bool present)
 {
 	//teleporter
 	tele.timestamp = 0.0;
 	tele.stamptime = true;
 
 	//life powerup
+	life.present = false;
 	life.timestamp = 0.0;
 	life.stamptime = true;
 
 	//fire powerup
+	fire.present = false;
+	fire.activated = false;
 	fire.timestamp = 0.0;
-	life.stamptime = true;
+	fire.stamptime = true;
 
-	//flame lifetime
-	flame.timestamp = 0.0;
-	flame.stamptime = true;
+	//flames
+	flames.timestamp = 0.0;
+	flames.stamptime = true;
 
 	//freeze powerup
+	freeze.present = false;
+	freeze.activated = false;
 	freeze.timestamp = 0.0;
 	freeze.stamptime = true;
-}
 
-void setpowerups(powerups& spawning,bool present)
-{
-	//life powerup
-	plife.present = false;
-
-	//fire powerup
-	pfire.present = false;
-
-	//freeze powerup
-	pfreeze.present = false;
+	//frozen
+	frozen.timestamp = 0.0;
+	frozen.stamptime = true;
 }
 
 void extralifepowerup()
 {
-	bool getpowerup = true;//able to pick up power up
+	bool getpowerup = true;//able tp pick up power up
 	int randomloop = rand() % 24 + 1;
 
 	//change random lifepowerup location
-	if(plife.present == false)
+	if(life.present == false)
 	{
 		for(int n = 0;n < randomloop;n++)
 		{
@@ -158,21 +141,22 @@ void extralifepowerup()
 		}
 		lifepoweruplocation.powerlocation.Y = (3);
 	}
+
 	//lifepowerup random spawn time
-	if(life.stamptime == true && plife.present == false)
+	if(life.stamptime == true && life.present == false)
 	{
 		life.timestamp = elapsedTime;
 		life.stamptime = false;
 	}
-	if(elapsedTime >life.timestamp + rand() % 10 + 5 && plife.present == false)//change random spawn timing here
+	if(elapsedTime > life.timestamp + rand() % 10 + 5 && life.present == false)//change random spawn timing here
 	{
-		plife.present = true;
+		life.present = true;
 		getpowerup = true;
 		life.stamptime = true;
 	}
 
 	//lifepowerup
-	if(getpowerup == true && plife.present == true)
+	if(getpowerup == true && life.present == true)
 	{
 		if(charLocation.X == lifepoweruplocation.powerlocation.X)
 		{
@@ -184,7 +168,7 @@ void extralifepowerup()
 					break;
 				}
 			}
-			plife.present = false;
+			life.present = false;
 			getpowerup = false;
 		}
 	}
@@ -197,7 +181,7 @@ void firepowerup()
 	int randomnum = rand() % 3 + 1;
 
 	//change random firepowerup location
-	if(pfire.present== false)
+	if(fire.present== false)
 	{
 		for(int n = 0;n < randomloop;n++)
 		{
@@ -210,31 +194,31 @@ void firepowerup()
 	}
 
 	//firepowerup random spawn time
-	if(fire.stamptime == true && pfire.present == false)
+	if(fire.stamptime == true && fire.present == false)
 	{
 		fire.timestamp = elapsedTime;
 		fire.stamptime = false;
 	}
-	if(elapsedTime > fire.timestamp + rand() % 10 + 5 && pfire.present == false)//change random spawn timing here
+	if(elapsedTime > fire.timestamp + rand() % 10 + 5 && fire.present == false)//change random spawn timing here
 	{
-		pfire.present = true;
+		fire.present = true;
 		getfire = true;
 		fire.stamptime = true;
 	}
 
 	//fire power up effect
-	if(getfire == true && pfire.present == true)
+	if(getfire == true && fire.present == true)
 	{
 		if(charLocation.X == firepoweruplocation.powerlocation.X)
 		{
 			flameslocation.powerlocation.X = 0;
 			switch(randomnum)
 			{
-			case 3: flameslocation.powerlocation.Y = 15;
+			case 3: flameslocation.powerlocation.Y = 14;
 				break;
-			case 2: flameslocation.powerlocation.Y = 21;
+			case 2: flameslocation.powerlocation.Y = 20;
 				break;
-			case 1: flameslocation.powerlocation.Y = 27;
+			case 1: flameslocation.powerlocation.Y = 26;
 			}
 			//kill enemies
 			for(int i = 0; i<6; i++)
@@ -244,11 +228,67 @@ void firepowerup()
 					enemyList[i].health = 0;
 				}
 			}
-			pfire.present = false;
+			fire.present = false;
 			getfire = false;
-			afire.activated = true;
-			flame.timestamp = elapsedTime;
+			fire.activated = true;
+			flames.timestamp = elapsedTime;
 		}
+	}
+}
+
+void freezepowerup()
+{
+	bool getfreeze = true;//able to pick up powerup
+	int randomloop = rand() % 24 + 1;
+
+	//change random lifepowerup location
+	if(freeze.present == false)
+	{
+		for(int n = 0;n < randomloop;n++)
+		{
+			if(randomloop - 1 == n)
+			{
+				freezepoweruplocation.powerlocation.X = (n * 3) + 1;//align position with player
+			}
+		}
+		freezepoweruplocation.powerlocation.Y = (3);
+	}
+
+	//freezepowerup random spawn time
+	if(freeze.stamptime == true && freeze.present == false)
+	{
+		freeze.timestamp = elapsedTime;
+		freeze.stamptime = false;
+	}
+	if(elapsedTime > freeze.timestamp + rand() % 10 + 5 && freeze.present == false)//change random spawn timing here
+	{
+		freeze.present = true;
+		getfreeze = true;
+		freeze.stamptime = true;
+	}
+
+	//freeze powerup effect
+	if(getfreeze == true && freeze.present == true)
+	{
+		if(charLocation.X == freezepoweruplocation.powerlocation.X)//pick up powerup
+		{
+			for(int i = 0; i<6; i++)
+			{
+				enemyList[i].canMove = false;
+			}
+			freeze.present = false;//change herer
+			getfreeze = false;
+			frozen.timestamp = elapsedTime;
+		}
+	}
+
+	//unfreeze enemies
+	if(elapsedTime > frozen.timestamp + 3)
+	{
+			for(int i = 0; i<6; i++)
+			{
+				enemyList[i].canMove = true;
+			}
 	}
 }
 
@@ -266,16 +306,17 @@ void drawtele()
 
 void drawlife()
 {
-	if(plife.present == true)
+	if(life.present == true)
 	{
 		gotoXY(lifepoweruplocation.powerlocation);
 		colour(0x0C);
 		std::cout<<(char)3;
 	}
 }
+
 void drawfire()
 {
-	if(pfire.present == true)
+	if(fire.present == true)
 	{
 		gotoXY(firepoweruplocation.powerlocation);
 		colour(0x0C);
@@ -285,22 +326,33 @@ void drawfire()
 
 void drawflame()
 {
-	if(afire.activated == true)
+	if(fire.activated == true)
 	{
 		gotoXY(flameslocation.powerlocation);
 		colour(0x4E);//orange
-		for(int n = 0; n < 79;n++)
+		for(int n = 0; n < 77;n++)
 		{
 			std::cout<<(char)15;
 		}
 		std::cout<<std::endl;
-		for(int n = 0; n < 79;n++)
+		for(int n = 0; n < 77;n++)
 		{
 			std::cout<<(char)15;
 		}
-		if(elapsedTime > flame.timestamp + 1)//flame lifetime
+		if(elapsedTime > flames.timestamp + 1)//flame lifetime
 		{
-			afire.activated = false;
+			fire.activated = false;
 		}
+	}
+}
+
+void drawfreeze()
+{
+	//render freeze power up
+	if(freeze.present == true)
+	{
+		gotoXY(freezepoweruplocation.powerlocation);
+		colour(0x0C);
+		std::cout<<(char)4;
 	}
 }

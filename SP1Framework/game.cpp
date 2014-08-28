@@ -162,6 +162,7 @@ void update(double dt)
 		teleporters();// update location of teleporters
 		extralifepowerup();
 		firepowerup();
+		freezepowerup();
 		if(versus == true)
 		{
 			LoadMap(2);
@@ -353,6 +354,9 @@ void render()// for drawing of objects only
 
 		//render flames of fire power up
 		drawflame();
+
+		//render freeze powerup
+		drawfreeze();
 
 		//Draws the enemies
 		//Spawns after 2 seconds

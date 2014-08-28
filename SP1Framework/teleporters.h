@@ -13,44 +13,25 @@ struct powercoord{
 
 extern powercoord teleporter1location, teleporter2location, lifepoweruplocation, firepoweruplocation, flameslocation, freezepoweruplocation;
 
-struct activatepowerup{
+struct powerups{
+	bool present;
 	bool activated;
-};
-
-extern activatepowerup afire;
-
-struct randomlevelpos{
-	int levelpos;
-};
-
-extern randomlevelpos lfire;
-
-struct timestamps{
 	double timestamp;
 	bool stamptime;
 };
 
-
-struct powerups{
-	bool present;
-};
-
-extern powerups plife, pfire, pfreeze;
-
-extern timestamps tele, life, fire, flame, freeze;
+extern powerups life, fire, freeze, tele, flames, frozen;
 
 //Powerups & Teleporters functions
 void drawtele();
 void drawlife();
 void drawfire();
 void drawflame();
+void drawfreeze();
 void firepowerup();
 void setpowerups(powerups& spawning,bool present);
-void settimeStamps(timestamps& timing,double timestamp, bool stamptime);
-void activatepowerups(activatepowerup& state,bool activated);
-void setrandomlevelpos(randomlevelpos& random,int levelpos);
-void setrandomlevelpos(randomlevelpos& random,int levelpos);
 void initialisepowercoord();
 void teleporters();				//teleporters
 void extralifepowerup();	   //life power up
+void freezepowerup();			//freeze power up
 #endif // _TELE_H
