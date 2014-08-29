@@ -25,6 +25,7 @@ struct playerhuman
 };
 
 extern EndScreen Gameover;
+extern bool mapload;
 
 //Game Menu functions
 void initialiseEnd();

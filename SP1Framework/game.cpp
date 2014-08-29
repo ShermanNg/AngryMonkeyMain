@@ -19,6 +19,7 @@ using std::string;
 double elapsedTime;
 double deltaTime;
 double dodgeTimer;
+bool mapload;
 bool keyPressed[K_COUNT];
 bool pause;
 
@@ -157,12 +158,21 @@ void update(double dt)
 		firepowerup();
 		if(versus == true)
 		{
-			LoadMap(2);
+			if(mapload == false)
+			{
+				LoadMap(2);
+				mapload = true;
+			}
 			multiplayerdead();//gameover conditions for versus mode
 		}
 		else
 		{
-			LoadMap(1);
+			if(mapload == false)
+			{
+				LoadMap(1);
+				mapload = true;
+			}
+		
 			monkeydead();//gameover conditions for single player
 		}
 	}
@@ -175,6 +185,7 @@ void update(double dt)
 	// Return to the game menu if player hits the escape key
 	if (keyPressed[K_ESCAPE])
 	{
+		mapload = false;
 		gameStarted = false;
 		init();
 	}

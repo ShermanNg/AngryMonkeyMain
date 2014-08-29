@@ -3,6 +3,7 @@
 #define MENU_H
 
 #include "game.h"
+#include"barrel.h"
 
 using std::string;
 using std::cout;

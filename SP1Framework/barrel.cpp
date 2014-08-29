@@ -44,7 +44,7 @@ void drawbanana()
 		{
 			gotoXY(banana[i].position);
 			colour(0x0E);
-			std::cout<<"gone";
+			std::cout<<" ";
 		}
 	}
 }

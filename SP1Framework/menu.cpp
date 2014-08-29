@@ -6,6 +6,8 @@ int pointer = 0;
 bool gameStarted;
 bool display;
 
+extern COORD charLocation;
+
 //function for main menu and to check if game started from decision
 bool gameStart()
 {
@@ -64,6 +66,12 @@ bool gameStart()
 				break;
 			}
 		}
+	}
+	for(int i = 0; i<barrelNum; i++)
+	{
+		barrellist[i].active = false;
+		barrellist[i].position.X = charLocation.X;
+		barrellist[i].position.Y = charLocation.Y+1;
 	}
 }
 

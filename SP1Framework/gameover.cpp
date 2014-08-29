@@ -146,6 +146,7 @@ void showgameover()
 	Sleep(5000);
 	killCount = 0; //Reset killcount
 	Gameover.active = false;
+	mapload = false;
 	init();
 	gameStart();
 }
@@ -208,6 +209,7 @@ void multiplayer1gameover()
 	Sleep(5000);
 	Gameover.active = false;
 	init();
+	mapload = false;
 	gameStart();
 }
 
@@ -221,5 +223,6 @@ void multiplayer2gameover()
 	Sleep(5000);
 	Gameover.active = false;
 	init();
+	mapload = false;
 	gameStart();
  }
