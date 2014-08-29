@@ -35,7 +35,7 @@ void drawNormalEnd()
 	colour(0x0E);
 	cout<<"*      Congratulations!! Your Score is ";
 	printScore(killCount);
-	cout<<"kills         *"<<endl;
+	cout<<"kills"<<endl;
 	gotoXY(13,consoleSize.Y/2);
 	colour(0x0E);
 	cout<<"*  You will return to the main menu in a short while  *";

@@ -87,21 +87,21 @@ void drawMenu()
 	menuText.close();
 
 	//Text Attribute only for Main Menu text
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0x0F);
+	colour(0x0F);
 	cout << "Please navigate through the menu and select your desired action using spacebar" << endl;
 	for (int i = 0; i < 4; ++i)
 	{
 		if (i == pointer)
 		{
 			//Selected options lights up to indicate selection
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0x0F);
+			colour(0x0F);
 			Beep(840,30);
 			cout << Menu[i] << " <-"<< endl;
 		}
 		else
 		{
 			//Unselected options are greyed
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0x07);
+			colour(0x07);
 			cout << Menu[i] << endl;
 		}
 	}
