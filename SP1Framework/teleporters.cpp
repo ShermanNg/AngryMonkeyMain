@@ -44,7 +44,7 @@ void teleporters()
 		//location for teleporter1
 		teleporter1location.powerlocation.Y = (15);
 		teleporter1location.powerlocation.
-	X = (rand() % 76 + 1);
+			X = (rand() % 76 + 1);
 
 		//location for teleporter2
 		teleporter2location.powerlocation.X = (rand() % 76 + 1);
