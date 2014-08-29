@@ -39,6 +39,21 @@
     <ClCompile Include="HighScore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="barrel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="teleporters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gameover.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\console.h">
@@ -54,6 +69,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HighScore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="barrel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="teleporters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameover.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

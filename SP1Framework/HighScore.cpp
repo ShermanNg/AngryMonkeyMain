@@ -44,7 +44,7 @@ void printhighScore (void)
 	cout << c;
 }
 
-void printScore(double a)
+void printScore(int a)
 {
 	Score = a;
 	cout << Score;

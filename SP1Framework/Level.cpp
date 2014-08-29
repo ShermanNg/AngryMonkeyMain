@@ -1,12 +1,13 @@
 #include "Level.h"
 
 # pragma once
+extern char map[WIDTH][HEIGHT];
 
 
 void save (void)
 {
-	ofstream myfile;
-	myfile.open ("Level1.txt", ios::in|ios::trunc);
+	std::ofstream myfile;
+	myfile.open ("Level1.txt", std::ios::in|std::ios::trunc);
 	myfile.close();
 }
 
@@ -17,7 +18,7 @@ void LoadMap(int a)
 	char * str;
 	if(a == 1)
 	{
-		ifstream Level ("Level1.txt");
+		std::ifstream Level ("Level1.txt");
 		for (int i=0;i<29;i++)
 	{	
 		if (Level.is_open())
@@ -37,13 +38,13 @@ void LoadMap(int a)
 			}
 		}
 		else
-			cout << "Error Loading Map"<<endl;
+			std::cout << "Error Loading Map"<<endl;
 	}
 	delete[] str;
 	}
 	if(a == 2)
 	{
-		ifstream Level ("Level2.txt");
+		std::ifstream Level ("Level2.txt");
 		for (int i=0;i<29;i++)
 	{	
 		if (Level.is_open())

@@ -75,19 +75,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="barrel.cpp" />
+    <ClCompile Include="enemy.cpp" />
     <ClCompile Include="Framework\console.cpp" />
     <ClCompile Include="Framework\timer.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="gameover.cpp" />
     <ClCompile Include="HighScore.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="player.cpp" />
+    <ClCompile Include="teleporters.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="barrel.h" />
+    <ClInclude Include="enemy.h" />
     <ClInclude Include="Framework\console.h" />
     <ClInclude Include="Framework\timer.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="gameover.h" />
     <ClInclude Include="HighScore.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="player.h" />
+    <ClInclude Include="teleporters.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HighScore.txt" />

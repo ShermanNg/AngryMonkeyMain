@@ -10,6 +10,7 @@ bool versus = false;
 const unsigned char FPS = 10; // FPS of this game
 const unsigned int frameTime = 1000 / FPS; // time for each frame
 char map[WIDTH][HEIGHT];
+extern double elapsedTime;
 
 void mainLoop();
 
@@ -39,12 +40,12 @@ void mainLoop()
 		if(gameStart && versus == false)
 		{
 			LoadMap(1);
-			render(1);						// render the graphics output to screen for gamestart
+			render();						// render the graphics output to screen for gamestart
 		}
 		if(gameStart && versus == true)
 		{
 			LoadMap(2);
-			render(2);
+			render();
 		}
 	}
 }
