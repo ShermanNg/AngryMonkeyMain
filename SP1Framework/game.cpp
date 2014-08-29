@@ -7,6 +7,7 @@
 #include "Level.h"
 #include "game.h"
 #include "gameover.h"
+#include "menu.h"
 #pragma once
 
 
@@ -19,21 +20,14 @@ double elapsedTime;
 double deltaTime;
 double dodgeTimer;
 bool keyPressed[K_COUNT];
-bool gameStarted = false;
 bool pause;
 
+extern bool gameStarted;
+extern int modeSelected;
 
 COORD consoleSize;
 COORD charLocation;
 COORD playerhumanLocation;
-
-// Enum of Game State
-enum States
-{
-	STARTGAME = 0,
-	ABOUT,
-	QUITGAME
-};
 
 void init()
 {
@@ -75,8 +69,6 @@ void init()
 	pause = false;
 }
 
-//Rolling dice for chance to climb
-
 void shutdown()
 {
 	// Reset to white text on black background
@@ -100,7 +92,8 @@ void getInput()
 
 void update(double dt)
 {
-	if (pause == false)
+	//Time elapses and update runs when unpaused and started
+	if (pause == false && gameStarted == true)
 	{
 		// get the delta time
 		elapsedTime += dt;
@@ -162,7 +155,6 @@ void update(double dt)
 		teleporters();// update location of teleporters
 		extralifepowerup();
 		firepowerup();
-		freezepowerup();
 		if(versus == true)
 		{
 			LoadMap(2);
@@ -183,134 +175,24 @@ void update(double dt)
 	// Return to the game menu if player hits the escape key
 	if (keyPressed[K_ESCAPE])
 	{
-		gameStart();
+		gameStarted = false;
+		init();
 	}
-}
 
-bool gameStart()
-{
-	init();
-	gameStarted = false;
-	//Menu Vars
-	int *p = 0;
-	int pointer = 0;
-	p = &pointer;
-	string Menu[3] = {"Start Angry Monkeys!", "2-Player Versus Mode", "Quit Angry Monkeys."};
-	std::ifstream menuText;
-	string menuBanner;
-
-	//Navigating Menu
-	while(true)	//Loop runs until user is not in menu screen
+	if(pause == false && gameStarted == false )
 	{
-		cls();	//Clear screen to update input
-
-		//Banner
-		colour(0x0F);
-		menuText.open("Text/Banner.txt");
-		while(!menuText.eof())
-		{
-			getline(menuText, menuBanner);
-			cout << menuBanner << endl;
-		}
-		menuText.close();
-
-		//Text Attribute only for Main Menu text
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0x0F);
-		cout << "Please navigate through the menu and select your desired action using spacebar" << endl;
-		for (int i = 0; i < 3; ++i)
-		{
-			if (i == *p)
-			{
-				//Selected options lights up to indicate selection
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0x0F);
-				Beep(840,30);
-				cout << Menu[i] << " <-"<< endl;
-			}
-			else
-			{
-				//Unselected options are greyed
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0x07);
-				cout << Menu[i] << endl;
-			}
-		}
-		//Loop to detect user input and move accordingly until action is selected
-		while(true)
-		{
-			if (isKeyPressed(VK_UP))
-			{
-				pointer -= 1;
-				if (pointer == -1)
-				{
-					pointer = 2;
-				}
-				break;
-			}
-			else if (isKeyPressed(VK_DOWN))
-			{
-				pointer += 1;
-				if (pointer == 3)
-				{
-					pointer = 0;
-				}
-				break;
-			}
-			//Execute action selected
-			else if (isKeyPressed(VK_SPACE))
-			{
-				//Choice is made depending on what pointer points to
-				switch (*p)
-				{
-				case STARTGAME:	//Starts the game
-					{
-						cout << "\n\nStarting the game now, please wait for a moment" << endl;
-						Sleep(1500);
-						versus = false;
-						gameStarted = true;
-						return gameStarted;
-						break;
-					} 
-
-					//Explains the game
-				case ABOUT:	
-					{
-						cout << "\n\nStarting 2-player versus game now, please wait for a moment" << endl;
-						Sleep(1500);
-						gameStarted = true;
-						versus = true;
-						return gameStarted;
-						break;
-						//menuText.open("Text/about.txt");
-						////Opens up about text file
-						//while(!menuText.eof())
-						//{
-						//	getline(menuText, menuBanner);
-						//	cout << menuBanner << endl;
-
-						//}
-						//system("PAUSE");
-						//menuText.close();
-						//break;
-					} 
-
-				case QUITGAME:
-					{
-						cout << "\n\nQuitting the game now";
-						Sleep(1000);
-						g_quitGame = true;
-						return gameStarted;
-					} 
-				}
-				break;
-			}
-		}
-		Sleep(100);
-		cls();
+		gameStart();
 	}
 }
 
 void render()// for drawing of objects only
 {
-	if (pause == false && Gameover.active == false)
+	if(gameStarted == false && pause == false)
+	{
+		drawMenu();
+	}
+
+	if (pause == false && Gameover.active == false && gameStarted == true)
 	{
 		// clear previous screen
 		colour(0x0F);
@@ -339,7 +221,7 @@ void render()// for drawing of objects only
 		drawbarrel();
 
 		//render teleporters
-		if(elapsedTime>2)//time taken for teleporters to spawn
+		if(elapsedTime>5)//time taken for teleporters to spawn
 		{
 			drawtele();
 		}
@@ -354,9 +236,6 @@ void render()// for drawing of objects only
 
 		//render flames of fire power up
 		drawflame();
-
-		//render freeze powerup
-		drawfreeze();
 
 		//Draws the enemies
 		//Spawns after 2 seconds
@@ -385,7 +264,17 @@ void render()// for drawing of objects only
 	}
 	else if (pause == true)
 	{
-		gotoXY(20,0);
-		cout<<"Game is Paused, Press BACKSPACE to continue";
+		//Pause message for menu
+		if(gameStarted == false)
+		{
+			gotoXY(0,25);
+			cout << "Press BACKSPACE to return to Unpause" << endl;
+		}
+		//Pause message for in game
+		else
+		{
+			gotoXY(20,0);
+			cout<<"Game is Paused, Press BACKSPACE to continue";
+		}
 	}
 }

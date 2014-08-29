@@ -7,6 +7,8 @@
 #include "enemy.h"
 #include "barrel.h"
 #include "game.h"
+#include "menu.h"
+#include "teleporters.h"
 
 using std::cout;
 using std::endl;

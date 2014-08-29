@@ -3,6 +3,7 @@
 extern double elapsedTime;
 extern COORD charLocation;
 extern COORD playerhumanLocation;
+extern int killCount;
 
 
 powercoord teleporter1location, teleporter2location, lifepoweruplocation, firepoweruplocation, flameslocation, freezepoweruplocation;
@@ -60,7 +61,7 @@ void teleporters()
 	}
 
 	//teleport enemies
-	if(elapsedTime>rand() % 1 + 2)//time before teleporters spawn
+	if(elapsedTime>5)//time before teleporters spawn
 	{
 		//teleporter 1
 		for(int i = 0; i<6; i++)
@@ -93,6 +94,38 @@ void teleporters()
 }
 
 void setpowerups(powerups& spawning,bool present)
+{
+	//teleporter
+	tele.timestamp = 0.0;
+	tele.stamptime = true;
+
+	//life powerup
+	life.present = false;
+	life.timestamp = 0.0;
+	life.stamptime = true;
+
+	//fire powerup
+	fire.present = false;
+	fire.activated = false;
+	fire.timestamp = 0.0;
+	fire.stamptime = true;
+
+	//flames
+	flames.timestamp = 0.0;
+	flames.stamptime = true;
+
+	//freeze powerup
+	freeze.present = false;
+	freeze.activated = false;
+	freeze.timestamp = 0.0;
+	freeze.stamptime = true;
+
+	//frozen
+	frozen.timestamp = 0.0;
+	frozen.stamptime = true;
+}
+
+void resetpowerup()
 {
 	//teleporter
 	tele.timestamp = 0.0;
@@ -220,19 +253,23 @@ void firepowerup()
 				break;
 			case 1: flameslocation.powerlocation.Y = 26;
 			}
-			//kill enemies
-			for(int i = 0; i<6; i++)
+			fire.present = false;
+			getfire = false;
+			fire.activated = true;
+			flames.timestamp = elapsedTime;
+		}
+	}
+
+	//kill enemies
+	if(fire.activated == true)
+	{
+		for(int i = 0; i<enemies; i++)
 			{
 				if(enemyList[i].position.Y == flameslocation.powerlocation.Y - 1)
 				{
 					enemyList[i].health = 0;
 				}
 			}
-			fire.present = false;
-			getfire = false;
-			fire.activated = true;
-			flames.timestamp = elapsedTime;
-		}
 	}
 }
 

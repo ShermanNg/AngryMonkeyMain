@@ -1,6 +1,7 @@
 #include "gameover.h"
 
 
+
 extern double elapsedTime;
 extern COORD consoleSize;
 extern COORD charLocation;
@@ -86,7 +87,7 @@ void drawplayer2Lose()
 	{
 		gotoXY(13,i);
 		colour(0x0E);
-		cout<<"*                                                      *";
+		cout<<"*                                                     *";
 	}
 	gotoXY(13,10);
 	colour(0x0E);
@@ -140,9 +141,12 @@ void showgameover()
 	cls();
 	Gameover.active = true;
 	Gameover.type = 1;
+	resetpowerup();
 	render();
 	Sleep(5000);
 	killCount = 0; //Reset killcount
+	Gameover.active = false;
+	init();
 	gameStart();
 }
 
@@ -199,8 +203,11 @@ void multiplayer1gameover()
 	cls();
 	Gameover.active = true;
 	Gameover.type = 2;
+	resetpowerup();
 	render();
-	Sleep(15000);
+	Sleep(5000);
+	Gameover.active = false;
+	init();
 	gameStart();
 }
 
@@ -209,7 +216,10 @@ void multiplayer2gameover()
 	cls();
 	Gameover.active = true;
 	Gameover.type = 3;
+	resetpowerup();
 	render();
-	Sleep(15000);
+	Sleep(5000);
+	Gameover.active = false;
+	init();
 	gameStart();
  }

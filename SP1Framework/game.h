@@ -10,6 +10,7 @@
 #include "HighScore.h"
 #include "Framework\timer.h"
 #include "Framework\console.h"
+#include "menu.h"
 #include <conio.h>
 #include <iostream>
 #include <iomanip>
@@ -44,7 +45,5 @@ void getInput();			   // get input from player
 void update(double dt);		  // update the game and the state of the game
 void render();               // renders the current state of the game to the console
 void shutdown();            // do clean up, free memory
-bool gameStart();			//menu for the game
-
 
 #endif // _GAME_H

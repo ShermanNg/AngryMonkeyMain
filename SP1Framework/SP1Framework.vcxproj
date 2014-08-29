@@ -84,6 +84,7 @@
     <ClCompile Include="HighScore.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="menu.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="teleporters.cpp" />
   </ItemGroup>
@@ -96,6 +97,7 @@
     <ClInclude Include="gameover.h" />
     <ClInclude Include="HighScore.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="menu.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="teleporters.h" />
   </ItemGroup>

@@ -22,6 +22,8 @@ struct powerups{
 
 extern powerups life, fire, freeze, tele, flames, frozen;
 
+
+
 //Powerups & Teleporters functions
 void drawtele();
 void drawlife();
@@ -30,6 +32,7 @@ void drawflame();
 void drawfreeze();
 void firepowerup();
 void setpowerups(powerups& spawning,bool present);
+void resetpowerup();
 void initialisepowercoord();
 void teleporters();				//teleporters
 void extralifepowerup();	   //life power up
