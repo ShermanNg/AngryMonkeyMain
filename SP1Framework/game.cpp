@@ -94,7 +94,7 @@ void getInput()
 void update(double dt)
 {
 	//Time elapses and update runs when unpaused and started
-	if (pause == false && gameStarted == true)
+	if (pause == false && gameStarted == true && Gameover.active == false)
 	{
 		// get the delta time
 		elapsedTime += dt;

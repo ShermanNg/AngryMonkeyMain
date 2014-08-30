@@ -1,8 +1,7 @@
 #include "Level.h"
 
 # pragma once
-extern char map[WIDTH][HEIGHT];
-
+char map[WIDTH][HEIGHT];
 
 void save (void)
 {

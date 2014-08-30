@@ -33,7 +33,7 @@ bool gameStart()
 		}
 	}
 	//Execute action selected
-	if (isKeyPressed(VK_SPACE))
+	if (isKeyPressed(VK_RETURN))
 	{
 		modeSelected = pointer;
 		switch(pointer)
@@ -96,7 +96,7 @@ void drawMenu()
 
 	//Text Attribute only for Main Menu text
 	colour(0x0F);
-	cout << "Please navigate through the menu and select your desired action using spacebar" << endl;
+	cout << "Please navigate through the menu and select your desired action using the enter key" << endl;
 	for (int i = 0; i < 4; ++i)
 	{
 		if (i == pointer)

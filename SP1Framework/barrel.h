@@ -4,6 +4,7 @@
 #include "Framework\console.h"
 #include <iostream>
 #define barrelNum 3 // num of barrel allowed at one time on screen
+#define barrelSpeed 2
 
 
 //Struct of Barrel properties

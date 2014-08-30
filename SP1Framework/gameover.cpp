@@ -147,6 +147,12 @@ void showgameover()
 	killCount = 0; //Reset killcount
 	Gameover.active = false;
 	mapload = false;
+	for(int i = 0; i<barrelNum; i++)
+	{
+		barrellist[i].active = false;
+		barrellist[i].position.X = charLocation.X;
+		barrellist[i].position.Y = charLocation.Y+1;
+	}
 	init();
 	gameStart();
 }
@@ -210,6 +216,12 @@ void multiplayer1gameover()
 	Gameover.active = false;
 	init();
 	mapload = false;
+	for(int i = 0; i<barrelNum; i++)
+	{
+		barrellist[i].active = false;
+		barrellist[i].position.X = charLocation.X;
+		barrellist[i].position.Y = charLocation.Y+1;
+	}
 	gameStart();
 }
 
@@ -224,5 +236,11 @@ void multiplayer2gameover()
 	Gameover.active = false;
 	init();
 	mapload = false;
+	for(int i = 0; i<barrelNum; i++)
+	{
+		barrellist[i].active = false;
+		barrellist[i].position.X = charLocation.X;
+		barrellist[i].position.Y = charLocation.Y+1;
+	}
 	gameStart();
  }

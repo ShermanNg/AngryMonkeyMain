@@ -3,6 +3,8 @@
 
 extern COORD charLocation;
 extern COORD playerhumanLocation;
+extern double deltaTime;
+extern double elapsedTime;
 Barrel barrellist[barrelNum];
 Barrel banana[3];
 
@@ -80,15 +82,12 @@ void Updatebarrel(void)
 {
 	for(int i = 0; i<barrelNum; i++)
 	{
-		if (barrellist[i].active == true)
+		barrellist[i].position.Y+= barrelSpeed;
+		if(barrellist[i].position.Y >= 27)
 		{
-			barrellist[i].position.Y = barrellist[i].position.Y + 2;
-			if(barrellist[i].position.Y >= 27)
-			{
-				barrellist[i].active = false;
-				barrellist[i].position.X = charLocation.X;
-				barrellist[i].position.Y = charLocation.Y+1;
-			}
+			barrellist[i].active = false;
+			barrellist[i].position.X = charLocation.X;
+			barrellist[i].position.Y = charLocation.Y+1;
 		}
 	}
 }
