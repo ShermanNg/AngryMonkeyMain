@@ -5,14 +5,15 @@ extern char map[WIDTH][HEIGHT];
 extern double elapsedTime;
 extern double dodgeTimer;
 extern double deltaTime;
-extern COORD consoleSize;
+extern COORD ConsoleSize;
 
 using std::cout;
 
-int printLine = 0;
+int printLineX = 0;
+int printLineY = 0;
 int killCount = 0;
 char enemy[3][3] = {
-	{' ','O',' '},
+	{' ','O',' ',},
 	{'-','|','-'},
 	{'/',' ','\\'}
 };
@@ -66,23 +67,26 @@ void drawenemy()
 			if (enemyList[i].position.X >= 0 && enemyList[i].isAlive == true)
 			{
 				//Designated spawn point
-				gotoXY(enemyList[i].position.X,enemyList[i].position.Y);
+				/*gotoXY(enemyList[i].position.X,enemyList[i].position.Y);*/
 
 				//Colors enemy
-				colour(0x0c);
-
+				/*colour(0x0c);*/
+				COORD temp = {enemyList[i].position.X,enemyList[i].position.Y};
 				//Drawing of enemy
 				for(int j = 0; j<=2; ++j)
 				{
 					for(int k = 0; k<=2; ++k)
 					{
-						cout << enemy[j][k];
+						writeToBuffer(temp, enemy[j][k], 0x0c);
+						temp.X += 1;
+						/*cout << enemy[j][k];*/
 					}
-					printLine++;
-					gotoXY(enemyList[i].position.X,enemyList[i].position.Y+printLine);
+					temp.Y+=1;
+					temp.X = enemyList[i].position.X;
+					/*gotoXY(enemyList[i].position.X,enemyList[i].position.Y+printLine);*/
 				}
 				//Resetting Y Pos after draw
-				printLine=0;
+				printLineY=0;
 			}
 		}
 	}
@@ -243,7 +247,7 @@ void climbAlign(int &enemy)
 
 bool climbCheck(int &enemy)
 {
-	int y = consoleSize.Y;
+	int y = ConsoleSize.Y;
 
 	//AI 1.3 Evasive climbing
 	for(int i = 0; i < 3; i++)
@@ -347,16 +351,22 @@ void drawdead(int &enemy)
 	int printLine = 0;
 
 	//Go to specific enemy coord
-	gotoXY(enemyList[enemy].position.X,enemyList[enemy].position.Y);
+	/*gotoXY(enemyList[enemy].position.X,enemyList[enemy].position.Y);*/
+	COORD temp = {enemyList[enemy].position.X,enemyList[enemy].position.Y};
+	
 
 	//Clears up dead enemy
 	for(int j = 0; j<=2; ++j)
 	{
 		for(int k = 0; k<=2; ++k)
 		{
-			cout << " ";
+			writeToBuffer(temp, " ", 0x0c);
+			temp.X += 1;
+			/*cout << " ";*/
 		}
+		temp.Y+=1;
+		temp.X = enemyList[enemy].position.X;
 		printLine++;
-		gotoXY(enemyList[enemy].position.X,enemyList[enemy].position.Y+printLine);
+		/*gotoXY(enemyList[enemy].position.X,enemyList[enemy].position.Y+printLine);*/
 	}
 }

@@ -26,7 +26,8 @@ bool pause;
 extern bool gameStarted;
 extern int modeSelected;
 
-COORD consoleSize;
+// Console size, width by height
+COORD ConsoleSize = {80, 25};
 COORD charLocation;
 COORD playerhumanLocation;
 
@@ -35,18 +36,7 @@ void init()
 	// Set precision for floating point output
 	std::cout << std::fixed << std::setprecision(3);
 
-	SetConsoleTitle(L"Angry Monkey");
-
-	// Sets the console size, this is the biggest so far.
-	setConsoleSize(79, 28);
-
-	// Get console width and height
-	CONSOLE_SCREEN_BUFFER_INFO csbi; /* to get buffer info */     
-
-	/* get the number of character cells in the current buffer */ 
-	GetConsoleScreenBufferInfo( GetStdHandle( STD_OUTPUT_HANDLE ), &csbi );
-	consoleSize.X = csbi.srWindow.Right + 1;
-	consoleSize.Y = csbi.srWindow.Bottom + 1;
+	initConsole(ConsoleSize, "Angry Monkey");
 
 	// set the character to be in the center of the screen.
 	charLocation.X = 40;
@@ -74,6 +64,8 @@ void shutdown()
 {
 	// Reset to white text on black background
 	colour(FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
+
+    shutDownConsole();
 }
 
 void getInput()
@@ -111,7 +103,7 @@ void update(double dt)
 			Beep(1440, 30);
 			charLocation.X-=3;
 		}
-		if (keyPressed[K_RIGHT] && charLocation.X < consoleSize.X - 4)
+		if (keyPressed[K_RIGHT] && charLocation.X < ConsoleSize.X - 4)
 		{
 			Beep(1440, 30);
 			charLocation.X+=3;
@@ -205,20 +197,23 @@ void render()// for drawing of objects only
 
 	if (pause == false && Gameover.active == false && gameStarted == true)
 	{
-		// clear previous screen
-		colour(0x0F);
-		cls();
+		// Clears the buffer with this colour attribute
+        clearBuffer(0x1F);
 
 		//render the game
 		read();
 		// render time taken to calculate this frame
-		gotoXY(70, 0);
+		COORD dtime ={70, 0};
+		/*gotoXY(70, 0);
 		colour(0x1A);
-		std::cout << 1.0 / deltaTime << "fps" << std::endl;
+		std::cout << 1.0 / deltaTime << "fps" << std::endl;*/
+		writeToBuffer(dtime, 1.0 / deltaTime, 0x1A);
 
-		gotoXY(0, 0);
+		COORD etime ={0, 0};
+		/*gotoXY(0, 0);
 		colour(0x59);
-		std::cout << elapsedTime << "secs" << std::endl;
+		std::cout << elapsedTime << "secs" << std::endl;*/
+		writeToBuffer(etime, elapsedTime, 0x59);
 
 		// render character
 		drawPlayer1();
@@ -278,14 +273,22 @@ void render()// for drawing of objects only
 		//Pause message for menu
 		if(gameStarted == false)
 		{
-			gotoXY(0,25);
-			cout << "Press BACKSPACE to return to Unpause" << endl;
+			COORD a = {0,25};
+			/*gotoXY(0,25);
+			cout << "Press BACKSPACE to return to Unpause" << endl;*/
+			writeToBuffer(a,"Press BACKSPACE to return to Unpause");
+			
 		}
 		//Pause message for in game
 		else
 		{
-			gotoXY(20,0);
-			cout<<"Game is Paused, Press BACKSPACE to continue";
+			COORD a = {20,0};
+			/*gotoXY(20,0);
+			cout<<"Game is Paused, Press BACKSPACE to continue";*/
+			writeToBuffer(a,"Game is Paused, Press BACKSPACE to continue");
 		}
 	}
+	
+	// Writes the buffer to the console, hence you will see what you have written
+    flushBufferToConsole();
 }

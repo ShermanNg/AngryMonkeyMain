@@ -331,23 +331,26 @@ void freezepowerup()
 
 void drawtele()
 {
-	gotoXY(teleporter1location.powerlocation);
+	/*gotoXY(teleporter1location.powerlocation);
 	colour(0x0C);
 	std::cout << (char)5;
-	std::cout << (char)5;
-	gotoXY(teleporter2location.powerlocation);
+	std::cout << (char)5;*/
+	writeToBuffer(teleporter1location.powerlocation, (char)5, 0x0C);
+	/*gotoXY(teleporter2location.powerlocation);
 	colour(0x0C);
 	std::cout << (char)5;
-	std::cout << (char)5;
+	std::cout << (char)5;*/
+	writeToBuffer(teleporter2location.powerlocation, (char)5, 0x0C);
 }
 
 void drawlife()
 {
 	if(life.present == true)
 	{
-		gotoXY(lifepoweruplocation.powerlocation);
+		/*gotoXY(lifepoweruplocation.powerlocation);
 		colour(0x0C);
-		std::cout<<(char)3;
+		std::cout<<(char)3;*/
+		writeToBuffer(lifepoweruplocation.powerlocation, (char)3, 0x0C);
 	}
 }
 
@@ -355,9 +358,10 @@ void drawfire()
 {
 	if(fire.present == true)
 	{
-		gotoXY(firepoweruplocation.powerlocation);
+		/*gotoXY(firepoweruplocation.powerlocation);
 		colour(0x0C);
-		std::cout<<(char)21;
+		std::cout<<(char)21;*/
+		writeToBuffer(firepoweruplocation.powerlocation, (char)21, 0x0C);
 	}
 }
 
@@ -365,16 +369,18 @@ void drawflame()
 {
 	if(fire.activated == true)
 	{
-		gotoXY(flameslocation.powerlocation);
-		colour(0x4E);//orange
+		//gotoXY(flameslocation.powerlocation);
+		//colour(0x4E);//orange
 		for(int n = 0; n < 77;n++)
 		{
-			std::cout<<(char)15;
+			/*std::cout<<(char)15;*/
+			writeToBuffer(flameslocation.powerlocation, (char)15, 0x4E);
 		}
 		std::cout<<std::endl;
 		for(int n = 0; n < 77;n++)
 		{
-			std::cout<<(char)15;
+			/*std::cout<<(char)15;*/
+			writeToBuffer(flameslocation.powerlocation, (char)15, 0x4E);
 		}
 		if(elapsedTime > flames.timestamp + 1)//flame lifetime
 		{
@@ -388,8 +394,9 @@ void drawfreeze()
 	//render freeze power up
 	if(freeze.present == true)
 	{
-		gotoXY(freezepoweruplocation.powerlocation);
+		/*gotoXY(freezepoweruplocation.powerlocation);
 		colour(0x0C);
-		std::cout<<(char)4;
+		std::cout<<(char)4;*/
+		writeToBuffer(freezepoweruplocation.powerlocation, (char)4, 0x0C);
 	}
 }

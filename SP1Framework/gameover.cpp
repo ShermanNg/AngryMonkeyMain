@@ -3,7 +3,7 @@
 
 
 extern double elapsedTime;
-extern COORD consoleSize;
+extern COORD ConsoleSize;
 extern COORD charLocation;
 extern COORD playerhumanLocation;
 extern int killCount;
@@ -17,42 +17,57 @@ void initialiseEnd()
 }
 void drawNormalEnd()
 {
-	gotoXY(13,consoleSize.Y/4);
+	COORD a = {(13,ConsoleSize.Y/4)};
+	/*gotoXY(13,ConsoleSize.Y/4);
 	colour(0x0E);
-	cout<<"*******************************************************";
+	cout<<"*******************************************************";*/
+	writeToBuffer(a, "*******************************************************", 0x0E);
 	for(int i = 8; i<14; i++)
 	{
-		gotoXY(13,i);
+		COORD b = {(13,i)};
+		/*gotoXY(13,i);
 		colour(0x0E);
-		cout<<"*                                                     *";
+		cout<<"*                                                     *";*/
+		writeToBuffer(b, "*                                                     *", 0x0E);
 	}
-	gotoXY(13,10);
+	COORD c = {(13,10)};
+	/*gotoXY(13,10);
 	colour(0x0E);
-	cout<<"*                Highest Score: ";
+	cout<<"*                Highest Score: ";*/
+	writeToBuffer(c, "*                Highest Score: ", 0x0E);
 	printhighScore();
-	cout<<"kills               *"<<endl;
-	gotoXY(13,12);
+	/*cout<<"kills               *"<<endl;*///fix later
+	COORD d = {(13,12)};
+	/*gotoXY(13,12);
 	colour(0x0E);
-	cout<<"*      Congratulations!! Your Score is ";
+	cout<<"*      Congratulations!! Your Score is ";*/
+	writeToBuffer(d, "*      Congratulations!! Your Score is ", 0x0E);
 	printScore(killCount);
-	cout<<"kills"<<endl;
-	gotoXY(13,consoleSize.Y/2);
+	/*cout<<"kills"<<endl;*///fix later
+	COORD e = {(13,ConsoleSize.Y/2)};
+	/*gotoXY(13,ConsoleSize.Y/2);
 	colour(0x0E);
-	cout<<"*  You will return to the main menu in a short while  *";
+	cout<<"*  You will return to the main menu in a short while  *";*/
+	writeToBuffer(e, "*  You will return to the main menu in a short while  *", 0x0E);
 	for(int i = 15; i<21; i++)
 	{
-		gotoXY(13,i);
+		COORD f = {(13,i)};
+		/*gotoXY(13,i);
 		colour(0x0E);
-		cout<<"*                                                     *";
+		cout<<"*                                                     *";*/
+		writeToBuffer(f, "*                                                     *", 0x0E);
 	}
-	gotoXY(13,21);
+	COORD g = {13, 21};
+	/*gotoXY(13,21);
 	colour(0x0E);
-	cout<<"*******************************************************";
+	cout<<"*******************************************************";*/
+	writeToBuffer(g, "*******************************************************", 0x0E);
+
 }
 
 void drawplayer1Lose()
 {
-	gotoXY(13,consoleSize.Y/4);
+	gotoXY(13,ConsoleSize.Y/4);
 	colour(0x0E);
 	cout<<"*******************************************************";
 	for(int i = 8; i<14; i++)
@@ -64,7 +79,7 @@ void drawplayer1Lose()
 	gotoXY(13,10);
 	colour(0x0E);
 	cout<<"*                 Player 2 Victory!                   *";
-	gotoXY(13,consoleSize.Y/2);
+	gotoXY(13,ConsoleSize.Y/2);
 	colour(0x0E);
 	cout<<"*  You will return to the main menu in a short while  *";
 	for(int i = 15; i<21; i++)
@@ -80,7 +95,7 @@ void drawplayer1Lose()
 
 void drawplayer2Lose()
 {
-	gotoXY(13,consoleSize.Y/4);
+	gotoXY(13,ConsoleSize.Y/4);
 	colour(0x0E);
 	cout<<"*******************************************************";
 	for(int i = 8; i<14; i++)
@@ -92,7 +107,7 @@ void drawplayer2Lose()
 	gotoXY(13,10);
 	colour(0x0E);
 	cout<<"*                 Player 1 Victory!                   *";
-	gotoXY(13,consoleSize.Y/2);
+	gotoXY(13,ConsoleSize.Y/2);
 	colour(0x0E);
 	cout<<"*  You will return to the main menu in a short while  *";
 	for(int i = 15; i<21; i++)
