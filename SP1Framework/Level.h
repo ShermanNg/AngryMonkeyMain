@@ -17,6 +17,6 @@ using std::endl;
 void save (void);
 void read (void);
 void LoadMap(int a);
-void DrawMap(char);
+void DrawMap(char,int x,int y);
 
 #endif // _LEVEL_H

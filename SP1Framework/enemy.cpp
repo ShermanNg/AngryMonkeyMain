@@ -67,10 +67,9 @@ void drawenemy()
 			if (enemyList[i].position.X >= 0 && enemyList[i].isAlive == true)
 			{
 				//Designated spawn point
-				/*gotoXY(enemyList[i].position.X,enemyList[i].position.Y);*/
 
 				//Colors enemy
-				/*colour(0x0c);*/
+
 				COORD temp = {enemyList[i].position.X,enemyList[i].position.Y};
 				//Drawing of enemy
 				for(int j = 0; j<=2; ++j)
@@ -79,11 +78,9 @@ void drawenemy()
 					{
 						writeToBuffer(temp, enemy[j][k], 0x0c);
 						temp.X += 1;
-						/*cout << enemy[j][k];*/
 					}
 					temp.Y+=1;
 					temp.X = enemyList[i].position.X;
-					/*gotoXY(enemyList[i].position.X,enemyList[i].position.Y+printLine);*/
 				}
 				//Resetting Y Pos after draw
 				printLineY=0;
@@ -304,7 +301,6 @@ bool climbCheck(int &enemy)
 bool enemyAlive(int &enemy)
 {
 	//Vertical Line for printing enemes
-	/*int printLine = 0;*/
 
 	//Disables movement
 	enemyList[enemy].canMove = false;
@@ -351,9 +347,7 @@ void drawdead(int &enemy)
 	int printLine = 0;
 
 	//Go to specific enemy coord
-	/*gotoXY(enemyList[enemy].position.X,enemyList[enemy].position.Y);*/
 	COORD temp = {enemyList[enemy].position.X,enemyList[enemy].position.Y};
-	
 
 	//Clears up dead enemy
 	for(int j = 0; j<=2; ++j)
@@ -362,11 +356,9 @@ void drawdead(int &enemy)
 		{
 			writeToBuffer(temp, " ", 0x0c);
 			temp.X += 1;
-			/*cout << " ";*/
 		}
 		temp.Y+=1;
 		temp.X = enemyList[enemy].position.X;
 		printLine++;
-		/*gotoXY(enemyList[enemy].position.X,enemyList[enemy].position.Y+printLine);*/
 	}
 }

@@ -27,7 +27,7 @@ extern bool gameStarted;
 extern int modeSelected;
 
 // Console size, width by height
-COORD ConsoleSize = {80, 25};
+COORD ConsoleSize = {80, 29};
 COORD charLocation;
 COORD playerhumanLocation;
 
@@ -142,8 +142,9 @@ void update(double dt)
 			Beep(1440, 30);
 			playerhumanLocation.X++;
 		}
+
 		//Spawning of enemies
-		spawnenemy();
+		spawnenemy();	//Spawns enemies
 		Updatebarrel();//update location of barrels if it is active
 		teleporters();// update location of teleporters
 		extralifepowerup();
@@ -190,6 +191,7 @@ void update(double dt)
 
 void render()// for drawing of objects only
 {
+	//Draws menu for game
 	if(gameStarted == false && pause == false)
 	{
 		drawMenu();
@@ -202,17 +204,12 @@ void render()// for drawing of objects only
 
 		//render the game
 		read();
+
 		// render time taken to calculate this frame
 		COORD dtime ={70, 0};
-		/*gotoXY(70, 0);
-		colour(0x1A);
-		std::cout << 1.0 / deltaTime << "fps" << std::endl;*/
 		writeToBuffer(dtime, 1.0 / deltaTime, 0x1A);
 
 		COORD etime ={0, 0};
-		/*gotoXY(0, 0);
-		colour(0x59);
-		std::cout << elapsedTime << "secs" << std::endl;*/
 		writeToBuffer(etime, elapsedTime, 0x59);
 
 		// render character
@@ -243,8 +240,7 @@ void render()// for drawing of objects only
 		//render flames of fire power up
 		drawflame();
 
-		//Draws the enemies
-		//Spawns after 2 seconds
+		//Draws the spawned enemies after 2 seconds
 		drawenemy();
 		
 		//Draw dead enemy
@@ -273,18 +269,13 @@ void render()// for drawing of objects only
 		//Pause message for menu
 		if(gameStarted == false)
 		{
-			COORD a = {0,25};
-			/*gotoXY(0,25);
-			cout << "Press BACKSPACE to return to Unpause" << endl;*/
+			COORD a = {0,10};
 			writeToBuffer(a,"Press BACKSPACE to return to Unpause");
-			
 		}
 		//Pause message for in game
 		else
 		{
 			COORD a = {20,0};
-			/*gotoXY(20,0);
-			cout<<"Game is Paused, Press BACKSPACE to continue";*/
 			writeToBuffer(a,"Game is Paused, Press BACKSPACE to continue");
 		}
 	}

@@ -19,89 +19,110 @@ void LoadMap(int a)
 	{
 		std::ifstream Level ("Level1.txt");
 		for (int i=0;i<29;i++)
-	{	
-		if (Level.is_open())
-		{
-			getline(Level,line);
-			str = new char [line.length()+1];
-			pch = strtok (str," ,");
-			strcpy (str, line.c_str());
-
-			int j =0;
-			char * p = strtok (str," ,");
-			while (p !=0)
+		{	
+			if (Level.is_open())
 			{
-				map[j][i] = *p;
-				p = strtok(NULL," ,");
-				j++;
+				getline(Level,line);
+				str = new char [line.length()+1];
+				pch = strtok (str," ,");
+				strcpy (str, line.c_str());
+
+				int j =0;
+				char * p = strtok (str," ,");
+				while (p !=0)
+				{
+					map[j][i] = *p;
+					p = strtok(NULL," ,");
+					j++;
+				}
 			}
+			else
+				std::cout << "Error Loading Map"<<endl;
 		}
-		else
-			std::cout << "Error Loading Map"<<endl;
-	}
-	delete[] str;
+		delete[] str;
 	}
 	if(a == 2)
 	{
 		std::ifstream Level ("Level2.txt");
 		for (int i=0;i<29;i++)
-	{	
-		if (Level.is_open())
-		{
-			getline(Level,line);
-			str = new char [line.length()+1];
-			pch = strtok (str," ,");
-			strcpy (str, line.c_str());
-
-			int j =0;
-			char * p = strtok (str," ,");
-			while (p !=0)
+		{	
+			if (Level.is_open())
 			{
-				map[j][i] = *p;
-				p = strtok(NULL," ,");
-				j++;
+				getline(Level,line);
+				str = new char [line.length()+1];
+				pch = strtok (str," ,");
+				strcpy (str, line.c_str());
+
+				int j =0;
+				char * p = strtok (str," ,");
+				while (p !=0)
+				{
+					map[j][i] = *p;
+					p = strtok(NULL," ,");
+					j++;
+				}
 			}
+			else
+				cout << "Error Loading Map"<<endl;
 		}
-		else
-			cout << "Error Loading Map"<<endl;
-	}
-	delete[] str;
+		delete[] str;
 	}
 }
 
 void read(void)
 {
 	char symbol = '0';
-
+	//Set X and Y for drawing map
+	int x = 0;
+	int y = 0;
 	for (int i=0;i<29;i++)
 	{	
 		for(int j =0;j<80;j++)
 		{
-			symbol = map[j][i] ;
-			DrawMap(symbol);
+			symbol = map[j][i];
+			DrawMap(symbol,x,y);
+			x++;
 		}
+		//Resetting X for new line
+		x = 0;
+		y++;
 	}
 }
 
-void DrawMap (char Sym)
+void DrawMap (char Sym,int X, int Y)
 {
-	if (Sym == '1')
+	//if (Sym == '1')
+	//{
+	//	colour(0x3C);
+	//	cout <<" ";
+	//}
+	//else if (Sym == '2')
+	//{
+	//	colour(0x4D);
+	//	cout << "H";
+	//}
+	//else if (Sym =='0')
+	//{
+	//	colour(0x00);
+	//	cout <<" ";
+	//}
+
+	COORD draw = {X,Y};
+	if(Sym == '0')
 	{
-		colour(0x3C);
-		cout <<" ";
+		writeToBuffer(draw,' ',0x00);
 	}
-	else if (Sym == '2')
+	else if(Sym == '1')
 	{
-		colour(0x4D);
-		cout << "H";
+		writeToBuffer(draw,' ',0x3C);
 	}
-	else if (Sym =='0')
+	else if(Sym == '2')
 	{
-		colour(0x00);
-		cout <<" ";
+		writeToBuffer(draw,'H',0x4D);
 	}
+
 	/*else 
 	{
-		cout << " skip" ;
+	cout << " skip" ;
 	}*/
 }

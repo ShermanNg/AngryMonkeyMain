@@ -1,7 +1,5 @@
 #include "gameover.h"
 
-
-
 extern double elapsedTime;
 extern COORD ConsoleSize;
 extern COORD charLocation;
@@ -18,50 +16,53 @@ void initialiseEnd()
 void drawNormalEnd()
 {
 	COORD a = {(13,ConsoleSize.Y/4)};
-	/*gotoXY(13,ConsoleSize.Y/4);
-	colour(0x0E);
-	cout<<"*******************************************************";*/
-	writeToBuffer(a, "*******************************************************", 0x0E);
-	for(int i = 8; i<14; i++)
+	std::ifstream scoreScr;
+	string scoreText;
+	int y = 0;
+
+	clearBuffer(0x0F);
+	scoreScr.open("Text/Score.txt");
+	while(!scoreScr.eof())
 	{
-		COORD b = {(13,i)};
-		/*gotoXY(13,i);
-		colour(0x0E);
-		cout<<"*                                                     *";*/
-		writeToBuffer(b, "*                                                     *", 0x0E);
+		COORD score = {0,y};
+		getline(scoreScr, scoreText);
+		writeToBuffer(score,scoreText,0x0F);
+		y++;
+		
 	}
-	COORD c = {(13,10)};
-	/*gotoXY(13,10);
-	colour(0x0E);
-	cout<<"*                Highest Score: ";*/
-	writeToBuffer(c, "*                Highest Score: ", 0x0E);
-	printhighScore();
-	/*cout<<"kills               *"<<endl;*///fix later
-	COORD d = {(13,12)};
-	/*gotoXY(13,12);
-	colour(0x0E);
-	cout<<"*      Congratulations!! Your Score is ";*/
-	writeToBuffer(d, "*      Congratulations!! Your Score is ", 0x0E);
-	printScore(killCount);
-	/*cout<<"kills"<<endl;*///fix later
-	COORD e = {(13,ConsoleSize.Y/2)};
-	/*gotoXY(13,ConsoleSize.Y/2);
-	colour(0x0E);
-	cout<<"*  You will return to the main menu in a short while  *";*/
-	writeToBuffer(e, "*  You will return to the main menu in a short while  *", 0x0E);
-	for(int i = 15; i<21; i++)
-	{
-		COORD f = {(13,i)};
-		/*gotoXY(13,i);
-		colour(0x0E);
-		cout<<"*                                                     *";*/
-		writeToBuffer(f, "*                                                     *", 0x0E);
-	}
-	COORD g = {13, 21};
-	/*gotoXY(13,21);
-	colour(0x0E);
-	cout<<"*******************************************************";*/
-	writeToBuffer(g, "*******************************************************", 0x0E);
+	scoreScr.close();
+	
+	//Clear all this crap and make the end screen in a txt file for single,and multi(p1 win and p2 win)
+
+	//writeToBuffer(a, "*******************************************************", 0x0E);
+	//for(int i = 8; i<14; i++)
+	//{
+	//	COORD b = {(13,i)};
+
+	//	writeToBuffer(b, "*                                                     *", 0x0E);
+	//}
+	//COORD c = {(13,10)};
+
+	//writeToBuffer(c, "*                Highest Score: ", 0x0E);
+	//printhighScore();
+	////cout<<"kills               *"<<endl;*///fix later
+	//COORD d = {(13,12)};
+
+	//writeToBuffer(d, "*      Congratulations!! Your Score is ", 0x0E);
+	//printScore(killCount);
+	////cout<<"kills"<<endl;*///fix later
+	//COORD e = {(13,ConsoleSize.Y/2)};
+
+	//writeToBuffer(e, "*  You will return to the main menu in a short while  *", 0x0E);
+	//for(int i = 15; i<21; i++)
+	//{
+	//	COORD f = {(13,i)};
+
+	//	writeToBuffer(f, "*                                                     *", 0x0E);
+	//}
+	//COORD g = {13, 21};
+
+	//writeToBuffer(g, "*******************************************************", 0x0E);
 
 }
 

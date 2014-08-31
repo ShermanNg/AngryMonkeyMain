@@ -38,16 +38,11 @@ void drawbanana()
 	{
 		if(banana[i].active == true)
 		{
-			/*gotoXY(banana[i].position);
-			colour(0x0E);
-			std::cout<<(char)247;*/
 			writeToBuffer(banana[i].position, (char)247, 0x0E);
 		}
 		if(banana[i].active == false)
 		{
 			gotoXY(banana[i].position);
-			colour(0x0E);
-			std::cout<<" ";
 			writeToBuffer(banana[i].position,' ', 0x0E);
 		}
 	}
@@ -74,8 +69,6 @@ void drawbarrel()
 		if(barrellist[i].active == true)
 		{
 			COORD c= {barrellist[i].position.X+1,barrellist[i].position.Y};
-			//colour(0xA2);
-			//std::cout<<(char)4;
 			writeToBuffer(c, char(4), 0xA2);
 		}
 	}

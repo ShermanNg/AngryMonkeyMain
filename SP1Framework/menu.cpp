@@ -19,6 +19,7 @@ bool gameStart()
 	if (isKeyPressed(VK_UP))
 	{
 		pointer--;
+		Beep(840,30);
 		if (pointer == -1)
 		{
 			pointer = 3;
@@ -27,6 +28,7 @@ bool gameStart()
 	if (isKeyPressed(VK_DOWN))
 	{
 		pointer++;
+		Beep(840,30);
 		if (pointer == 4)
 		{
 			pointer = 0;
@@ -65,7 +67,13 @@ bool gameStart()
 				return gameStarted;
 				break;
 			}
+		default:
+			{
+				return gameStarted;
+				break;
+			}
 		}
+
 	}
 	for(int i = 0; i<barrelNum; i++)
 	{
@@ -73,6 +81,7 @@ bool gameStart()
 		barrellist[i].position.X = charLocation.X;
 		barrellist[i].position.Y = charLocation.Y+1;
 	}
+	return gameStarted;
 }
 
 void drawMenu()
@@ -82,36 +91,42 @@ void drawMenu()
 	std::ifstream menuText;
 	string menuBanner;
 
-	cls();	//Clear screen to update input
+	//clears all the buffer for menu
+	clearBuffer(0x0F);
 
 	//Banner
-	colour(0x0F);
+	int y = 0;
 	menuText.open("Text/Banner.txt");
 	while(!menuText.eof())
 	{
+		COORD menu = {0,y};
 		getline(menuText, menuBanner);
-		cout << menuBanner << endl;
+		writeToBuffer(menu,menuBanner,0x0F);
+		y++;
+		
 	}
 	menuText.close();
 
 	//Text Attribute only for Main Menu text
-	colour(0x0F);
-	cout << "Please navigate through the menu and select your desired action using the enter key" << endl;
+
 	for (int i = 0; i < 4; ++i)
 	{
+		COORD options = {0,y};
+		COORD arrow = {21,y};
 		if (i == pointer)
 		{
 			//Selected options lights up to indicate selection
-			colour(0x0F);
-			Beep(840,30);
-			cout << Menu[i] << " <-"<< endl;
+			writeToBuffer(options,Menu[i],0x0F);
+			writeToBuffer(arrow,"<-",0x0F);
 		}
 		else
 		{
 			//Unselected options are greyed
-			colour(0x07);
-			cout << Menu[i] << endl;
+			writeToBuffer(options,Menu[i],0x07);
+			writeToBuffer(arrow,"  ",0x0F);
 		}
+		
+		y++;
 	}
 }
 
@@ -119,16 +134,21 @@ void drawInstructions()
 {
 	std::ifstream instruction;
 	string display;
-	cls();	//Clear screen to update input
+	
+	//clear buffer for instructions
+	clearBuffer(0x0F);
 
 	//Banner
-	colour(0x0F);
+	int y = 0;
 	instruction.open("Text/about.txt");
 	while(!instruction.eof())
 	{
+		COORD info={0,y};
 		getline(instruction, display);
-		cout << display << endl;
+		writeToBuffer(info,display,0x0F);
+		y++;
 	}
 	instruction.close();
 	pause = true;
+	
 }
