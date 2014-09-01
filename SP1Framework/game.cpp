@@ -207,7 +207,8 @@ void render()// for drawing of objects only
 
 		// render time taken to calculate this frame
 		COORD dtime ={70, 0};
-		writeToBuffer(dtime, 1.0 / deltaTime, 0x1A);
+		auto a = 1.0/deltaTime;
+		writeToBuffer(dtime, a, 0x1A);
 
 		COORD etime ={0, 0};
 		writeToBuffer(etime, elapsedTime, 0x59);

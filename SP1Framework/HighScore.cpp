@@ -41,11 +41,14 @@ void HighscoreCheck(double b)
 void printhighScore (void)
 {
 	int c = highscore;
-	cout << c;
+	COORD b = {42,12};
+	string Str = static_cast<std::ostringstream*>(&(std::ostringstream()<<highscore))->str();
+	writeToBuffer(b, Str, 0x0F);
 }
 
 void printScore(int a)
 {
-	Score = a;
-	cout << Score;
+	COORD b = {55,13};
+	string Str = static_cast<std::ostringstream*>(&(std::ostringstream()<<a))->str();
+	writeToBuffer(b, Str, 0x0F);
 }

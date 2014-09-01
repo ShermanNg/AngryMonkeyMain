@@ -4,8 +4,8 @@
 *                                                     *
 *                                                     *
 *                                                     *
-*                 HighScore:                          *
-*         Congratulations!! Your Score is             *
+*                                                     *
+*                 Player Two Victory!                 *
 *  You will return to the main menu in a short while  *
 *                                                     *
 *                                                     *

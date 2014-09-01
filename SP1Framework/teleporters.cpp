@@ -336,11 +336,16 @@ void drawtele()
 	std::cout << (char)5;
 	std::cout << (char)5;*/
 	writeToBuffer(teleporter1location.powerlocation, (char)5, 0x0C);
+	COORD a = {teleporter1location.powerlocation.X+1,teleporter1location.powerlocation.Y};
+	writeToBuffer(a, (char)5, 0x0C);
+
 	/*gotoXY(teleporter2location.powerlocation);
 	colour(0x0C);
 	std::cout << (char)5;
 	std::cout << (char)5;*/
 	writeToBuffer(teleporter2location.powerlocation, (char)5, 0x0C);
+	COORD b = {teleporter2location.powerlocation.X+1,teleporter2location.powerlocation.Y};
+	writeToBuffer(b, (char)5, 0x0C);
 }
 
 void drawlife()
@@ -373,14 +378,16 @@ void drawflame()
 		//colour(0x4E);//orange
 		for(int n = 0; n < 77;n++)
 		{
+			COORD a = {flameslocation.powerlocation.X+n,flameslocation.powerlocation.Y};
 			/*std::cout<<(char)15;*/
-			writeToBuffer(flameslocation.powerlocation, (char)15, 0x4E);
+			writeToBuffer(a, (char)15, 0x4E);
 		}
-		std::cout<<std::endl;
+		/*std::cout<<std::endl;*/
 		for(int n = 0; n < 77;n++)
 		{
 			/*std::cout<<(char)15;*/
-			writeToBuffer(flameslocation.powerlocation, (char)15, 0x4E);
+			COORD b = {flameslocation.powerlocation.X+n,flameslocation.powerlocation.Y+1};
+			writeToBuffer(b, (char)15, 0x4E);
 		}
 		if(elapsedTime > flames.timestamp + 1)//flame lifetime
 		{

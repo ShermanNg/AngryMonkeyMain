@@ -43,7 +43,7 @@ void drawPlayer1(void)
 void drawPlayer2(void)
 {
 	int printplayer = 0;
-	COORD temp = charLocation;
+	COORD temp = playerhumanLocation;
 	/*gotoXY(playerhumanLocation);
 	colour(0x0E);*/
 	for(int i = 0; i<=2; ++i)
@@ -55,7 +55,7 @@ void drawPlayer2(void)
 			temp.X += 1;
 		}
 		temp.Y+=1;
-		temp.X = charLocation.X;
+		temp.X = playerhumanLocation.X;
 		/*printplayer++;
 		gotoXY(playerhumanLocation.X,playerhumanLocation.Y+printplayer);*/
 	}

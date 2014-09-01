@@ -15,7 +15,6 @@ void initialiseEnd()
 }
 void drawNormalEnd()
 {
-	COORD a = {(13,ConsoleSize.Y/4)};
 	std::ifstream scoreScr;
 	string scoreText;
 	int y = 0;
@@ -24,102 +23,52 @@ void drawNormalEnd()
 	scoreScr.open("Text/Score.txt");
 	while(!scoreScr.eof())
 	{
-		COORD score = {0,y};
+		COORD score = {13,y+6};
 		getline(scoreScr, scoreText);
 		writeToBuffer(score,scoreText,0x0F);
 		y++;
 		
 	}
 	scoreScr.close();
-	
-	//Clear all this crap and make the end screen in a txt file for single,and multi(p1 win and p2 win)
-
-	//writeToBuffer(a, "*******************************************************", 0x0E);
-	//for(int i = 8; i<14; i++)
-	//{
-	//	COORD b = {(13,i)};
-
-	//	writeToBuffer(b, "*                                                     *", 0x0E);
-	//}
-	//COORD c = {(13,10)};
-
-	//writeToBuffer(c, "*                Highest Score: ", 0x0E);
-	//printhighScore();
-	////cout<<"kills               *"<<endl;*///fix later
-	//COORD d = {(13,12)};
-
-	//writeToBuffer(d, "*      Congratulations!! Your Score is ", 0x0E);
-	//printScore(killCount);
-	////cout<<"kills"<<endl;*///fix later
-	//COORD e = {(13,ConsoleSize.Y/2)};
-
-	//writeToBuffer(e, "*  You will return to the main menu in a short while  *", 0x0E);
-	//for(int i = 15; i<21; i++)
-	//{
-	//	COORD f = {(13,i)};
-
-	//	writeToBuffer(f, "*                                                     *", 0x0E);
-	//}
-	//COORD g = {13, 21};
-
-	//writeToBuffer(g, "*******************************************************", 0x0E);
+	printhighScore();
+	printScore(killCount);
 
 }
 
 void drawplayer1Lose()
 {
-	gotoXY(13,ConsoleSize.Y/4);
-	colour(0x0E);
-	cout<<"*******************************************************";
-	for(int i = 8; i<14; i++)
+	std::ifstream scoreScr;
+	string scoreText;
+	int y = 0;
+
+	clearBuffer(0x0F);
+	scoreScr.open("Text/player2win.txt");
+	while(!scoreScr.eof())
 	{
-		gotoXY(13,i);
-		colour(0x0E);
-		cout<<"*                                                     *";
+		COORD score = {13,y+6};
+		getline(scoreScr, scoreText);
+		writeToBuffer(score,scoreText,0x0F);
+		y++;
 	}
-	gotoXY(13,10);
-	colour(0x0E);
-	cout<<"*                 Player 2 Victory!                   *";
-	gotoXY(13,ConsoleSize.Y/2);
-	colour(0x0E);
-	cout<<"*  You will return to the main menu in a short while  *";
-	for(int i = 15; i<21; i++)
-	{
-		gotoXY(13,i);
-		colour(0x0E);
-		cout<<"*                                                     *";
-	}
-	gotoXY(13,21);
-	colour(0x0E);
-	cout<<"*******************************************************"<<endl;
+	scoreScr.close();
 }
 
 void drawplayer2Lose()
 {
-	gotoXY(13,ConsoleSize.Y/4);
-	colour(0x0E);
-	cout<<"*******************************************************";
-	for(int i = 8; i<14; i++)
+	std::ifstream scoreScr;
+	string scoreText;
+	int y = 0;
+
+	clearBuffer(0x0F);
+	scoreScr.open("Text/player1win.txt");
+	while(!scoreScr.eof())
 	{
-		gotoXY(13,i);
-		colour(0x0E);
-		cout<<"*                                                     *";
+		COORD score = {13,y+6};
+		getline(scoreScr, scoreText);
+		writeToBuffer(score,scoreText,0x0F);
+		y++;
 	}
-	gotoXY(13,10);
-	colour(0x0E);
-	cout<<"*                 Player 1 Victory!                   *";
-	gotoXY(13,ConsoleSize.Y/2);
-	colour(0x0E);
-	cout<<"*  You will return to the main menu in a short while  *";
-	for(int i = 15; i<21; i++)
-	{
-		gotoXY(13,i);
-		colour(0x0E);
-		cout<<"*                                                     *";
-	}
-	gotoXY(13,21);
-	colour(0x0E);
-	cout<<"*******************************************************"<<endl;
+	scoreScr.close();
 }
 
 void monkeydead()
