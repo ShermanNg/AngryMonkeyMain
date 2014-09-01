@@ -130,8 +130,9 @@ void moveEnemy(int &enemy, double dt)
 				double counter = 1.0;
 				if(elapsedTime >= counter)
 				{
-					enemyList[enemy].position.X+= enemySpeed*(1.0/dt);
-					counter+=1.0;
+					enemyList[enemy].position.X += enemySpeed*counter;
+					counter = counter + 1.0;
+					
 				}
 			}
 			//Moving left side after reaching right corner
@@ -140,8 +141,8 @@ void moveEnemy(int &enemy, double dt)
 				double counter = 1.0;
 				if(elapsedTime >= counter)
 				{
-					enemyList[enemy].position.X-= enemySpeed*(1.0/dt);
-					counter+=1.0;
+					enemyList[enemy].position.X -= enemySpeed;
+					counter = counter + 1.0;
 				}
 			}
 		}

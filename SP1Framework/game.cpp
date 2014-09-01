@@ -1,14 +1,13 @@
 // This is the main file for the game logic and function
 //
 //
-
+#pragma once
 #include "player.h"
 #include "teleporters.h"
 #include "Level.h"
 #include "game.h"
 #include "gameover.h"
 #include "menu.h"
-#pragma once
 
 
 using std::cin;
@@ -103,7 +102,7 @@ void update(double dt)
 			Beep(1440, 30);
 			charLocation.X-=3;
 		}
-		if (keyPressed[K_RIGHT] && charLocation.X < ConsoleSize.X - 4)
+		if (keyPressed[K_RIGHT] && charLocation.X < ConsoleSize.X - 7)
 		{
 			Beep(1440, 30);
 			charLocation.X+=3;
@@ -207,12 +206,14 @@ void render()// for drawing of objects only
 
 		// render time taken to calculate this frame
 		COORD dtime ={70, 0};
-		auto a = 1.0/deltaTime;
-		writeToBuffer(dtime, a, 0x1A);
+		double a = 1.0/deltaTime;
+		string fps = static_cast<std::ostringstream*>(&(std::ostringstream()<<a))->str();
+		writeToBuffer(dtime, fps, 0x1A);
 
 		COORD etime ={0, 0};
-		writeToBuffer(etime, elapsedTime, 0x59);
-
+		string elap = static_cast<std::ostringstream*>(&(std::ostringstream()<<elapsedTime))->str();
+		writeToBuffer(etime, elap, 0x59);
+		
 		// render character
 		drawPlayer1();
 

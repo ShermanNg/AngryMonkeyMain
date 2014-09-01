@@ -81,7 +81,7 @@ void Updatebarrel(double dt)
 		double temp = 1.0;
 		if(elapsedTime >= temp)
 		{
-			barrellist[i].position.Y+= barrelSpeed*(1.0/dt);
+			barrellist[i].position.Y += barrelSpeed;
 			temp += 1.0;
 		}
 		if(barrellist[i].position.Y >= 27)
