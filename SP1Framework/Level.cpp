@@ -10,12 +10,12 @@ void save (void)
 	myfile.close();
 }
 
-void LoadMap(int a)
+void LoadMap()
 {
 	string line;
 	char *pch;
 	char * str;
-	if(a == 1)
+	if(versus == false)
 	{
 		std::ifstream Level ("Level1.txt");
 		for (int i=0;i<29;i++)
@@ -35,13 +35,14 @@ void LoadMap(int a)
 					p = strtok(NULL," ,");
 					j++;
 				}
+				delete[] str;
 			}
 			else
 				std::cout << "Error Loading Map"<<endl;
 		}
-		delete[] str;
+		
 	}
-	if(a == 2)
+	if(versus == true)
 	{
 		std::ifstream Level ("Level2.txt");
 		for (int i=0;i<29;i++)

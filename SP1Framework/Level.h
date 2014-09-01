@@ -9,6 +9,8 @@
 #include <fstream>
 #include "Framework\console.h"
 
+extern bool versus;
+
 
 using std::string;
 using std::cout;
@@ -16,7 +18,7 @@ using std::endl;
 
 void save (void);
 void read (void);
-void LoadMap(int a);
+void LoadMap();
 void DrawMap(char,int x,int y);
 
 #endif // _LEVEL_H

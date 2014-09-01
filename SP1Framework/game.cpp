@@ -18,7 +18,7 @@ using std::string;
 double elapsedTime;
 double deltaTime;
 double dodgeTimer;
-bool mapload;
+bool mapload = false;
 bool keyPressed[K_COUNT];
 bool pause;
 
@@ -53,6 +53,10 @@ void init()
 
 	//initialise banana
 	initialisebanana();
+
+	//initialise default single player map
+	LoadMap();
+	mapload = true;
 
 	Highscoreload();
 	elapsedTime = 0.0;
@@ -152,7 +156,7 @@ void update(double dt)
 		{
 			if(mapload == false)
 			{
-				LoadMap(2);
+				LoadMap();
 				mapload = true;
 			}
 			multiplayerdead();//gameover conditions for versus mode
@@ -161,7 +165,7 @@ void update(double dt)
 		{
 			if(mapload == false)
 			{
-				LoadMap(1);
+				LoadMap();
 				mapload = true;
 			}
 		
@@ -206,9 +210,9 @@ void render()// for drawing of objects only
 
 		// render time taken to calculate this frame
 		COORD dtime ={70, 0};
-		double a = 1.0/deltaTime;
-		string fps = static_cast<std::ostringstream*>(&(std::ostringstream()<<a))->str();
-		writeToBuffer(dtime, fps, 0x1A);
+		double a = deltaTime;
+		string framerate = static_cast<std::ostringstream*>(&(std::ostringstream()<<a))->str();
+		writeToBuffer(dtime, framerate, 0x1A);
 
 		COORD etime ={0, 0};
 		string elap = static_cast<std::ostringstream*>(&(std::ostringstream()<<elapsedTime))->str();
@@ -271,8 +275,8 @@ void render()// for drawing of objects only
 		//Pause message for menu
 		if(gameStarted == false)
 		{
-			COORD a = {0,10};
-			writeToBuffer(a,"Press BACKSPACE to return to Unpause");
+			COORD a = {0,24};
+			writeToBuffer(a,"Press BACKSPACE to Unpause");
 		}
 		//Pause message for in game
 		else
