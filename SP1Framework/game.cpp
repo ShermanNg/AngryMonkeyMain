@@ -144,8 +144,8 @@ void update(double dt)
 		}
 
 		//Spawning of enemies
-		spawnenemy();	//Spawns enemies
-		Updatebarrel();//update location of barrels if it is active
+		spawnenemy(dt);	//Spawns enemies
+		Updatebarrel(dt);//update location of barrels if it is active
 		teleporters();// update location of teleporters
 		extralifepowerup();
 		firepowerup();

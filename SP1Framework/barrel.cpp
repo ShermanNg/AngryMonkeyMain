@@ -74,11 +74,16 @@ void drawbarrel()
 	}
 }
 
-void Updatebarrel(void)
+void Updatebarrel(double dt)
 {
 	for(int i = 0; i<barrelNum; i++)
 	{
-		barrellist[i].position.Y+= barrelSpeed;
+		double temp = 1.0;
+		if(elapsedTime >= temp)
+		{
+			barrellist[i].position.Y+= barrelSpeed*(1.0/dt);
+			temp += 1.0;
+		}
 		if(barrellist[i].position.Y >= 27)
 		{
 			barrellist[i].active = false;

@@ -89,7 +89,7 @@ void drawenemy()
 	}
 }
 
-void moveEnemy(int &enemy)
+void moveEnemy(int &enemy, double dt)
 {
 	//AI 1.0 Movement
 	//Damage enemies
@@ -127,12 +127,22 @@ void moveEnemy(int &enemy)
 			//Moving right side after reaching left corner
 			if(enemyList[enemy].toRight == true)
 			{
-				enemyList[enemy].position.X++;
+				double counter = 1.0;
+				if(elapsedTime >= counter)
+				{
+					enemyList[enemy].position.X+= enemySpeed*(1.0/dt);
+					counter+=1.0;
+				}
 			}
 			//Moving left side after reaching right corner
 			else
 			{
-				enemyList[enemy].position.X--;
+				double counter = 1.0;
+				if(elapsedTime >= counter)
+				{
+					enemyList[enemy].position.X-= enemySpeed*(1.0/dt);
+					counter+=1.0;
+				}
 			}
 		}
 		//AI 1.1 Evasive movement(Dodge)
@@ -313,13 +323,13 @@ bool enemyAlive(int &enemy)
 	return enemyList[enemy].isAlive;
 }
 
-void spawnenemy()
+void spawnenemy(double dt)
 {
 	for(int i = 0; i < enemies; i++)
 		{
 			if(enemyList[i].isAlive == true)
 			{
-				moveEnemy(i);
+				moveEnemy(i, dt);
 			}
 			//If enemy is not alive
 			else if(enemyAlive(i) == false)

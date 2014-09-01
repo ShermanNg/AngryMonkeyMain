@@ -10,6 +10,7 @@
 #define sizeY 8 //Size of Y Coord Array
 #define WIDTH 80
 #define HEIGHT 30
+#define enemySpeed 0.2
 
 
 
@@ -40,9 +41,9 @@ extern int enemyY[sizeY];
 //Enemy functions
 void initialiseEnemy();										  // initialise All enemies properties
 void drawenemy();
-void spawnenemy();
+void spawnenemy(double dt);
 void drawdead(int &enemy);
-void moveEnemy(int &enemy);								 // all enemy movements
+void moveEnemy(int &enemy, double dt);								 // all enemy movements
 void enemyClimb(int &enemy);								// Enemy Climbing
 void climbAlign(int &enemy);							   // Align enemy climb
 bool enemyAlive(int &enemy);							  // Enemy death and needs respawn

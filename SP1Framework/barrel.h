@@ -4,7 +4,7 @@
 #include "Framework\console.h"
 #include <iostream>
 #define barrelNum 3 // num of barrel allowed at one time on screen
-#define barrelSpeed 2
+#define barrelSpeed 0.4
 
 
 //Struct of Barrel properties
@@ -23,5 +23,5 @@ void initialisebanana(void);
 void drawbarrel();			  // draws out barrel
 void drawbanana();			 //  draw banana
 void barrelshooting(COORD);  // set barrel location for shooting
-void Updatebarrel();		// update barrel COORD
+void Updatebarrel(double dt);		// update barrel COORD
 #endif // _BARREL_H
