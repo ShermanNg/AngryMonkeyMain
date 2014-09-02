@@ -21,7 +21,7 @@ char enemy[3][3] = {
 
 //Using defined array size
 Enemy enemyList[maxEnemies];	//Enemy count
-bool enemyType[maxEnemies] = {true, true, false, false, false, false, false, false};
+bool enemyType[maxEnemies] = {false, false, false, false, false, false, true, true};
 int enemyX[sizeX] = {25, 30, 0, 3, 6, 64, 67, 70};//left enemy X=COORD
 int enemyY[sizeY] = {25, 25, 25, 25, 25, 25, 25, 25};//Standard enemy Y COORD
 

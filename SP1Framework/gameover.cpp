@@ -105,14 +105,11 @@ void monkeydead()
 
 void showgameover()
 {
-	cls();
 	Gameover.active = true;
 	Gameover.type = 1;
 	resetpowerup();
-	render();
-	Sleep(5000);
-	killCount = 0; //Reset killcount
-	Gameover.active = false;
+	
+
 	mapload = false;
 	for(int i = 0; i<barrelNum; i++)
 	{
@@ -120,8 +117,6 @@ void showgameover()
 		barrellist[i].position.X = charLocation.X;
 		barrellist[i].position.Y = charLocation.Y+1;
 	}
-	init();
-	gameStart();
 }
 
 void multiplayerdead()
@@ -174,14 +169,9 @@ void multiplayerdead()
 
 void multiplayer1gameover()
 {
-	cls();
 	Gameover.active = true;
 	Gameover.type = 2;
 	resetpowerup();
-	render();
-	Sleep(5000);
-	Gameover.active = false;
-	init();
 	mapload = false;
 	for(int i = 0; i<barrelNum; i++)
 	{
@@ -189,19 +179,13 @@ void multiplayer1gameover()
 		barrellist[i].position.X = charLocation.X;
 		barrellist[i].position.Y = charLocation.Y+1;
 	}
-	gameStart();
 }
 
 void multiplayer2gameover()
 {
-	cls();
 	Gameover.active = true;
 	Gameover.type = 3;
 	resetpowerup();
-	render();
-	Sleep(5000);
-	Gameover.active = false;
-	init();
 	mapload = false;
 	for(int i = 0; i<barrelNum; i++)
 	{
@@ -209,5 +193,4 @@ void multiplayer2gameover()
 		barrellist[i].position.X = charLocation.X;
 		barrellist[i].position.Y = charLocation.Y+1;
 	}
-	gameStart();
- }
+}

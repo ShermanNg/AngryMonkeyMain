@@ -31,6 +31,7 @@ bool pause;
 extern bool gameStarted;
 extern int modeSelected;
 extern int bananaNum;
+extern int killCount;
 
 // Console size, width by height
 COORD ConsoleSize = {80, 29};
@@ -69,6 +70,9 @@ void init()
 	//init sound 
 	snd.loadWave("beep", "beep.wav");
 	snd.loadWave("select", "select.wav");
+
+	//init killcount
+	killCount = 0;  //Reset killcount
 
 	Highscoreload();
 	LoadMap();
@@ -220,6 +224,7 @@ void update(double dt)
 				{
 					ClearMap ();
 				}
+				SaveLevel();
 
 			}
 			if (editor == false)
@@ -239,7 +244,7 @@ void update(double dt)
 			extralifepowerup();
 			firepowerup();
 			}
-			if((versus == false)&&(editor==false))
+			if(versus == false && editor==false)
 			{
 				monkeydead();
 			}
@@ -267,6 +272,7 @@ void update(double dt)
 	{
 		mapload = false;
 		gameStarted = false;
+		Gameover.active = false;
 		init();
 	}
 

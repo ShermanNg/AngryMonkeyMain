@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#define barrelNum 12 // num of barrel allowed at one time on screen
+#define barrelNum 15 // num of barrel allowed at one time on screen
 #define barrelSpeed 1
 
 using std::string;

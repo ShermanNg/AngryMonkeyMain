@@ -6,7 +6,7 @@
 *                                                     *
 *                                                     *
 *                 Player One Victory!                 *
-*  You will return to the main menu in a short while  *
+*       Press Esc to return to the main menu          *
 *                                                     *
 *                                                     *
 *                                                     *
