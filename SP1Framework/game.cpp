@@ -262,7 +262,7 @@ void update(double dt)
 
 	}
 	//Pause function
-	if(isKeyPressed(K_BACKSPACE))
+	if(keyPressed[K_BACKSPACE])
 	{
 		pause = !pause;
 	}
