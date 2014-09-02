@@ -1,7 +1,24 @@
-In a Long Long Time Ago,
-Humans and Monkeys lived together in peace,
-until a drought came and food became scarce.
-The crops of the humans were destroyed.
-But the clever monkeys kept all their bananas safe.
-The huamns waged a war against all the monkeys for the remaining bananas.
-At last all but one ANGRY monkey survived. He must defend his remaining bananas at all cost.
+                              A Long Long Time Ago,
+                  Humans and Monkeys lived together in peace.
+                                ___            
+                              [|O O|]   
+                                |-|             O
+                              /((_))\          -|-
+                               /   \           / \
+
+             Until one day, a drought came and food became scarce.
+                   The crops of the humans were destroyed.
+              But the clever monkeys kept all their bananas safe.
+           
+                                ".           ,#  
+                                \ `-._____,-'=/
+                                 `._ ----- _,'
+                                    `-----'
+   The huamns waged a war against all the monkeys for the remaining bananas.
+                 At last all but one ANGRY monkey survived.
+                                     ___            
+                                   [|> <|]   
+                                     |-|             
+                                   /((_))\          
+                                    /   \                                                            
+              He must defend his remaining bananas at all cost.
