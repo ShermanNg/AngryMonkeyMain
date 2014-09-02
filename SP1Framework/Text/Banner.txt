@@ -17,4 +17,4 @@
                                                               /\___/                                                                                                                                                            
                                                               \/__/                                                                                                                                                             
                                                                                                                                                                                                         
-Please navigate through the menu and select your desired action using enter                                                  
+Please navigate through the menu and select your desired action using enter                                                   
