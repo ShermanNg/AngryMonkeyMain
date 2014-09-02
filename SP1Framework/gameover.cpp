@@ -80,7 +80,7 @@ void monkeydead()
 		for(int i = 0; i<3; i++)
 		{
 			if(temp.X-1 == banana[i].position.X && temp.Y+2 == banana[i].position.Y 
-				|| temp.X+1 == banana[i].position.X && temp.Y+2 == banana[i].position.Y&& banana[i].active == true)
+				|| temp.X+1 == banana[i].position.X && temp.Y+2 == banana[i].position.Y && banana[i].active == true)
 			{
 				banana[i].active = false;
 			}

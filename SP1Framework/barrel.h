@@ -23,5 +23,5 @@ void initialisebanana(void);
 void drawbarrel();			  // draws out barrel
 void drawbanana();			 //  draw banana
 void barrelshooting(COORD);  // set barrel location for shooting
-void Updatebarrel(double dt);		// update barrel COORD
+void Updatebarrel();		// update barrel COORD
 #endif // _BARREL_H

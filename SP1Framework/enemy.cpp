@@ -127,12 +127,12 @@ void moveEnemy(int &enemy, double dt)
 			//Moving right side after reaching left corner
 			if(enemyList[enemy].toRight == true)
 			{
-				enemyList[enemy].position.X += enemySpeed;
+				enemyList[enemy].position.X++;
 			}
 			//Moving left side after reaching right corner
 			else
 			{
-				enemyList[enemy].position.X -= enemySpeed;
+				enemyList[enemy].position.X--;
 			}
 		}
 		//AI 1.1 Evasive movement(Dodge)

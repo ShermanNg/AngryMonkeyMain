@@ -5,6 +5,7 @@ extern COORD charLocation;
 extern COORD playerhumanLocation;
 extern double deltaTime;
 extern double elapsedTime;
+double a;
 Barrel barrellist[barrelNum];
 Barrel banana[3];
 
@@ -74,15 +75,13 @@ void drawbarrel()
 	}
 }
 
-void Updatebarrel(double dt)
+void Updatebarrel()
 {
 	for(int i = 0; i<barrelNum; i++)
 	{
-		double temp = 1.0;
-		if(elapsedTime >= temp)
+		if (barrellist[i].active == true)
 		{
 			barrellist[i].position.Y += barrelSpeed;
-			temp += 1.0;
 		}
 		if(barrellist[i].position.Y >= 27)
 		{

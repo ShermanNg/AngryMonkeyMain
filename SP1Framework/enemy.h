@@ -10,7 +10,6 @@
 #define sizeY 8 //Size of Y Coord Array
 #define WIDTH 80
 #define HEIGHT 30
-#define enemySpeed 2
 
 
 

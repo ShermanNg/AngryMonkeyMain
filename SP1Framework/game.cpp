@@ -18,6 +18,7 @@ using std::string;
 double elapsedTime;
 double deltaTime;
 double dodgeTimer;
+double fpsCtrl;
 bool mapload = false;
 bool keyPressed[K_COUNT];
 bool pause;
@@ -54,11 +55,8 @@ void init()
 	//initialise banana
 	initialisebanana();
 
-	//initialise default single player map
-	LoadMap();
-	mapload = true;
-
 	Highscoreload();
+	LoadMap();
 	elapsedTime = 0.0;
 	pause = false;
 }
@@ -95,82 +93,81 @@ void update(double dt)
 		elapsedTime += dt;
 		deltaTime = dt;
 		dodgeTimer += dt;
+		fpsCtrl += dt;
 		int printL = 0;
 		int leftNum = 0;
 		int rightNum = 0;
 
+		if (fpsCtrl >(0.1))
+		{
+			// Updating the location of the character based on the key press
+			if (keyPressed[K_LEFT] && charLocation.X > 2)
+			{
+				Beep(1440, 30);
+				charLocation.X-=3;
+			}
+			if (keyPressed[K_RIGHT] && charLocation.X < ConsoleSize.X - 7)
+			{
+				Beep(1440, 30);
+				charLocation.X+=3;
+			}
+			if(keyPressed[K_SPACE])
+			{
+				int barrelcount = 0;
+				if(barrelcount<barrelNum)
+				{
+					barrelshooting(charLocation);
+					barrelcount++;
+				}
+				if(barrelcount == barrelNum)
+				{
+					barrelcount = 0;
+				}
+			}
+			// Updating the location of player 2
+			if(keyPressed[K_W] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] == '2')
+			{
+				Beep(1440, 30);
+				playerhumanLocation.Y--;
+			}
+			if(keyPressed[K_S] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] == '2' && map[playerhumanLocation.X+1][playerhumanLocation.Y+3] != '1')
+			{
+				Beep(1440, 30);
+				playerhumanLocation.Y++;
+			}
+			if(keyPressed[K_A] && map[playerhumanLocation.X+1][playerhumanLocation.Y] != '2' || keyPressed[K_A] && map[playerhumanLocation.X][playerhumanLocation.Y+3] == '1')
+			{
+				Beep(1440, 30);
+				playerhumanLocation.X--;
+			}
+			if(keyPressed[K_D] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] != '2' || keyPressed[K_D] && map[playerhumanLocation.X][playerhumanLocation.Y+3] == '1')
+			{
+				Beep(1440, 30);
+				playerhumanLocation.X++;
+			}
 
-		// Updating the location of the character based on the key press
-		if (keyPressed[K_LEFT] && charLocation.X > 2)
-		{
-			Beep(1440, 30);
-			charLocation.X-=3;
-		}
-		if (keyPressed[K_RIGHT] && charLocation.X < ConsoleSize.X - 7)
-		{
-			Beep(1440, 30);
-			charLocation.X+=3;
-		}
-		if(keyPressed[K_SPACE])
-		{
-			int barrelcount = 0;
-			if(barrelcount<barrelNum)
+			//Spawning of enemies
+			spawnenemy(dt);	//Spawns enemies
+			Updatebarrel();//update location of barrels if it is active
+			teleporters();// update location of teleporters
+			extralifepowerup();
+			firepowerup();
+			if(versus == false)
 			{
-				barrelshooting(charLocation);
-				barrelcount++;
+				monkeydead();
 			}
-			if(barrelcount == barrelNum)
+			else if(versus == true)
 			{
-				barrelcount = 0;
+				multiplayerdead();//gameover conditions for versus mode
 			}
-		}
-		// Updating the location of player 2
-		if(keyPressed[K_W] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] == '2')
-		{
-			Beep(1440, 30);
-			playerhumanLocation.Y--;
-		}
-		if(keyPressed[K_S] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] == '2' && map[playerhumanLocation.X+1][playerhumanLocation.Y+3] != '1')
-		{
-			Beep(1440, 30);
-			playerhumanLocation.Y++;
-		}
-		if(keyPressed[K_A] && map[playerhumanLocation.X+1][playerhumanLocation.Y] != '2' || keyPressed[K_A] && map[playerhumanLocation.X][playerhumanLocation.Y+3] == '1')
-		{
-			Beep(1440, 30);
-			playerhumanLocation.X--;
-		}
-		if(keyPressed[K_D] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] != '2' || keyPressed[K_D] && map[playerhumanLocation.X][playerhumanLocation.Y+3] == '1')
-		{
-			Beep(1440, 30);
-			playerhumanLocation.X++;
-		}
-
-		//Spawning of enemies
-		spawnenemy(dt);	//Spawns enemies
-		Updatebarrel(dt);//update location of barrels if it is active
-		teleporters();// update location of teleporters
-		extralifepowerup();
-		firepowerup();
-		if(versus == true)
-		{
-			if(mapload == false)
+			if(versus == true && mapload == false)
 			{
-				LoadMap();
 				mapload = true;
-			}
-			multiplayerdead();//gameover conditions for versus mode
-		}
-		else
-		{
-			if(mapload == false)
-			{
 				LoadMap();
-				mapload = true;
 			}
-		
-			monkeydead();//gameover conditions for single player
+			fpsCtrl = 0;
 		}
+			
 	}
 	//Pause function
 	if(isKeyPressed(K_BACKSPACE))
@@ -205,7 +202,7 @@ void render()// for drawing of objects only
 		// Clears the buffer with this colour attribute
         clearBuffer(0x1F);
 
-		//render the game
+		//render the game map
 		read();
 
 		// render time taken to calculate this frame
