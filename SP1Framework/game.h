@@ -10,6 +10,7 @@
 #include "HighScore.h"
 #include "Framework\timer.h"
 #include "Framework\console.h"
+#include "Framework\sound.h"
 #include "menu.h"
 #include <conio.h>
 #include <iostream>
@@ -22,21 +23,34 @@ extern char map[WIDTH][HEIGHT];
 extern StopWatch g_timer;
 extern bool g_quitGame;
 extern bool versus;
+extern bool editor;
 
 enum Keys
 {
-    K_LEFT,
-    K_RIGHT,
+	K_LEFT,
+	K_RIGHT,
+	K_UP,
+	K_DOWN,
 	K_SPACE,
-    K_ESCAPE,
+	K_ESCAPE,
 	K_W,
 	K_S,
 	K_A,
 	K_D,
 	K_BACKSPACE,
 	K_F1,
+	K_0,
+	K_1,
+	K_2,
 	K_RETURN,
-    K_COUNT,
+	K_COUNT,
+};
+
+enum SoundType
+{
+	S_BEEP,
+	S_SELECT,
+	S_COUNT
 };
 
 //Main Game functions
@@ -45,5 +59,6 @@ void getInput();			   // get input from player
 void update(double dt);		  // update the game and the state of the game
 void render();               // renders the current state of the game to the console
 void shutdown();            // do clean up, free memory
+void playGameSound(SoundType sound); // play this sound type
 
 #endif // _GAME_H

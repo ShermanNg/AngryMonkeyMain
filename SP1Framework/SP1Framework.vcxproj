@@ -78,11 +78,13 @@
     <ClCompile Include="barrel.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="Framework\console.cpp" />
+    <ClCompile Include="Framework\sound.cpp" />
     <ClCompile Include="Framework\timer.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gameover.cpp" />
     <ClCompile Include="HighScore.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="player.cpp" />
@@ -92,11 +94,13 @@
     <ClInclude Include="barrel.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="Framework\console.h" />
+    <ClInclude Include="Framework\sound.h" />
     <ClInclude Include="Framework\timer.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="gameover.h" />
     <ClInclude Include="HighScore.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LevelEditor.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="teleporters.h" />
@@ -104,6 +108,7 @@
   <ItemGroup>
     <None Include="HighScore.txt" />
     <None Include="Level1.txt" />
+    <None Include="LevelEditor.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

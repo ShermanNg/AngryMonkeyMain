@@ -10,6 +10,7 @@
 #include "Framework\console.h"
 
 extern bool versus;
+extern bool editor;
 
 
 using std::string;

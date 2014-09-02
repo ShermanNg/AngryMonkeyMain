@@ -13,23 +13,25 @@ bool gameStart()
 {
 	//Reinitialize upon menu
 	gameStarted = false;
+	editor = false;
+	versus= false;
 
 	//Loop to detect user input and move accordingly until action is selected
 
 	if (isKeyPressed(VK_UP))
 	{
 		pointer--;
-		Beep(840,30);
+		playGameSound(S_BEEP);
 		if (pointer == -1)
 		{
-			pointer = 3;
+			pointer = 4;
 		}
 	}
 	if (isKeyPressed(VK_DOWN))
 	{
 		pointer++;
-		Beep(840,30);
-		if (pointer == 4)
+			playGameSound(S_BEEP);
+		if (pointer == 5)
 		{
 			pointer = 0;
 		}
@@ -37,6 +39,7 @@ bool gameStart()
 	//Execute action selected
 	if (isKeyPressed(VK_RETURN))
 	{
+			playGameSound(S_SELECT);
 		modeSelected = pointer;
 		switch(pointer)
 		{
@@ -51,6 +54,16 @@ bool gameStart()
 			{
 				versus = true;
 				gameStarted = true;
+				return gameStarted;
+				break;
+			}
+			case STARTEDITOR:
+			{
+				
+				versus = false;
+						editor = true;
+				gameStarted = true;
+				LoadMap();
 				return gameStarted;
 				break;
 			}
@@ -87,7 +100,7 @@ bool gameStart()
 void drawMenu()
 {
 	//Menu Vars
-	string Menu[4] = {"Start Angry Monkeys!", "2-Player Versus Mode", "About Angry Monkeys", "Quit Angry Monkeys."};
+	string Menu[5] = {"Start Angry Monkeys!", "2-Player Versus Mode","Level Editor", "About Angry Monkeys", "Quit Angry Monkeys."};
 	std::ifstream menuText;
 	string menuBanner;
 
@@ -109,7 +122,7 @@ void drawMenu()
 
 	//Text Attribute only for Main Menu text
 
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
 		COORD options = {0,y};
 		COORD arrow = {21,y};

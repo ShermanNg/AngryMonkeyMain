@@ -18,6 +18,7 @@ enum States
 {
 	STARTGAME = 0,
 	STARTMULTI,
+		STARTEDITOR,
 	ABOUT,
 	QUITGAME
 };
