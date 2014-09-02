@@ -5,9 +5,9 @@ extern COORD charLocation;
 extern COORD playerhumanLocation;
 extern double deltaTime;
 extern double elapsedTime;
-double a;
 Barrel barrellist[barrelNum];
 Barrel banana[3];
+int bananaNum = 3;// initialise banana Num
 
 //initialise barrel
 void intialisebarrel(void)

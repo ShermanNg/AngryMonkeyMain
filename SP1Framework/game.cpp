@@ -19,12 +19,17 @@ double elapsedTime;
 double deltaTime;
 double dodgeTimer;
 double fpsCtrl;
+
+double spawnTimer;
+int enemyCount = 2;
+
 bool mapload = false;
 bool keyPressed[K_COUNT];
 bool pause;
 
 extern bool gameStarted;
 extern int modeSelected;
+extern int bananaNum;
 
 // Console size, width by height
 COORD ConsoleSize = {80, 29};
@@ -57,6 +62,7 @@ void init()
 
 	Highscoreload();
 	LoadMap();
+	enemyCount = 2;
 	elapsedTime = 0.0;
 	pause = false;
 }
@@ -94,6 +100,8 @@ void update(double dt)
 		deltaTime = dt;
 		dodgeTimer += dt;
 		fpsCtrl += dt;
+		spawnTimer += dt;
+		int test = static_cast<int>(elapsedTime);
 		int printL = 0;
 		int leftNum = 0;
 		int rightNum = 0;
@@ -147,7 +155,14 @@ void update(double dt)
 			}
 
 			//Spawning of enemies
-			spawnenemy(dt);	//Spawns enemies
+			activateEnemy(enemyCount);	//Spawns enemies
+
+			//spawn more enemies per 10 seconds until max enemy count
+			if(spawnTimer > 10 && enemyCount < maxEnemies)
+			{
+				enemyCount++;
+				spawnTimer = 0;
+			}
 			Updatebarrel();//update location of barrels if it is active
 			teleporters();// update location of teleporters
 			extralifepowerup();
@@ -206,10 +221,10 @@ void render()// for drawing of objects only
 		read();
 
 		// render time taken to calculate this frame
-		COORD dtime ={70, 0};
+		/*COORD dtime ={70, 0};
 		double a = deltaTime;
 		string framerate = static_cast<std::ostringstream*>(&(std::ostringstream()<<a))->str();
-		writeToBuffer(dtime, framerate, 0x1A);
+		writeToBuffer(dtime, framerate, 0x1A);*/
 
 		COORD etime ={0, 0};
 		string elap = static_cast<std::ostringstream*>(&(std::ostringstream()<<elapsedTime))->str();
@@ -244,14 +259,18 @@ void render()// for drawing of objects only
 		drawflame();
 
 		//Draws the spawned enemies after 2 seconds
-		drawenemy();
+		drawenemy(enemyCount);
 		
+		//drawlife status
+		drawlifestatus();
+		drawfirestatus();
+
 		//Draw dead enemy
-		for(int i = 0; i<enemies; i++)
+		for(int i = 0; i<maxEnemies; i++)
 		{
 			if(enemyList[i].health == 0)
 			{
-				drawdead(i);
+				drawdeadEnemy(i);
 			}
 		}
 	}

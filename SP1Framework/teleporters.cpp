@@ -4,6 +4,7 @@ extern double elapsedTime;
 extern COORD charLocation;
 extern COORD playerhumanLocation;
 extern int killCount;
+extern int bananaNum;
 
 
 powercoord teleporter1location, teleporter2location, lifepoweruplocation, firepoweruplocation, flameslocation, freezepoweruplocation;
@@ -203,6 +204,10 @@ void extralifepowerup()
 			}
 			life.present = false;
 			getpowerup = false;
+			if(bananaNum<3)
+			{
+				bananaNum++;
+			}
 		}
 	}
 }
@@ -263,7 +268,7 @@ void firepowerup()
 	//kill enemies
 	if(fire.activated == true)
 	{
-		for(int i = 0; i<enemies; i++)
+		for(int i = 0; i<maxEnemies; i++)
 			{
 				if(enemyList[i].position.Y == flameslocation.powerlocation.Y - 1)
 				{
@@ -405,5 +410,22 @@ void drawfreeze()
 		colour(0x0C);
 		std::cout<<(char)4;*/
 		writeToBuffer(freezepoweruplocation.powerlocation, (char)4, 0x0C);
+	}
+}
+
+void drawlifestatus()
+{
+	if(life.present == true)
+	{
+		COORD life ={70, 0};
+		writeToBuffer(life, (char)3, 0xA2);
+	}
+}
+void drawfirestatus()
+{
+	if(fire.present == true)
+	{
+		COORD fire ={70, 1};
+		writeToBuffer(fire, (char)21, 0xA2);
 	}
 }

@@ -30,6 +30,8 @@ void drawlife();
 void drawfire();
 void drawflame();
 void drawfreeze();
+void drawlifestatus();
+void drawfirestatus();
 void firepowerup();
 void setpowerups(powerups& spawning,bool present);
 void resetpowerup();

@@ -7,6 +7,7 @@ extern double dodgeTimer;
 extern double deltaTime;
 extern COORD ConsoleSize;
 
+
 using std::cout;
 
 int printLineX = 0;
@@ -19,15 +20,15 @@ char enemy[3][3] = {
 };
 
 //Using defined array size
-Enemy enemyList[enemies];	//Enemy count
-bool enemyType[enemies] = {true, true, false, false, false, false, false, false};
+Enemy enemyList[maxEnemies];	//Enemy count
+bool enemyType[maxEnemies] = {true, true, false, false, false, false, false, false};
 int enemyX[sizeX] = {25, 30, 0, 3, 6, 64, 67, 70};//left enemy X=COORD
 int enemyY[sizeY] = {25, 25, 25, 25, 25, 25, 25, 25};//Standard enemy Y COORD
 
 // Initialise enemies
 void initialiseEnemy(void)
 {
-	for(int i = 0; i < enemies; i++)
+	for(int i = 0; i < maxEnemies; i++)
 	{	
 		//initialising stats
 		enemyList[i].health = 1;
@@ -42,9 +43,41 @@ void initialiseEnemy(void)
 		enemyList[i].position.X = enemyX[i];
 		enemyList[i].position.Y = enemyY[i];
 		enemyList[i].isSpecial = enemyType[i];
-		enemyList[i].respawnTimer = 3;
+		enemyList[i].respawnTimer = 0.3;
 	}
+ 
 }
+
+//Activate enemies
+void activateEnemy(int enemyCount)
+{
+	for(int i = 0; i < enemyCount; i++)
+		{
+			if(enemyList[i].isAlive == true)
+			{
+				moveEnemy(i);
+			}
+			//If enemy is not alive
+			else if(enemyAlive(i) == false)
+			{
+				//Respawn timer
+				enemyList[i].respawnTimer -= deltaTime;
+
+				//If countdown to 0 and below, respawns
+				if(enemyList[i].respawnTimer < 0)
+				{
+					//Restores the selected enemy and properties to alive status
+					enemyList[i].health = 1;
+					enemyList[i].canMove = true;
+					enemyList[i].isAlive = true;
+					enemyList[i].respawnTimer += 0.3;
+					enemyList[i].position.X = enemyX[i];
+					enemyList[i].position.Y = enemyY[i];
+				}
+			}
+		}
+}
+
 
 //Rolling dice for chance to climb
 int rollDice()
@@ -57,11 +90,11 @@ int rollDice()
 	return randNum;
 }
 
-void drawenemy()
+void drawenemy(int enemyCount)
 {
 	if(elapsedTime > 0)
 	{
-		for(int i = 0; i < enemies; i++)
+		for(int i = 0; i < enemyCount; i++)
 		{
 			//Spawns enemies after 4 seconds
 			if (enemyList[i].position.X >= 0 && enemyList[i].isAlive == true)
@@ -69,27 +102,40 @@ void drawenemy()
 				//Designated spawn point
 
 				//Colors enemy
-
 				COORD temp = {enemyList[i].position.X,enemyList[i].position.Y};
 				//Drawing of enemy
-				for(int j = 0; j<=2; ++j)
+				if(enemyList[i].isSpecial == false)
 				{
-					for(int k = 0; k<=2; ++k)
+					for(int j = 0; j<=2; ++j)
 					{
-						writeToBuffer(temp, enemy[j][k], 0x0c);
-						temp.X += 1;
+						for(int k = 0; k<=2; ++k)
+						{
+							writeToBuffer(temp, enemy[j][k], 0x08);
+							temp.X += 1;
+						}
+						temp.Y+=1;
+						temp.X = enemyList[i].position.X;
 					}
-					temp.Y+=1;
-					temp.X = enemyList[i].position.X;
 				}
+				else
+					for(int j = 0; j<=2; ++j)
+					{
+						for(int k = 0; k<=2; ++k)
+						{
+							writeToBuffer(temp, enemy[j][k], 0x0F);
+							temp.X += 1;
+						}
+						temp.Y+=1;
+						temp.X = enemyList[i].position.X;
+					}
 				//Resetting Y Pos after draw
 				printLineY=0;
-			}
+			}	
 		}
 	}
 }
 
-void moveEnemy(int &enemy, double dt)
+void moveEnemy(int &enemy)
 {
 	//AI 1.0 Movement
 	//Damage enemies
@@ -127,12 +173,12 @@ void moveEnemy(int &enemy, double dt)
 			//Moving right side after reaching left corner
 			if(enemyList[enemy].toRight == true)
 			{
-				enemyList[enemy].position.X++;
+				enemyList[enemy].position.X+= EnemySpd;
 			}
 			//Moving left side after reaching right corner
 			else
 			{
-				enemyList[enemy].position.X--;
+				enemyList[enemy].position.X-= EnemySpd;
 			}
 		}
 		//AI 1.1 Evasive movement(Dodge)
@@ -313,35 +359,7 @@ bool enemyAlive(int &enemy)
 	return enemyList[enemy].isAlive;
 }
 
-void spawnenemy(double dt)
-{
-	for(int i = 0; i < enemies; i++)
-		{
-			if(enemyList[i].isAlive == true)
-			{
-				moveEnemy(i, dt);
-			}
-			//If enemy is not alive
-			else if(enemyAlive(i) == false)
-			{
-				//Respawn timer
-				enemyList[i].respawnTimer -= deltaTime;
-				//If countdown to 0 and below, respawns
-				if(enemyList[i].respawnTimer < 0)
-				{
-					//Restores the selected enemy and properties to alive status
-					enemyList[i].health = 1;
-					enemyList[i].canMove = true;
-					enemyList[i].isAlive = true;
-					enemyList[i].respawnTimer = 3;
-					enemyList[i].position.X = enemyX[i];
-					enemyList[i].position.Y = enemyY[i];
-				}
-			}
-		}
-}
-
-void drawdead(int &enemy)
+void drawdeadEnemy(int &enemy)
 {
 	//Vertical Line for printing enemes
 	int printLine = 0;

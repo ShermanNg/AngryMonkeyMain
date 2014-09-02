@@ -5,6 +5,7 @@ extern COORD ConsoleSize;
 extern COORD charLocation;
 extern COORD playerhumanLocation;
 extern int killCount;
+extern int bananaNum;
 
 EndScreen Gameover;
 
@@ -74,15 +75,16 @@ void drawplayer2Lose()
 void monkeydead()
  {
 	int death = 0;
-	for(int i = 0; i<enemies; i++)
+	for(int i = 0; i<maxEnemies; i++)
 	{
 		COORD temp = enemyList[i].position;
-		for(int i = 0; i<3; i++)
+		for(int j = 0; j<3; j++)
 		{
-			if(temp.X-1 == banana[i].position.X && temp.Y+2 == banana[i].position.Y 
-				|| temp.X+1 == banana[i].position.X && temp.Y+2 == banana[i].position.Y && banana[i].active == true)
+			if(temp.X-1 == banana[j].position.X && temp.Y+2 == banana[j].position.Y 
+				|| temp.X+1 == banana[j].position.X && temp.Y+2 == banana[j].position.Y && banana[j].active == true)
 			{
-				banana[i].active = false;
+				bananaNum--;
+				banana[j].active = false;
 			}
 		}
 	}
@@ -135,7 +137,7 @@ void multiplayerdead()
 		}
 
 	}
-	for(int i = 0; i<enemies; i++)
+	for(int i = 0; i<maxEnemies; i++)
 	{
 		COORD temp = enemyList[i].position;
 		for(int i = 0; i<3; i++)
