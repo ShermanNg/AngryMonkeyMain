@@ -3,12 +3,12 @@
                                 ___            
                               [|O O|]   
                                 |-|             O
-                              /((_))\          -|-
+                               /(_)\           -|-
                                /   \           / \
 
              Until one day, a drought came and food became scarce.
-                   The crops of the humans were destroyed.
-              But the clever monkeys kept all their bananas safe.
+                   The crops of the humans were destroyed,
+              but the clever monkeys kept all their bananas safe.
            
                                 ".           ,#  
                                 \ `-._____,-'=/
@@ -19,6 +19,6 @@
                                      ___            
                                    [|> <|]   
                                      |-|             
-                                   /((_))\          
+                                    /(_)\          
                                     /   \                                                            
                He must defend his remaining bananas at all cost. 
