@@ -48,7 +48,7 @@ void initialiseEnemy(void)
 //Activate enemies
 void activateEnemy(int enemyCount)
 {
-	for(int i = 0; i < 1; i++)
+	for(int i = 0; i < enemyCount; i++)
 		{
 			//Move enemies if alive
 			if(enemyList[i].isAlive == true)
@@ -91,7 +91,7 @@ int rollDice()
 void drawEnemy(int enemyCount)
 {
 	//Draws enemies based on current possible max count
-	for(int i = 0; i < 1; i++)
+	for(int i = 0; i < enemyCount; i++)
 	{
 		//Spawns enemies that are alive and not out of map
 		if (enemyList[i].position.X >= 0 && enemyList[i].isAlive == true)
