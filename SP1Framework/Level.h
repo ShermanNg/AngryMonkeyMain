@@ -8,6 +8,7 @@
 #include <sstream>
 #include <fstream>
 #include "Framework\console.h"
+#include "LevelEditor.h"
 
 extern bool versus;
 extern bool editor;
@@ -20,6 +21,7 @@ using std::endl;
 void save (void);
 void read (void);
 void LoadMap();
+void reloadlevel(void);
 void DrawMap(char,int x,int y);
 
 #endif // _LEVEL_H

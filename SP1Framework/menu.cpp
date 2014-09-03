@@ -11,6 +11,7 @@ extern COORD charLocation;	//Resetting barrel coord
 //function for main menu and to check if game started from decision
 bool gameStart()
 {
+	
 	//Reinitialize upon menu
 	gameStarted = false;	//Game is not started
 	editor = false;			//Editor is not started
@@ -20,7 +21,7 @@ bool gameStart()
 	if (isKeyPressed(VK_UP))
 	{
 		pointed--;					//Moves pointed upwards
-		playGameSound(S_BEEP);		//Sound for scrolling
+		//playGameSound(S_BEEP);		//Sound for scrolling
 		if (pointed == -1)			//If pointed exceeds limit, pointed returns to bottom
 		{
 			pointed = 4;
@@ -29,7 +30,7 @@ bool gameStart()
 	if (isKeyPressed(VK_DOWN))		
 	{
 		pointed++;					//Moves pointed upwards
-		playGameSound(S_BEEP);		//Sound for scrolling
+		//playGameSound(S_BEEP);		//Sound for scrolling
 		if (pointed == 5)			//If pointed exceeds limit, pointed returns to bottom
 		{
 			pointed = 0;

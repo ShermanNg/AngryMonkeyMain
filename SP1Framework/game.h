@@ -50,6 +50,9 @@ enum SoundType
 {
 	S_BEEP,
 	S_SELECT,
+	S_THROW,
+	S_HIT,
+	S_MUSIC,
 	S_COUNT
 };
 

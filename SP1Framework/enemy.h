@@ -5,6 +5,7 @@
 #include "Framework\console.h"
 #include <iostream>
 #include "barrel.h"
+#include "game.h"
 
 #define maxEnemies 8	//Size of enemies
 #define sizeX 8			//Size of X Coord Array

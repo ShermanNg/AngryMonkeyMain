@@ -143,6 +143,7 @@ void moveEnemy(int &enemy)
 			|| enemyList[enemy].position.X == barrellist[i].position.X+1 && enemyList[enemy].position.Y == barrellist[i].position.Y
 			|| enemyList[enemy].position.X == barrellist[i].position.X && enemyList[enemy].position.Y == barrellist[i].position.Y)
 		{
+			playGameSound(S_HIT);
 			enemyList[enemy].health = 0;	//Sets collided enemies to 0 health
 			killCount++;					//Increases kill count(score)
 			break;

@@ -70,6 +70,10 @@ void init()
 	//init sound 
 	snd.loadWave("beep", "beep.wav");
 	snd.loadWave("select", "select.wav");
+		snd.loadWave("throw", "throw.wav");
+	snd.loadWave("hit", "hit.wav");
+	snd.loadWave("music", "music.wav");
+
 
 	//init killcount
 	killCount = 0;  //Reset killcount
@@ -79,6 +83,7 @@ void init()
 	enemyCount = 2;
 	elapsedTime = 0.0;
 	pause = false;
+	playGameSound(S_MUSIC);
 }
 
 void shutdown()
@@ -130,7 +135,6 @@ void update(double dt)
 			// Updating the location of the character based on the key press
 			if (keyPressed[K_LEFT])
 			{
-				Beep(1440, 30);
 				if((editor == true)&&(CursorLocation.X >0))
 				{
 					CursorLocation.X-=1;
@@ -143,7 +147,6 @@ void update(double dt)
 			}
 			if (keyPressed[K_RIGHT])
 			{
-				Beep(1440, 30);
 				if((editor == true)&&(CursorLocation.X <79))
 				{
 					CursorLocation.X+=1;
@@ -155,7 +158,7 @@ void update(double dt)
 			}
 			if ((keyPressed[K_UP])&&(CursorLocation.Y >0))
 			{
-				Beep(1440, 30);
+
 				if(editor == true)
 				{
 					CursorLocation.Y-=1;
@@ -164,7 +167,7 @@ void update(double dt)
 			}
 			if (keyPressed[K_DOWN])
 			{
-				Beep(1440, 30);
+
 				if((editor == true)&&(CursorLocation.Y <28))
 				{
 					CursorLocation.Y+=1;
@@ -175,6 +178,7 @@ void update(double dt)
 				int barrelcount = 0;
 				if(barrelcount<barrelNum)
 				{
+					playGameSound(S_THROW);
 					barrelshooting(charLocation);
 					barrelcount++;
 				}
@@ -186,22 +190,22 @@ void update(double dt)
 			// Updating the location of player 2
 			if(keyPressed[K_W] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] == '2')
 			{
-				Beep(1440, 30);
+
 				playerhumanLocation.Y--;
 			}
 			if(keyPressed[K_S] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] == '2' && map[playerhumanLocation.X+1][playerhumanLocation.Y+3] != '1')
 			{
-				Beep(1440, 30);
+
 				playerhumanLocation.Y++;
 			}
 			if(keyPressed[K_A] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] != '2' || keyPressed[K_A] && map[playerhumanLocation.X][playerhumanLocation.Y+3] == '1')
 			{
-				Beep(1440, 30);
+
 				playerhumanLocation.X--;
 			}
 			if(keyPressed[K_D] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] != '2' || keyPressed[K_D] && map[playerhumanLocation.X][playerhumanLocation.Y+3] == '1')
 			{
-				Beep(1440, 30);
+
 				playerhumanLocation.X++;
 			}
 			if(editor==true)
@@ -221,6 +225,10 @@ void update(double dt)
 				if(keyPressed[K_F1])
 				{
 					ClearMap ();
+				}
+				if(keyPressed[K_BACKSPACE])
+				{
+					reloadlevel();
 				}
 				SaveLevel();
 
@@ -265,6 +273,7 @@ void update(double dt)
 	// Return to the game menu if player hits the escape key
 	if (keyPressed[K_ESCAPE])
 	{
+		playGameSound(S_BEEP);
 		mapload = false;
 		gameStarted = false;
 		Gameover.active = false;
@@ -395,6 +404,12 @@ void playGameSound(SoundType sound)
         case S_BEEP: snd.playSound("beep");    
                     break;
         case S_SELECT : snd.playSound("select");
+                    break;
+					        case S_THROW : snd.playSound("throw");
+                    break;
+					        case S_HIT : snd.playSound("hit");
+								break;
+        case S_MUSIC : snd.playSound("music");
                     break;
     }
 }

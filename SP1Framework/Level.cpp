@@ -17,7 +17,7 @@ void LoadMap()
 	char * str;
 	if((versus == false) && (editor== false))
 	{
-		std::ifstream Level ("Level1.txt");
+		std::ifstream Level ("LevelEditor.txt");
 		for (int i=0;i<29;i++)
 		{	
 			if (Level.is_open())
@@ -40,7 +40,7 @@ void LoadMap()
 			else
 				std::cout << "Error Loading Map"<<endl;
 		}
-		
+
 	}
 	if((versus == true)&&(editor==false))
 	{
@@ -67,7 +67,7 @@ void LoadMap()
 				cout << "Error Loading Map"<<endl;
 			delete[] str;
 		}
-		
+
 	}
 	if((editor == true)&&(versus==false))
 	{
@@ -153,4 +153,36 @@ void DrawMap (char Sym,int X, int Y)
 	{
 	cout << " skip" ;
 	}*/
+}
+
+void reloadlevel(void)
+{
+		string line;
+	char *pch;
+	char * str;
+	std::ifstream Level ("Level1.txt");
+	for (int i=0;i<29;i++)
+	{	
+		if (Level.is_open())
+		{
+			getline(Level,line);
+			str = new char [line.length()+1];
+			pch = strtok (str," ,");
+			strcpy (str, line.c_str());
+
+			int j =0;
+			char * p = strtok (str," ,");
+			while (p !=0)
+			{
+				map[j][i] = *p;
+				p = strtok(NULL," ,");
+				j++;
+			}
+			delete[] str;
+		}
+		else
+			std::cout << "Error Loading Map"<<endl;
+	}
+
+	SaveLevel ();
 }
