@@ -194,7 +194,7 @@ void update(double dt)
 				Beep(1440, 30);
 				playerhumanLocation.Y++;
 			}
-			if(keyPressed[K_A] && map[playerhumanLocation.X+1][playerhumanLocation.Y] != '2' || keyPressed[K_A] && map[playerhumanLocation.X][playerhumanLocation.Y+3] == '1')
+			if(keyPressed[K_A] && map[playerhumanLocation.X+1][playerhumanLocation.Y+2] != '2' || keyPressed[K_A] && map[playerhumanLocation.X][playerhumanLocation.Y+3] == '1')
 			{
 				Beep(1440, 30);
 				playerhumanLocation.X--;
