@@ -146,7 +146,7 @@ void DrawMap (char Sym,int X, int Y)
 	}
 	else if(Sym == '2')
 	{
-		writeToBuffer(draw,'H',0x4D);
+		writeToBuffer(draw,'H',0x0E);
 	}
 
 	/*else 

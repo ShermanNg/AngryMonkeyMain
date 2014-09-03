@@ -415,17 +415,32 @@ void drawfreeze()
 
 void drawlifestatus()
 {
+	COORD lifeName = {56, 0};
+	writeToBuffer(lifeName, "Life PowerUp: ", 0x0E);
 	if(life.present == true)
 	{
 		COORD life ={70, 0};
-		writeToBuffer(life, (char)3, 0xA2);
+		writeToBuffer(life, (char)3, 0x0E);
 	}
+	else
+	{
+		COORD life ={70, 0};
+		writeToBuffer(life, (char)3, 0x08);
+	}
+
 }
 void drawfirestatus()
 {
+	COORD fireName = {56, 1};
+	writeToBuffer(fireName, "Fire PowerUp: ", 0x0E);
 	if(fire.present == true)
 	{
 		COORD fire ={70, 1};
-		writeToBuffer(fire, (char)21, 0xA2);
+		writeToBuffer(fire, (char)21, 0x0E);
+	}
+	else
+	{
+		COORD fire ={70, 1};
+		writeToBuffer(fire, (char)21, 0x08);
 	}
 }

@@ -9,10 +9,9 @@ extern COORD ConsoleSize;
 
 
 using std::cout;
-
+int killCount = 0;
 int printLineX = 0;
 int printLineY = 0;
-int killCount = 0;
 char enemy[3][3] = {
 	{' ','O',' ',},
 	{'-','|','-'},
@@ -139,12 +138,18 @@ void moveEnemy(int &enemy)
 {
 	//AI 1.0 Movement
 	//Damage enemies
-	for(int i = 0; i < 3; i++)
+	for(int i = 0; i < barrelNum; i++)
 	{
 		//Collision against enemy bodies
-		if(enemyList[enemy].position.X == barrellist[i].position.X && enemyList[enemy].position.Y == barrellist[i].position.Y
-			|| enemyList[enemy].position.X+1 == barrellist[i].position.X && enemyList[enemy].position.Y == barrellist[i].position.Y
-			|| enemyList[enemy].position.X-1 == barrellist[i].position.X && enemyList[enemy].position.Y == barrellist[i].position.Y)
+		if(enemyList[enemy].position.X == barrellist[i].position.X-1 && enemyList[enemy].position.Y == barrellist[i].position.Y
+			|| enemyList[enemy].position.X == barrellist[i].position.X+1 && enemyList[enemy].position.Y == barrellist[i].position.Y
+			|| enemyList[enemy].position.X == barrellist[i].position.X && enemyList[enemy].position.Y == barrellist[i].position.Y
+/*			|| enemyList[enemy].position.X == barrellist[i].position.X-1 && enemyList[enemy].position.Y == barrellist[i].position.Y+1
+			|| enemyList[enemy].position.X+1 == barrellist[i].position.X+1 && enemyList[enemy].position.Y == barrellist[i].position.Y+1
+			|| enemyList[enemy].position.X+2 == barrellist[i].position.X && enemyList[enemy].position.Y == barrellist[i].position.Y+1
+			|| enemyList[enemy].position.X == barrellist[i].position.X && enemyList[enemy].position.Y == barrellist[i].position.Y+2
+			|| enemyList[enemy].position.X+1 == barrellist[i].position.X && enemyList[enemy].position.Y == barrellist[i].position.Y+2
+			|| enemyList[enemy].position.X+2 == barrellist[i].position.X && enemyList[enemy].position.Y == barrellist[i].position.Y+2*/)
 		{
 			enemyList[enemy].health = 0;
 			killCount++;
@@ -191,7 +196,7 @@ void moveEnemy(int &enemy)
 				&& enemyList[enemy].isClimbing == false)
 			{
 				//Checks the random number for to dodge(50%, chance reset every frame)
-				if(enemyList[enemy].dodgeChance < 4)
+				if(enemyList[enemy].dodgeChance < 3)
 				{
 					//Dodges to left if moving right
 					if(enemyList[enemy].toRight == true)
@@ -379,4 +384,13 @@ void drawdeadEnemy(int &enemy)
 		temp.X = enemyList[enemy].position.X;
 		printLine++;
 	}
+}
+
+void showKill()
+{
+	COORD killName ={0, 0};
+	writeToBuffer(killName, "KillCount: ", 0x0E);
+	COORD kill ={12, 0};
+	string Str = static_cast<std::ostringstream*>(&(std::ostringstream()<<killCount))->str();
+	writeToBuffer(kill, Str, 0x0E);
 }

@@ -49,4 +49,5 @@ void climbAlign(int &enemy);							   // Align enemy climb
 bool enemyAlive(int &enemy);							  // Enemy death and needs respawn
 int rollDice();											 // RNG
 bool climbCheck(int &enemy);	//Check if AI can climb
+void showKill();
 #endif // _ENEMY_H

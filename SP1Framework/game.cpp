@@ -204,8 +204,6 @@ void update(double dt)
 				Beep(1440, 30);
 				playerhumanLocation.X++;
 			}
-
-
 			if(editor==true)
 			{
 				if (keyPressed[K_0])
@@ -229,7 +227,6 @@ void update(double dt)
 			}
 			if (editor == false)
 			{
-
 			//Spawning of enemies
 			activateEnemy(enemyCount);	//Spawns enemies
 
@@ -246,7 +243,7 @@ void update(double dt)
 			}
 			if(versus == false && editor==false)
 			{
-				monkeydead();
+				/*monkeydead();*/
 			}
 			else if(versus == true)
 			{
@@ -259,14 +256,12 @@ void update(double dt)
 			}
 			fpsCtrl = 0;
 		}
-
 	}
 	//Pause function
 	if(keyPressed[K_BACKSPACE])
 	{
 		pause = !pause;
 	}
-
 	// Return to the game menu if player hits the escape key
 	if (keyPressed[K_ESCAPE])
 	{
@@ -275,7 +270,6 @@ void update(double dt)
 		Gameover.active = false;
 		init();
 	}
-
 	if(pause == false && gameStarted == false )
 	{
 		gameStart();
@@ -306,9 +300,9 @@ void render()// for drawing of objects only
 			string framerate = static_cast<std::ostringstream*>(&(std::ostringstream()<<a))->str();
 			writeToBuffer(dtime, framerate, 0x1A);*/
 
-			COORD etime ={0, 0};
+		/*	COORD etime ={0, 0};
 			string elap = static_cast<std::ostringstream*>(&(std::ostringstream()<<elapsedTime))->str();
-			writeToBuffer(etime, elap, 0x59);
+			writeToBuffer(etime, elap, 0x59);*/
 
 			// render character
 			drawPlayer1();
@@ -340,6 +334,9 @@ void render()// for drawing of objects only
 
 			//Draws the spawned enemies after 2 seconds
 			drawenemy(enemyCount);
+
+			//Draw kill count in game
+			showKill();
 
 			//drawlife status
 			drawlifestatus();
@@ -376,7 +373,7 @@ void render()// for drawing of objects only
 		//Pause message for menu
 		if(gameStarted == false)
 		{
-			COORD a = {0,24};
+			COORD a = {0,25};
 			writeToBuffer(a,"Press BACKSPACE to Unpause");
 		}
 		//Pause message for in game
@@ -401,3 +398,4 @@ void playGameSound(SoundType sound)
                     break;
     }
 }
+
