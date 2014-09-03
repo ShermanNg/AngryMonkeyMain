@@ -55,6 +55,7 @@ void barrelshooting(COORD unit)// set barrel according to player's position
 	{
 		if(barrellist[i].active == false)
 		{
+			playGameSound(S_THROW);
 			barrellist[i].active = true;
 			barrellist[i].position.X = unit.X;
 			barrellist[i].position.Y = unit.Y;

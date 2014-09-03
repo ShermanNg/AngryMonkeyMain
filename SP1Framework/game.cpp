@@ -183,7 +183,6 @@ void update(double dt)
 				int barrelcount = 0;
 				if(barrelcount<barrelNum)
 				{
-					playGameSound(S_THROW);
 					barrelshooting(charLocation);
 					barrelcount++;
 				}
