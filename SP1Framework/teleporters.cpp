@@ -65,7 +65,7 @@ void teleporters()
 	if(elapsedTime>5)//time before teleporters spawn
 	{
 		//teleporter 1
-		for(int i = 0; i<6; i++)
+		for(int i = 0; i<=maxEnemies; i++)
 		{
 			if(enemyList[i].position.Y == teleporter1location.powerlocation.Y - 2 && enemyList[0].position.X == teleporter1location.powerlocation.X)
 			{
@@ -78,7 +78,7 @@ void teleporters()
 			}
 		}
 		//teleporter 2
-		for(int i = 0; i<6; i++)
+		for(int i = 0; i<=maxEnemies; i++)
 		{
 			if(enemyList[i].position.Y == teleporter2location.powerlocation.Y - 2 && enemyList[i].position.X == teleporter2location.powerlocation.X)
 			{
@@ -381,14 +381,14 @@ void drawflame()
 	{
 		//gotoXY(flameslocation.powerlocation);
 		//colour(0x4E);//orange
-		for(int n = 0; n < 77;n++)
+		for(int n = 0; n < 80;n++)
 		{
 			COORD a = {flameslocation.powerlocation.X+n,flameslocation.powerlocation.Y};
 			/*std::cout<<(char)15;*/
 			writeToBuffer(a, (char)15, 0x4E);
 		}
 		/*std::cout<<std::endl;*/
-		for(int n = 0; n < 77;n++)
+		for(int n = 0; n < 80;n++)
 		{
 			/*std::cout<<(char)15;*/
 			COORD b = {flameslocation.powerlocation.X+n,flameslocation.powerlocation.Y+1};
@@ -415,32 +415,32 @@ void drawfreeze()
 
 void drawlifestatus()
 {
-	COORD lifeName = {56, 0};
+	COORD lifeName = {48, 0};
 	writeToBuffer(lifeName, "Life PowerUp: ", 0x0E);
 	if(life.present == true)
 	{
-		COORD life ={70, 0};
+		COORD life ={62, 0};
 		writeToBuffer(life, (char)3, 0x0E);
 	}
 	else
 	{
-		COORD life ={70, 0};
+		COORD life ={62, 0};
 		writeToBuffer(life, (char)3, 0x08);
 	}
 
 }
 void drawfirestatus()
 {
-	COORD fireName = {56, 1};
+	COORD fireName = {64, 0};
 	writeToBuffer(fireName, "Fire PowerUp: ", 0x0E);
 	if(fire.present == true)
 	{
-		COORD fire ={70, 1};
+		COORD fire ={78, 0};
 		writeToBuffer(fire, (char)21, 0x0E);
 	}
 	else
 	{
-		COORD fire ={70, 1};
+		COORD fire ={78, 0};
 		writeToBuffer(fire, (char)21, 0x08);
 	}
 }

@@ -27,6 +27,7 @@ int enemyCount = 2;
 bool mapload = false;
 bool keyPressed[K_COUNT];
 bool pause;
+bool about;
 
 extern bool gameStarted;
 extern int modeSelected;
@@ -83,6 +84,7 @@ void init()
 	enemyCount = 2;
 	elapsedTime = 0.0;
 	pause = false;
+	about = false;
 	playGameSound(S_MUSIC);
 }
 
@@ -151,7 +153,7 @@ void update(double dt)
 				{
 					CursorLocation.X+=1;
 				}
-				else if (charLocation.X < ConsoleSize.X - 4)
+				else if (charLocation.X < ConsoleSize.X - 7)
 				{
 					charLocation.X+=3;
 				}
@@ -251,7 +253,7 @@ void update(double dt)
 			}
 			if(versus == false && editor==false)
 			{
-				/*monkeydead();*/
+				monkeydead();
 			}
 			else if(versus == true)
 			{
@@ -380,10 +382,15 @@ void render()// for drawing of objects only
 	else if (pause == true)
 	{
 		//Pause message for menu
-		if(gameStarted == false)
+		if(gameStarted == false && about == false)
 		{
 			COORD a = {0,25};
 			writeToBuffer(a,"Press BACKSPACE to Unpause");
+		}
+		else if(gameStarted == false && about == true)
+		{
+			COORD a = {0,25};
+			writeToBuffer(a,"Press BACKSPACE to return to Main Menu");
 		}
 		//Pause message for in game
 		else
@@ -392,7 +399,6 @@ void render()// for drawing of objects only
 			writeToBuffer(a,"Game is Paused, Press BACKSPACE to continue");
 		}
 	}
-
 	// Writes the buffer to the console, hence you will see what you have written
 	flushBufferToConsole();
 }

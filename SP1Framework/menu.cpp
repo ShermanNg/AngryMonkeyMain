@@ -4,9 +4,9 @@
 int modeSelected = 0;		//Mode selection
 int pointed = 0;			//Option of menu selected
 bool gameStarted;			//Game started check
-bool display;				//Displays instructions
 
 extern COORD charLocation;	//Resetting barrel coord
+extern bool about;					//Displays instructions
 
 //function for main menu and to check if game started from decision
 bool gameStart()
@@ -168,6 +168,7 @@ void drawInstructions()
 		y++;								//Next Line
 	}
 	instruction.close();					//Closes about file
+	about = true;
 	pause = true;							//Pause state
 	
 }
