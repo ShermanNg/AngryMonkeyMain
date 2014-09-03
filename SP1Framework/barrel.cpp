@@ -7,7 +7,7 @@ extern double deltaTime;
 extern double elapsedTime;
 Barrel barrellist[barrelNum];
 Barrel banana[3];
-int bananaNum = 3;// initialise banana Num
+int bananaNum = 3;
 
 //initialise barrel
 void intialisebarrel(void)

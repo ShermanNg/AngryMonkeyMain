@@ -28,6 +28,7 @@ bool mapload = false;
 bool keyPressed[K_COUNT];
 bool pause;
 bool about;
+bool godMode;
 
 extern bool gameStarted;
 extern int modeSelected;
@@ -71,7 +72,7 @@ void init()
 	//init sound 
 	snd.loadWave("beep", "beep.wav");
 	snd.loadWave("select", "select.wav");
-		snd.loadWave("throw", "throw.wav");
+	snd.loadWave("throw", "throw.wav");
 	snd.loadWave("hit", "hit.wav");
 	snd.loadWave("music", "music.wav");
 
@@ -85,6 +86,7 @@ void init()
 	elapsedTime = 0.0;
 	pause = false;
 	about = false;
+	godMode = false;
 	playGameSound(S_MUSIC);
 }
 
@@ -108,6 +110,7 @@ void getInput()
 	keyPressed[K_S] = isKeyPressed(0x53);
 	keyPressed[K_A] = isKeyPressed(0x41);
 	keyPressed[K_D] = isKeyPressed(0x44);
+	keyPressed[K_G] = isKeyPressed(0x47);
 	keyPressed[K_BACKSPACE] = isKeyPressed(0x08);
 	keyPressed[K_RETURN] = isKeyPressed(VK_RETURN);
 	keyPressed[K_F1] = isKeyPressed(VK_F1);
@@ -251,7 +254,7 @@ void update(double dt)
 			extralifepowerup();
 			firepowerup();
 			}
-			if(versus == false && editor==false)
+			if(godMode == false && versus == false && editor==false)
 			{
 				monkeydead();
 			}
@@ -259,6 +262,7 @@ void update(double dt)
 			{
 				multiplayerdead();//gameover conditions for versus mode
 			}
+			
 			if(versus == true && mapload == false)
 			{
 				mapload = true;
@@ -266,6 +270,11 @@ void update(double dt)
 			}
 			fpsCtrl = 0;
 		}
+	}
+	//toggle god mode
+	if(keyPressed[keyPressed[K_G]])
+	{
+		godMode = !godMode;
 	}
 	//Pause function
 	if(keyPressed[K_BACKSPACE])
@@ -405,18 +414,18 @@ void render()// for drawing of objects only
 
 void playGameSound(SoundType sound)
 {
-    switch (sound)
-    {
-        case S_BEEP: snd.playSound("beep");    
-                    break;
-        case S_SELECT : snd.playSound("select");
-                    break;
-					        case S_THROW : snd.playSound("throw");
-                    break;
-					        case S_HIT : snd.playSound("hit");
-								break;
-        case S_MUSIC : snd.playSound("music");
-                    break;
-    }
+	switch (sound)
+	{
+	case S_BEEP: snd.playSound("beep");    
+		break;
+	case S_SELECT : snd.playSound("select");
+		break;
+	case S_THROW : snd.playSound("throw");
+		break;
+	case S_HIT : snd.playSound("hit");
+		break;
+	case S_MUSIC : snd.playSound("music");
+		break;
+	}
 }
 

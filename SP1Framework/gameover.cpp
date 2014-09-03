@@ -6,6 +6,7 @@ extern COORD charLocation;
 extern COORD playerhumanLocation;
 extern int killCount;
 extern int bananaNum;
+extern bool godMode;
 
 EndScreen Gameover;
 
@@ -74,33 +75,33 @@ void drawplayer2Lose()
 
 void monkeydead()
  {
-	int death = 0;
-	for(int i = 0; i<maxEnemies; i++)
-	{
-		COORD temp = enemyList[i].position;
-		for(int j = 0; j<3; j++)
-		{
-			if(temp.X-1 == banana[j].position.X && temp.Y+2 == banana[j].position.Y 
-				|| temp.X+1 == banana[j].position.X && temp.Y+2 == banana[j].position.Y && banana[j].active == true)
-			{
-				bananaNum--;
-				banana[j].active = false;
-			}
-		}
-	}
-	for(int i = 0; i<3; i++)
-	{
-		if(banana[i].active == false)
-		{
-			death++;
-		}
-	}
-	if(death==3)
-	{
-		death = 0;//reset temp death value
-		HighscoreCheck(killCount);
-		showgameover();
-	}
+	 int death = 0;
+	 for(int i = 0; i<maxEnemies; i++)
+	 {
+		 COORD temp = enemyList[i].position;
+		 for(int j = 0; j<3; j++)
+		 {
+			 if(temp.X-1 == banana[j].position.X && temp.Y+2 == banana[j].position.Y 
+				 || temp.X+1 == banana[j].position.X && temp.Y+2 == banana[j].position.Y && banana[j].active == true)
+			 {
+				 bananaNum--;
+				 banana[j].active = false;
+			 }
+		 }
+	 }
+	 for(int i = 0; i<3; i++)
+	 {
+		 if(banana[i].active == false)
+		 {
+			 death++;
+		 }
+	 }
+	 if(death==3)
+	 {
+		 death = 0;//reset temp death value
+		 HighscoreCheck(killCount);
+		 showgameover();
+	 }
 }
 
 void showgameover()

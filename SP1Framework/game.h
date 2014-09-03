@@ -10,7 +10,7 @@
 #include "HighScore.h"
 #include "Framework\timer.h"
 #include "Framework\console.h"
-#include "Framework\sound.h"
+
 #include "menu.h"
 #include <conio.h>
 #include <iostream>
@@ -37,6 +37,7 @@ enum Keys
 	K_S,
 	K_A,
 	K_D,
+	K_G,
 	K_BACKSPACE,
 	K_F1,
 	K_0,
