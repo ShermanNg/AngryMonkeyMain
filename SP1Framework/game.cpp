@@ -333,7 +333,7 @@ void render()// for drawing of objects only
 			drawflame();
 
 			//Draws the spawned enemies after 2 seconds
-			drawenemy(enemyCount);
+			drawEnemy(enemyCount);
 
 			//Draw kill count in game
 			showKill();
@@ -347,7 +347,7 @@ void render()// for drawing of objects only
 			{
 				if(enemyList[i].health == 0)
 				{
-					drawdeadEnemy(i);
+					drawDeadEnemy(i);
 				}
 			}
 		}

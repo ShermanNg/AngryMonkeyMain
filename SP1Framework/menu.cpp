@@ -1,48 +1,49 @@
 #include "menu.h"
 #pragma once
 
-int modeSelected = 0;	
-int pointer = 0;
-bool gameStarted;
-bool display;
+int modeSelected = 0;		//Mode selection
+int pointed = 0;			//Option of menu selected
+bool gameStarted;			//Game started check
+bool display;				//Displays instructions
 
-extern COORD charLocation;
+extern COORD charLocation;	//Resetting barrel coord
 
 //function for main menu and to check if game started from decision
 bool gameStart()
 {
 	//Reinitialize upon menu
-	gameStarted = false;
-	editor = false;
-	versus= false;
+	gameStarted = false;	//Game is not started
+	editor = false;			//Editor is not started
+	versus= false;			//Versus is not started
 
 	//Loop to detect user input and move accordingly until action is selected
-
 	if (isKeyPressed(VK_UP))
 	{
-		pointer--;
-		playGameSound(S_BEEP);
-		if (pointer == -1)
+		pointed--;					//Moves pointed upwards
+		playGameSound(S_BEEP);		//Sound for scrolling
+		if (pointed == -1)			//If pointed exceeds limit, pointed returns to bottom
 		{
-			pointer = 4;
+			pointed = 4;
 		}
-	}
-	if (isKeyPressed(VK_DOWN))
+	}	
+	if (isKeyPressed(VK_DOWN))		
 	{
-		pointer++;
-			playGameSound(S_BEEP);
-		if (pointer == 5)
+		pointed++;					//Moves pointed upwards
+		playGameSound(S_BEEP);		//Sound for scrolling
+		if (pointed == 5)			//If pointed exceeds limit, pointed returns to bottom
 		{
-			pointer = 0;
+			pointed = 0;
 		}
 	}
+
 	//Execute action selected
 	if (isKeyPressed(VK_RETURN))
 	{
-			playGameSound(S_SELECT);
-		modeSelected = pointer;
-		switch(pointer)
+		playGameSound(S_SELECT);	//Sound for selecting option
+		modeSelected = pointed;		//Sets mode selected to pointed option
+		switch(pointed)
 		{
+			//Starts Single-Player
 		case STARTGAME:
 			{
 				versus = false;
@@ -50,6 +51,7 @@ bool gameStart()
 				return gameStarted;
 				break;
 			}
+			//Starts Multi-Player
 		case STARTMULTI:
 			{
 				versus = true;
@@ -57,16 +59,17 @@ bool gameStart()
 				return gameStarted;
 				break;
 			}
-			case STARTEDITOR:
+			//Starts Level Editor
+		case STARTEDITOR:
 			{
-				
 				versus = false;
-						editor = true;
+				editor = true;
 				gameStarted = true;
 				LoadMap();
 				return gameStarted;
 				break;
 			}
+			//Shows info about game
 		case ABOUT:
 			{
 				gameStarted = false;
@@ -74,33 +77,36 @@ bool gameStart()
 				return gameStarted;
 				break;
 			}
+			//Quits game
 		case QUITGAME:
 			{
 				g_quitGame = true;
 				return gameStarted;
 				break;
 			}
+			//Game is not started by default
 		default:
 			{
 				return gameStarted;
 				break;
 			}
 		}
-
 	}
+
+	//Resetting barrel location
 	for(int i = 0; i<barrelNum; i++)
 	{
 		barrellist[i].active = false;
 		barrellist[i].position.X = charLocation.X;
 		barrellist[i].position.Y = charLocation.Y+1;
 	}
-	return gameStarted;
+	return gameStarted;	//Returns T/F based on choices
 }
 
+//Draws menu of game
 void drawMenu()
 {
-	//Menu Vars
-	string Menu[5] = {"Start Angry Monkeys!", "2-Player Versus Mode","Level Editor", "About Angry Monkeys", "Quit Angry Monkeys."};
+	string Menu[5] = {"Start Angry Monkeys!", "2-Player Versus Mode","Level Editor", "About Angry Monkeys", "Quit Angry Monkeys"};	//Menu option text
 	std::ifstream menuText;
 	string menuBanner;
 
@@ -109,24 +115,22 @@ void drawMenu()
 
 	//Banner
 	int y = 0;
-	menuText.open("Text/Banner.txt");
+	menuText.open("Text/Banner.txt");		//Opens banner text file
 	while(!menuText.eof())
 	{
 		COORD menu = {0,y};
-		getline(menuText, menuBanner);
+		getline(menuText, menuBanner);		//Stores data to string
 		writeToBuffer(menu,menuBanner,0x0F);
-		y++;
-		
+		y++;								//Next Line
 	}
-	menuText.close();
+	menuText.close();						//Close banner text file
 
-	//Text Attribute only for Main Menu text
-
+	//Option highlighting indicator
 	for (int i = 0; i < 5; ++i)
 	{
-		COORD options = {0,y};
-		COORD arrow = {21,y};
-		if (i == pointer)
+		COORD options = {0,y};		//Option Text
+		COORD arrow = {21,y};		//Option Arrow
+		if (i == pointed)
 		{
 			//Selected options lights up to indicate selection
 			writeToBuffer(options,Menu[i],0x0F);
@@ -138,30 +142,31 @@ void drawMenu()
 			writeToBuffer(options,Menu[i],0x07);
 			writeToBuffer(arrow,"  ",0x0F);
 		}
-		
-		y++;
+
+		y++;			//Increases drawing to next line after finishing each line
 	}
 }
 
+//Draws instruction of game
 void drawInstructions()
 {
 	std::ifstream instruction;
 	string display;
-	
-	//clear buffer for instructions
+
+	//Clear buffer for instructions
 	clearBuffer(0x0F);
 
-	//Banner
+	//Instructions
 	int y = 0;
-	instruction.open("Text/about.txt");
+	instruction.open("Text/about.txt");		//Opens about file
 	while(!instruction.eof())
 	{
 		COORD info={0,y};
-		getline(instruction, display);
+		getline(instruction, display);		//Stores data to string
 		writeToBuffer(info,display,0x0F);
-		y++;
+		y++;								//Next Line
 	}
-	instruction.close();
-	pause = true;
+	instruction.close();					//Closes about file
+	pause = true;							//Pause state
 	
 }
