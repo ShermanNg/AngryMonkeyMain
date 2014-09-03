@@ -27,6 +27,7 @@ struct Enemy
 	bool isAlive;
 	bool isJumpingOff;
 	bool isSpecial;
+	bool isDropping;
 	double respawnTimer;
 	COORD position;
 };

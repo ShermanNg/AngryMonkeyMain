@@ -1,9 +1,9 @@
 #include "enemy.h"
 
 
-extern char map[WIDTH][HEIGHT];//Using map data for char climbing
-extern double dodgeTimer;//Dodge timer from update
-extern double deltaTime;//delta time for resetting time based chances
+extern char map[WIDTH][HEIGHT];		//Using map data for char climbing
+extern double dodgeTimer;			//Dodge timer from update
+extern double deltaTime;			//delta time for resetting time based chances
 extern COORD ConsoleSize;
 
 //Kill counter to track score
@@ -48,7 +48,7 @@ void initialiseEnemy(void)
 //Activate enemies
 void activateEnemy(int enemyCount)
 {
-	for(int i = 0; i < enemyCount; i++)
+	for(int i = 0; i < 1; i++)
 		{
 			//Move enemies if alive
 			if(enemyList[i].isAlive == true)
@@ -76,7 +76,6 @@ void activateEnemy(int enemyCount)
 		}
 }
 
-
 //Rolling dice for chance to climb
 int rollDice()
 {
@@ -92,7 +91,7 @@ int rollDice()
 void drawEnemy(int enemyCount)
 {
 	//Draws enemies based on current possible max count
-	for(int i = 0; i < enemyCount; i++)
+	for(int i = 0; i < 1; i++)
 	{
 		//Spawns enemies that are alive and not out of map
 		if (enemyList[i].position.X >= 0 && enemyList[i].isAlive == true)
@@ -169,14 +168,28 @@ void moveEnemy(int &enemy)
 			}
 
 			//Starts moving right upon reaching end of map
-			if(enemyList[enemy].toRight == true)
+			if(enemyList[enemy].toRight == true && enemyList[enemy].isDropping == false)
 			{
 				enemyList[enemy].position.X++;
 			}
+
 			//Stops moving right upon reaching end of map
-			else
+			if(enemyList[enemy].toRight == false && enemyList[enemy].isDropping == false)
 			{
 				enemyList[enemy].position.X--;
+			}
+
+			//If left and right platform is empty
+			if(map[enemyList[enemy].position.X][enemyList[enemy].position.Y+3] == '0'
+					||map[enemyList[enemy].position.X+2][enemyList[enemy].position.Y+3] == '0')
+			{
+				//Enemy is not climbing
+				if(enemyList[enemy].isClimbing == false)
+				{
+					enemyList[enemy].position.Y++;			//Enemy drops down
+					enemyList[enemy].isDropping = true;		//Sets dropping state to true
+					climbAlign(enemy);						//Align to platform
+				}
 			}
 		}
 		//AI 1.1 Evasive movement(Dodge)
@@ -222,6 +235,7 @@ void moveEnemy(int &enemy)
 		enemyList[enemy].dodgeChance = rollDice();		//Rerolls dodge chance
 	}
 }
+
 //Climbing of enemies
 void enemyClimb(int &enemy)
 {
@@ -245,25 +259,33 @@ void enemyClimb(int &enemy)
 	else
 	{
 		enemyList[enemy].randNum = rollDice();
+
+		//If is not climbing, movement enabled(moving away from incomplete ladders)
+		if(enemyList[enemy].isClimbing == false)
+		{
+			enemyList[enemy].canMove = true;
+		}
 	}
 }
 
+//Alignment to platform
 void climbAlign(int &enemy)
 {
-	//Checking if aligned to platform with char '1'(platform)
-	if(map[enemyList[enemy].position.X][enemyList[enemy].position.Y+3] == '1')
+	//Checking if able to walk after each ladder coord
+	if(map[enemyList[enemy].position.X-1][enemyList[enemy].position.Y+3] == '1'
+		|| map[enemyList[enemy].position.X+3][enemyList[enemy].position.Y+3] == '1')
 	{
 		//After alignment
 		enemyList[enemy].canMove = true;		//Enable movement
 		enemyList[enemy].canClimb = false;		//Disable climbing(prevent glitch)
 		enemyList[enemy].isClimbing = false;	//Set to not climbing state
 		enemyList[enemy].isJumpingOff = false;	//Set to not jumping off state(special enemies)
+		enemyList[enemy].isDropping = false;
 
 		//Randomized movement after climbing
 		if(enemyList[enemy].isClimbing == false)
 		{
 			enemyList[enemy].randNum = rollDice();
-
 			//Moving to left
 			if(enemyList[enemy].randNum < 4)
 			{
@@ -275,18 +297,20 @@ void climbAlign(int &enemy)
 			{
 				enemyList[enemy].toRight = true;
 			}
-
 		}
 	}
 }
 
+//Check if able to climb
 bool climbCheck(int &enemy)
 {
 	//AI 1.3 Evasive climbing
 	for(int i = 0; i < 3; i++)
 	{
-		//If is climbing, cannot change to unable to climb for normal enemies
-		if(enemyList[enemy].isClimbing == true && enemyList[enemy].isSpecial == false)
+		//If is climbing, cannot change to unable to climb for normal enemies and still on ladder
+		if(enemyList[enemy].isClimbing == true
+			&& enemyList[enemy].isSpecial == false
+			&& map[enemyList[enemy].position.X+1][enemyList[enemy].position.Y+2] == '2')
 		{
 			return true;
 		}
@@ -331,10 +355,12 @@ bool climbCheck(int &enemy)
 	//Unable to climb when not at ladders
 	else
 	{
+		enemyList[enemy].isClimbing = false;
 		return false;
 	}
 }
 
+//Enemy is not alive
 bool enemyAlive(int &enemy)
 {
 	//Set death statuses
@@ -348,6 +374,7 @@ bool enemyAlive(int &enemy)
 	return enemyList[enemy].isAlive;		//Returns state of alive
 }
 
+//Draws dead enemies
 void drawDeadEnemy(int &enemy)
 {
 	//Go to specific enemy coord
@@ -366,6 +393,7 @@ void drawDeadEnemy(int &enemy)
 	}
 }
 
+//Shows kill count
 void showKill()
 {
 	COORD killName ={0, 0};
